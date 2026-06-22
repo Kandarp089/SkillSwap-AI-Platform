@@ -1,0 +1,130 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+Community
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">
+            🌍 SkillSwap Community
+        </h1>
+
+        <p class="text-secondary">
+            Connect, Share, Learn & Grow Together
+        </p>
+    </div>
+
+    <div class="row">
+
+        <!-- Post Feed -->
+
+        <div class="col-lg-8">
+
+            <div class="glass-card p-4 mb-4">
+
+                <h4>Create Post</h4>
+
+                <textarea
+                    class="form-control"
+                    rows="4"
+                    placeholder="Share your knowledge..."
+                ></textarea>
+
+                <button class="btn btn-primary mt-3">
+                    Post
+                </button>
+
+            </div>
+
+            <div class="glass-card p-4 mb-4">
+
+                <h5>👨‍💻 Arjun Patel</h5>
+
+                <p class="text-secondary">
+                    Just completed Django API Project.
+                    Happy to help beginners.
+                </p>
+
+                <button class="btn btn-outline-light btn-sm">
+                    👍 Like
+                </button>
+
+                <button class="btn btn-outline-light btn-sm">
+                    💬 Comment
+                </button>
+
+            </div>
+
+            <div class="glass-card p-4">
+
+                <h5>🎨 Sara Johnson</h5>
+
+                <p class="text-secondary">
+                    Free Figma Workshop this weekend.
+                </p>
+
+                <button class="btn btn-outline-light btn-sm">
+                    👍 Like
+                </button>
+
+                <button class="btn btn-outline-light btn-sm">
+                    💬 Comment
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Sidebar -->
+
+        <div class="col-lg-4">
+
+            <div class="glass-card p-4 mb-4">
+
+                <h5>🔥 Trending Skills</h5>
+
+                <ul class="list-group">
+
+                    <li class="list-group-item">
+                        Python
+                    </li>
+
+                    <li class="list-group-item">
+                        AI / ML
+                    </li>
+
+                    <li class="list-group-item">
+                        UI/UX
+                    </li>
+
+                    <li class="list-group-item">
+                        Cyber Security
+                    </li>
+
+                </ul>
+
+            </div>
+
+            <div class="glass-card p-4">
+
+                <h5>🏆 Top Contributors</h5>
+
+                <p>#1 Arjun Patel</p>
+
+                <p>#2 Sara Johnson</p>
+
+                <p>#3 John Smith</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

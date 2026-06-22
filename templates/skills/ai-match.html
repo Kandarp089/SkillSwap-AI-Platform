@@ -1,0 +1,93 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+AI Match
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+
+        <h1 class="display-3 fw-bold">
+            AI Skill Match
+        </h1>
+
+        <p class="text-secondary">
+            Find the best learning partner using AI
+        </p>
+
+    </div>
+
+    <div class="glass-card p-5 text-center mb-5">
+
+        <h2>Compatibility Score</h2>
+
+        <h1 style="font-size:80px;color:#8b5cf6;">
+            94%
+        </h1>
+
+        <p>
+            Excellent Match Found
+        </p>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-6">
+
+            <div class="glass-card p-4">
+
+                <h3>Recommended User</h3>
+
+                <hr>
+
+                <h4>Rahul Patel</h4>
+
+                <p>
+                    Python • Django • AI
+                </p>
+
+                <p>
+                    Rating: ⭐ 4.9
+                </p>
+
+                <button class="btn btn-primary">
+                    Send Request
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="glass-card p-4">
+
+                <h3>AI Suggestions</h3>
+
+                <hr>
+
+                <ul>
+
+                    <li>Learn React</li>
+
+                    <li>Improve Git Skills</li>
+
+                    <li>Build AI Projects</li>
+
+                    <li>Practice Django APIs</li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

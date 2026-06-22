@@ -1,0 +1,121 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+Leaderboard
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+<div class="text-center mb-5">
+
+<h1 class="display-3 fw-bold">
+🏆 Leaderboard
+</h1>
+
+<p class="text-secondary">
+Top Skill Swappers This Month
+</p>
+
+</div>
+
+<div class="glass-card p-4">
+
+<table class="table table-dark table-hover">
+
+<thead>
+
+<tr>
+
+<th>Rank</th>
+<th>User</th>
+<th>XP</th>
+<th>Level</th>
+<th>Badge</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>🥇 1</td>
+<td>King</td>
+<td>3200</td>
+<td>15</td>
+<td>Master</td>
+
+</tr>
+
+<tr>
+
+<td>🥈 2</td>
+<td>Rahul</td>
+<td>2800</td>
+<td>13</td>
+<td>Expert</td>
+
+</tr>
+
+<tr>
+
+<td>🥉 3</td>
+<td>Priya</td>
+<td>2500</td>
+<td>12</td>
+<td>Pro</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="row mt-5">
+
+<div class="col-lg-4">
+
+<div class="glass-card p-4 text-center">
+
+<h3>Weekly Winner</h3>
+
+<h2>Rahul</h2>
+
+</div>
+
+</div>
+
+<div class="col-lg-4">
+
+<div class="glass-card p-4 text-center">
+
+<h3>Top Mentor</h3>
+
+<h2>Priya</h2>
+
+</div>
+
+</div>
+
+<div class="col-lg-4">
+
+<div class="glass-card p-4 text-center">
+
+<h3>Most Active</h3>
+
+<h2>King</h2>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

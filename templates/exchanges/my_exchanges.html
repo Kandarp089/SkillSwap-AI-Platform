@@ -1,0 +1,116 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+My Exchanges
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+
+        <h1 class="display-4 fw-bold">
+            🤝 My Exchanges
+        </h1>
+
+        <p class="text-secondary">
+            Track all your skill exchange activities
+        </p>
+
+    </div>
+
+    <div class="row">
+
+        <!-- Active Exchange -->
+
+        <div class="col-lg-4 mb-4">
+
+            <div class="glass-card p-4 h-100">
+
+                <span class="badge bg-success mb-3">
+                    Active
+                </span>
+
+                <h4>
+                    Python ↔ UI/UX
+                </h4>
+
+                <p>
+                    Exchanging skills with Rahul Patel
+                </p>
+
+                <div class="progress mb-3">
+
+                    <div class="progress-bar bg-success"
+                         style="width:70%">
+                        70%
+                    </div>
+
+                </div>
+
+                <button class="btn btn-primary w-100">
+                    Continue
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Pending -->
+
+        <div class="col-lg-4 mb-4">
+
+            <div class="glass-card p-4 h-100">
+
+                <span class="badge bg-warning mb-3">
+                    Pending
+                </span>
+
+                <h4>
+                    Django ↔ React
+                </h4>
+
+                <p>
+                    Waiting for acceptance
+                </p>
+
+                <button class="btn btn-warning w-100">
+                    Pending
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Completed -->
+
+        <div class="col-lg-4 mb-4">
+
+            <div class="glass-card p-4 h-100">
+
+                <span class="badge bg-info mb-3">
+                    Completed
+                </span>
+
+                <h4>
+                    AI ↔ Figma
+                </h4>
+
+                <p>
+                    Successfully completed
+                </p>
+
+                <button class="btn btn-success w-100">
+                    View Certificate
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,175 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+Events
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+
+        <h1 class="display-4 fw-bold">
+            🎉 Community Events
+        </h1>
+
+        <p class="text-secondary">
+            Join workshops, hackathons and networking events
+        </p>
+
+    </div>
+
+    <div class="row">
+
+        <!-- Event 1 -->
+
+        <div class="col-lg-4 mb-4">
+
+            <div class="glass-card p-4 h-100">
+
+                <span class="badge bg-primary">
+                    Upcoming
+                </span>
+
+                <h3 class="mt-3">
+                    Python Bootcamp
+                </h3>
+
+                <p>
+                    Learn Python from beginner to advanced.
+                </p>
+
+                <p>
+                    📅 25 June 2026
+                </p>
+
+                <p>
+                    ⏰ 7:00 PM
+                </p>
+
+                <button class="btn btn-primary w-100">
+                    Join Event
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Event 2 -->
+
+        <div class="col-lg-4 mb-4">
+
+            <div class="glass-card p-4 h-100">
+
+                <span class="badge bg-success">
+                    Live
+                </span>
+
+                <h3 class="mt-3">
+                    AI Workshop
+                </h3>
+
+                <p>
+                    Build ML projects with experts.
+                </p>
+
+                <p>
+                    📅 Today
+                </p>
+
+                <p>
+                    ⏰ 5:00 PM
+                </p>
+
+                <button class="btn btn-success w-100">
+                    Join Now
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Event 3 -->
+
+        <div class="col-lg-4 mb-4">
+
+            <div class="glass-card p-4 h-100">
+
+                <span class="badge bg-warning">
+                    Hackathon
+                </span>
+
+                <h3 class="mt-3">
+                    SkillSwap Challenge
+                </h3>
+
+                <p>
+                    Compete and win certificates.
+                </p>
+
+                <p>
+                    📅 1 July 2026
+                </p>
+
+                <p>
+                    ⏰ 10:00 AM
+                </p>
+
+                <button class="btn btn-warning w-100">
+                    Register
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Upcoming Events Table -->
+
+    <div class="glass-card p-4 mt-5">
+
+        <h3 class="mb-4">
+            📆 Upcoming Schedule
+        </h3>
+
+        <table class="table">
+
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Date</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>Python Bootcamp</td>
+                    <td>25 June</td>
+                    <td>Programming</td>
+                </tr>
+
+                <tr>
+                    <td>AI Workshop</td>
+                    <td>28 June</td>
+                    <td>Artificial Intelligence</td>
+                </tr>
+
+                <tr>
+                    <td>UI/UX Masterclass</td>
+                    <td>30 June</td>
+                    <td>Design</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,786 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}
+Chat
+{% endblock %}
+
+{% block content %}
+<style>
+  /* આધુનિક ગ્લોબલ વેરિએબલ્સ અને યુટિલિટીઝ (જો બેઝ ફાઇલમાં ન હોય તો) */
+  :root {
+    --glass-bg: rgba(30, 41, 59, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --msg-own-bg: linear-gradient(135deg, #7C3AED, #4F46E5);
+    --msg-other-bg: rgba(255, 255, 255, 0.06);
+  }
+
+  .app-layout {
+    display: flex;
+    height: calc(100vh - 60px); /* તમારી નેવબારની હાઇટ મુજબ એડજસ્ટ કરો */
+    background: #0B0F19;
+    color: #F1F5F9;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+  }
+
+  /* મિની નેવિગેશન */
+  .sidebar-nav-mini {
+    width: 70px;
+    background: rgba(15, 23, 42, 0.95);
+    border-right: 1px solid var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.25rem 0;
+    gap: 1.25rem;
+  }
+
+  .side-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: #94A3B8;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .side-icon:hover, .side-icon.active {
+    color: #FFF;
+    background: rgba(124, 58, 237, 0.15);
+    box-shadow: inset 0 0 0 1px rgba(124, 58, 237, 0.3);
+  }
+
+  .side-icon.active {
+    color: #A78BFA;
+    background: rgba(124, 58, 237, 0.2);
+  }
+
+  .notif-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 8px;
+    height: 8px;
+    background: #EF4444;
+    border-radius: 50%;
+  }
+
+  /* ચેટ લિસ્ટ પેનલ */
+  .chat-list-panel {
+    width: 340px;
+    background: rgba(15, 23, 42, 0.6);
+    border-right: 1px solid var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(20px);
+  }
+
+  .chat-list-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--glass-border);
+  }
+
+  .search-chat {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 0.6rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .search-chat input {
+    background: transparent;
+    border: none;
+    color: #FFF;
+    outline: none;
+    width: 100%;
+    font-size: 0.88rem;
+  }
+
+  .chat-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.75rem;
+  }
+
+  .chat-section-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748B;
+    padding: 0.75rem 0.75rem 0.35rem;
+    font-weight: 700;
+  }
+
+  .chat-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 0.25rem;
+  }
+
+  .chat-item:hover {
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .chat-item.active {
+    background: rgba(124, 58, 237, 0.12);
+    box-shadow: inset 0 0 0 1px rgba(124, 58, 237, 0.2);
+  }
+
+  .chat-ava {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #FFF;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .online-ring {
+    position: absolute;
+    bottom: 1px;
+    right: 1px;
+    width: 12px;
+    height: 12px;
+    background: #10B981;
+    border: 2px solid #0B0F19;
+    border-radius: 50%;
+  }
+
+  .chat-item-name {
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: #F1F5F9;
+  }
+
+  .chat-item-time {
+    font-size: 0.75rem;
+    color: #64748B;
+  }
+
+  .chat-item-preview {
+    font-size: 0.82rem;
+    color: #94A3B8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    margin-top: 0.15rem;
+  }
+
+  .unread-badge {
+    background: #7C3AED;
+    color: #FFF;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 20px;
+    min-width: 18px;
+    text-align: center;
+  }
+
+  /* ચેટ રૂમ મુખ્ય એરિયા */
+  .chat-room {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: rgba(11, 15, 25, 0.4);
+  }
+
+  .chat-header {
+    padding: 1rem 1.5rem;
+    background: rgba(15, 23, 42, 0.4);
+    border-bottom: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.02);
+    color: #94A3B8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .icon-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #FFF;
+  }
+
+  .chat-header-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  /* મેસેજીસ એરિયા */
+  .messages-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .date-divider {
+    text-align: center;
+    position: relative;
+    margin: 1rem 0;
+  }
+
+  .date-divider span {
+    background: #0B0F19;
+    padding: 0.35rem 1rem;
+    font-size: 0.75rem;
+    color: #64748B;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    position: relative;
+    z-index: 2;
+  }
+
+  .date-divider::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+    background: var(--glass-border);
+    z-index: 1;
+  }
+
+  .msg-row {
+    display: flex;
+    gap: 0.85rem;
+    max-width: 75%;
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .msg-row.own {
+    margin-left: auto;
+    flex-direction: row-reverse;
+  }
+
+  .msg-ava {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #FFF;
+    flex-shrink: 0;
+  }
+
+  .msg-bubble {
+    padding: 0.85rem 1.1rem;
+    border-radius: 16px;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+
+  .msg-row:not(.own) .msg-bubble {
+    background: var(--msg-other-bg);
+    border: 1px solid var(--glass-border);
+    border-top-left-radius: 4px;
+    color: #E2E8F0;
+  }
+
+  .msg-row.own .msg-bubble {
+    background: var(--msg-own-bg);
+    border-top-right-radius: 4px;
+    color: #FFF;
+  }
+
+  .msg-meta {
+    font-size: 0.7rem;
+    color: #64748B;
+    margin-top: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .msg-row.own .msg-meta {
+    color: rgba(255, 255, 255, 0.6);
+    justify-content: flex-end;
+  }
+
+  .reaction-bar {
+    display: flex;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+    padding-left: 0.25rem;
+  }
+
+  .reaction {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    padding: 0.15rem 0.45rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .reaction:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+  }
+
+  /* ઇનપુટ બોક્સ એરિયા */
+  .chat-input-area {
+    padding: 1.25rem 1.5rem;
+    background: rgba(15, 23, 42, 0.6);
+    border-top: 1px solid var(--glass-border);
+    backdrop-filter: blur(15px);
+    position: relative;
+  }
+
+  .input-row {
+    background: rgba(11, 15, 25, 0.6);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .chat-textarea {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #FFF;
+    resize: none;
+    outline: none;
+    font-size: 0.92rem;
+    padding: 0.4rem 0.25rem;
+    max-height: 120px;
+  }
+
+  .input-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .send-btn {
+    background: #7C3AED;
+    color: #FFF;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .send-btn:hover {
+    background: #6D28D9;
+    transform: scale(1.03);
+  }
+
+  /* રાઈટ સાઇડ પેનલ */
+  .right-panel {
+    width: 300px;
+    background: rgba(15, 23, 42, 0.4);
+    border-left: 1px solid var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(20px);
+  }
+
+  .rp-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--glass-border);
+  }
+
+  .rp-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  .session-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .skill-pill {
+    display: inline-block;
+    background: rgba(6, 182, 212, 0.1);
+    color: #22D3EE;
+    border: 1px solid rgba(6, 182, 212, 0.2);
+    padding: 0.25rem 0.65rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    margin-right: 0.4rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .skill-pill.want {
+    background: rgba(124, 58, 237, 0.1);
+    color: #C084FC;
+    border: 1px solid rgba(124, 58, 237, 0.2);
+  }
+
+  /* ટાઇપિંગ ઇન્ડિકેટર એનિમેશન */
+  .typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .typing-dots {
+    display: flex;
+    gap: 3px;
+    background: var(--msg-other-bg);
+    padding: 0.6rem 0.8rem;
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+  }
+
+  .typing-dot {
+    width: 6px;
+    height: 6px;
+    background: #94A3B8;
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out both;
+  }
+  .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+  .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+  @keyframes bounce {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1.0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<div class="app-layout">
+
+  <div class="chat-list-panel">
+    <div class="chat-list-header">
+      <div class="d-flex align-items-center justify-content-between">
+        <h5 style="font-weight:800;margin:0;letter-spacing:-0.5px">Messages</h5>
+        <div class="d-flex gap-15">
+          <div class="icon-btn"><i class="bi bi-pencil-square"></i></div>
+        </div>
+      </div>
+      <div class="search-chat">
+        <i class="bi bi-search" style="color:#64748B;font-size:.85rem"></i>
+        <input type="text" placeholder="Search conversations...">
+      </div>
+    </div>
+    <div class="chat-list">
+      <div class="chat-section-label">Pinned</div>
+      <div class="chat-item active" onclick="openChat('Sara Johnson','S','linear-gradient(135deg,#06B6D4,#10B981)', this)">
+        <div class="chat-ava" style="background:linear-gradient(135deg,#06B6D4,#10B981)">S<div class="online-ring"></div></div>
+        <div style="flex:1;min-width:0">
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="chat-item-name">Sara Johnson</span>
+            <span class="chat-item-time">2m</span>
+          </div>
+          <span class="chat-item-preview">Can we schedule our first session?</span>
+        </div>
+        <div class="unread-badge">3</div>
+      </div>
+
+      <div class="chat-section-label">Recent</div>
+      <div class="chat-item" onclick="openChat('Nina Patel','N','linear-gradient(135deg,#7C3AED,#3B82F6)', this)">
+        <div class="chat-ava" style="background:linear-gradient(135deg,#7C3AED,#3B82F6)">N<div class="online-ring"></div></div>
+        <div style="flex:1;min-width:0">
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="chat-item-name">Nina Patel</span>
+            <span class="chat-item-time">1h</span>
+          </div>
+          <span class="chat-item-preview">Loved session 3! REST APIs 🔥</span>
+        </div>
+        <div class="unread-badge">1</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-room">
+    <div class="chat-header">
+      <div class="chat-ava" id="chatAva" style="background:linear-gradient(135deg,#06B6D4,#10B981);width:42px;height:42px">S<div class="online-ring"></div></div>
+      <div>
+        <div style="font-weight:700;font-size:1rem" id="chatName">Sara Johnson</div>
+        <div style="font-size:.78rem;color:#10B981; display:flex; align-items:center; gap:4px">
+          <i class="bi bi-circle-fill" style="font-size:.4rem"></i>Online · Figma Designer · Toronto
+        </div>
+      </div>
+      <div class="chat-header-actions">
+        <div class="icon-btn" title="Voice Call"><i class="bi bi-telephone-fill"></i></div>
+        <div class="icon-btn" title="Video Call" style="color:#A78BFA"><i class="bi bi-camera-video-fill"></i></div>
+        <div class="icon-btn" title="More Options"><i class="bi bi-three-dots-vertical"></i></div>
+      </div>
+    </div>
+
+    <div style="background:rgba(124,58,237,.06);border-bottom:1px solid var(--glass-border);padding:.75rem 1.5rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap">
+      <div style="font-size:.8rem;color:#94A3B8"><i class="bi bi-arrow-left-right me-1" style="color:#A78BFA"></i>Exchange: <strong style="color:#FFF">Python 🐍</strong> ↔ <strong style="color:#FFF">Figma 🎨</strong></div>
+      <div style="height:6px;border-radius:3px;background:rgba(255,255,255,0.05);width:120px;overflow:hidden"><div style="width:37.5%;height:100%;background:linear-gradient(90deg,#7C3AED,#3B82F6)"></div></div>
+      <div style="font-size:.8rem;color:#94A3B8">Session 3/8 · <span style="color:#10B981;font-weight:600">Active</span></div>
+      <div class="ms-auto d-flex gap-2">
+        <button style="background:rgba(124,58,237,.15);color:#C084FC;border:1px solid rgba(124,58,237,0.3);padding:.35rem .9rem;border-radius:20px;font-size:.75rem;font-weight:600;cursor:pointer">Schedule Session</button>
+      </div>
+    </div>
+
+    <div class="messages-area" id="messagesArea">
+      <div class="date-divider"><span>Today · June 19, 2025</span></div>
+
+      <div class="msg-row">
+        <div class="msg-ava" style="background:linear-gradient(135deg,#06B6D4,#10B981)">S</div>
+        <div>
+          <div class="msg-bubble">
+            <div class="msg-text">Hey Arjun! I'm so excited to start our skill exchange 🎉 When are you free this weekend for our first Python session?</div>
+          </div>
+          <div class="reaction-bar"><span class="reaction">🎉 2</span></div>
+          <div class="msg-meta">Sara · 10:02 AM</div>
+        </div>
+      </div>
+
+      <div class="msg-row own">
+        <div class="msg-ava" style="background:linear-gradient(135deg,#7C3AED,#3B82F6)">A</div>
+        <div>
+          <div class="msg-bubble">
+            <div class="msg-text">Hey Sara! Super excited too! I'm thinking Saturday afternoon around 3pm IST? We can use Google Meet for the session.</div>
+          </div>
+          <div class="msg-meta">10:15 AM · <i class="bi bi-check2-all" style="color:#22D3EE"></i></div>
+        </div>
+      </div>
+
+      <div class="typing-indicator" id="typingIndicator" style="display:none">
+        <div class="msg-ava" style="background:linear-gradient(135deg,#06B6D4,#10B981);width:32px;height:32px">S</div>
+        <div class="typing-dots">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <div id="emojiPicker" style="display:none;position:absolute;bottom:75px;left:20px;background:#1E293B;border:1px solid var(--glass-border);border-radius:12px;padding:.75rem;z-index:100;box-shadow:0 10px 25px rgba(0,0,0,0.3)">
+        <div style="display:flex;flex-wrap:wrap;gap:.3rem;max-width:260px">
+          <span class="reaction" onclick="insertEmoji(this)">😊</span><span class="reaction" onclick="insertEmoji(this)">🎉</span><span class="reaction" onclick="insertEmoji(this)">🚀</span><span class="reaction" onclick="insertEmoji(this)">🔥</span><span class="reaction" onclick="insertEmoji(this)">👍</span><span class="reaction" onclick="insertEmoji(this)">❤️</span><span class="reaction" onclick="insertEmoji(this)">🐍</span><span class="reaction" onclick="insertEmoji(this)">🎨</span>
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="icon-btn" style="border:none" onclick="toggleEmoji()"><i class="bi bi-emoji-smile" style="font-size:1.1rem"></i></div>
+        <textarea class="chat-textarea" id="msgInput" placeholder="Message Sara..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <div class="input-actions">
+          <label class="icon-btn" style="border:none; cursor:pointer" title="Attach file"><i class="bi bi-paperclip"></i><input type="file" hidden></label>
+          <button class="send-btn" onclick="sendMessage()"><i class="bi bi-send-fill"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <div class="rp-header">
+      <h6 style="font-weight:700;margin:0">Exchange Details</h6>
+    </div>
+    <div class="rp-body">
+      <div style="text-align:center;margin-bottom:1.5rem">
+        <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#06B6D4,#10B981);margin:0 auto .75rem;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#fff">S</div>
+        <div style="font-weight:700;font-size:.95rem">Sara Johnson</div>
+        <div style="font-size:.75rem;color:#10B981;margin-top:2px">Online</div>
+        <div style="font-size:.75rem;color:#64748B;margin-top:2px">Toronto, Canada 🇨🇦</div>
+      </div>
+
+      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;color:#64748B;margin-bottom:.5rem">She Offers</div>
+      <div style="margin-bottom:1rem"><span class="skill-pill">Figma</span><span class="skill-pill">UI Design</span></div>
+      
+      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;color:#64748B;margin-bottom:.5rem">She Wants</div>
+      <div style="margin-bottom:1.25rem"><span class="skill-pill want">Python</span></div>
+
+      <div class="session-card">
+        <div style="font-size:.75rem;font-weight:700;color:#64748B;margin-bottom:.4rem">📅 Next Session</div>
+        <div style="font-size:.85rem;font-weight:600">Saturday, Jun 22</div>
+        <div style="font-size:.75rem;color:#94A3B8">3:00 PM IST</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ઓટો સ્ક્રૉલ ટુ બોટમ
+function scrollToBottom() {
+  const area = document.getElementById('messagesArea');
+  area.scrollTop = area.scrollHeight;
+}
+window.onload = scrollToBottom;
+
+// ચેટ સ્વિચ કરવાનું ફંક્શન (હવે બગ-ફ્રી)
+function openChat(name, initial, gradient, element) {
+  document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
+  if(element) element.classList.add('active');
+
+  document.getElementById('chatAva').innerHTML = `${initial}<div class="online-ring"></div>`;
+  document.getElementById('chatAva').style.background = gradient;
+  document.getElementById('chatName').textContent = name;
+  document.getElementById('msgInput').placeholder = `Message ${name}...`;
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// મોડર્ન ફેડ-ઇન સાથે મેસેજ મોકલવાનું ફંક્શન
+function sendMessage() {
+  const inp = document.getElementById('msgInput');
+  const text = inp.value.trim();
+  if (!text) return;
+
+  const area = document.getElementById('messagesArea');
+  const div = document.createElement('div');
+  div.className = 'msg-row own';
+  
+  const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  
+  div.innerHTML = `
+    <div class="msg-ava" style="background:linear-gradient(135deg,#7C3AED,#3B82F6)">A</div>
+    <div>
+      <div class="msg-bubble">
+        <div class="msg-text">${escHtml(text)}</div>
+      </div>
+      <div class="msg-meta">${timeStr} · <i class="bi bi-check2"></i></div>
+    </div>
+  `;
+  
+  const typing = document.getElementById('typingIndicator');
+  area.insertBefore(div, typing);
+  inp.value = '';
+  inp.style.height = 'auto';
+  scrollToBottom();
+
+  setTimeout(() => {
+
+    const reply = document.createElement('div');
+
+    reply.className = 'msg-row';
+
+    const replyTime = new Date().toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+
+    reply.innerHTML = `
+        <div class="msg-ava">S</div>
+
+        <div>
+            <div class="msg-bubble">
+                <div class="msg-text">
+                    Thanks for your message 😊
+                </div>
+            </div>
+
+            <div class="msg-meta">
+                ${replyTime}
+            </div>
+        </div>
+    `;
+
+    area.insertBefore(
+        reply,
+        typing
+    );
+
+    scrollToBottom();
+
+}, 1000);
+
+  // મોડર્ન ટાઇપિંગ સિમ્યુલેશન ઇફેક્ટ
+  setTimeout(() => {
+    document.getElementById('typingIndicator').style.display = 'flex';
+    scrollToBottom();
+  }, 800);
+  
+  setTimeout(() => {
+    document.getElementById('typingIndicator').style.display = 'none';
+  }, 3000);
+}
+
+function escHtml(t) {
+  const d = document.createElement('div');
+  d.appendChild(document.createTextNode(t));
+  return d.innerHTML;
+}
+
+function toggleEmoji() {
+  const p = document.getElementById('emojiPicker');
+  p.style.display = p.style.display === 'none' ? 'block' : 'none';
+}
+
+function insertEmoji(el) {
+  const inp = document.getElementById('msgInput');
+  inp.value += el.textContent;
+  document.getElementById('emojiPicker').style.display = 'none';
+  inp.focus();
+}
+
+// બહાર ક્લિક કરવાથી ઇમોજી પીકર બંધ થાય તે માટે
+document.addEventListener('click', e => {
+  const ep = document.getElementById('emojiPicker');
+  if (ep && !ep.contains(e.target) && !e.target.closest('.bi-emoji-smile')) {
+    ep.style.display = 'none';
+  }
+});
+</script>
+{% endblock %}

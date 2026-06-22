@@ -1,0 +1,133 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+<div class="mb-5">
+
+<h1 class="display-4 fw-bold">
+Welcome Back 👋
+</h1>
+
+<p class="text-secondary">
+Track your learning journey
+</p>
+
+</div>
+
+<div class="row g-4">
+
+<div class="col-md-3">
+<div class="glass-card p-4 text-center">
+
+<h5>XP Points</h5>
+
+<h2 class="text-gradient">
+1250
+</h2>
+
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="glass-card p-4 text-center">
+
+<h5>Matches</h5>
+
+<h2>
+23
+</h2>
+
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="glass-card p-4 text-center">
+
+<h5>Skills</h5>
+
+<h2>
+12
+</h2>
+
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="glass-card p-4 text-center">
+
+<h5>Exchanges</h5>
+
+<h2>
+8
+</h2>
+
+</div>
+</div>
+
+</div>
+
+<div class="row mt-5">
+
+<div class="col-lg-8">
+
+<div class="glass-card p-4">
+
+<h4>
+Recent Activity
+</h4>
+
+<hr>
+
+<p>
+✅ Exchange completed with Arjun
+</p>
+
+<p>
+🔥 New AI Match Found
+</p>
+
+<p>
+🎯 XP +120 Earned
+</p>
+
+</div>
+
+</div>
+
+<div class="col-lg-4">
+
+<div class="glass-card p-4">
+
+<h4>
+Quick Actions
+</h4>
+
+<hr>
+
+<a href="/skills/" class="btn btn-primary w-100 mb-2">
+Browse Skills
+</a>
+
+<a href="/skills/ai_match.html" class="btn btn-success w-100 mb-2">
+AI Match
+</a>
+
+<a href="/chat/" class="btn btn-info w-100">
+Open Chat
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

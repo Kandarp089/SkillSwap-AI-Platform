@@ -1,0 +1,98 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+Help Center
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">
+            🛟 Help Center
+        </h1>
+
+        <p class="text-secondary">
+            Find answers, guides and support
+        </p>
+    </div>
+
+    <!-- Search -->
+
+    <div class="glass-card p-4 mb-5">
+
+        <input
+            type="text"
+            class="form-control form-control-lg"
+            placeholder="Search help articles..."
+        >
+
+    </div>
+
+    <!-- FAQ -->
+
+    <div class="glass-card p-4 mb-4">
+
+        <h4>❓ Frequently Asked Questions</h4>
+
+        <hr>
+
+        <h6>How does SkillSwap work?</h6>
+        <p>Users exchange skills without money. You teach a skill and learn another skill in return.</p>
+
+        <h6>How do I send an exchange request?</h6>
+        <p>Go to Browse Skills, choose a user and click Send Exchange Request.</p>
+
+        <h6>How does AI Matching work?</h6>
+        <p>AI analyzes skills, interests and goals to suggest the best learning partners.</p>
+
+    </div>
+
+    <!-- Help Categories -->
+
+    <div class="row">
+
+        <div class="col-md-4 mb-4">
+            <div class="glass-card p-4 text-center">
+                <h3>👤 Account Help</h3>
+                <p>Profile, Login, Password & Settings</p>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="glass-card p-4 text-center">
+                <h3>🔄 Skill Exchange</h3>
+                <p>Requests, Matching & Learning</p>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="glass-card p-4 text-center">
+                <h3>🏆 Achievements</h3>
+                <p>Badges, Certificates & Rewards</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Support -->
+
+    <div class="glass-card p-4 mt-4 text-center">
+
+        <h3>Need More Help?</h3>
+
+        <p class="text-secondary">
+            Contact our support team anytime.
+        </p>
+
+        <a href="/dashboard/contact/"
+           class="btn btn-primary">
+            Contact Support
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %} 

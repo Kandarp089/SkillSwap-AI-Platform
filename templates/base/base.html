@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SkillSwap AI{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            background:#0f172a;
+            color:white;
+            font-family:'Poppins',sans-serif;
+        }
+
+        .navbar{
+            background:rgba(255,255,255,.05);
+            backdrop-filter:blur(20px);
+        }
+
+        .glass-card{
+            background:rgba(255,255,255,.05);
+            border:1px solid rgba(255,255,255,.1);
+            backdrop-filter:blur(20px);
+            border-radius:20px;
+        }
+
+        .logo{
+            font-size:1.8rem;
+            font-weight:700;
+            color:#8b5cf6;
+        }
+
+        .nav-link{
+            color:white !important;
+        }
+
+        footer{
+            margin-top:80px;
+            padding:30px;
+            text-align:center;
+            border-top:1px solid rgba(255,255,255,.1);
+        }
+    </style>
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg py-3">
+    <div class="container">
+
+        <a class="navbar-brand logo" href="/">
+            <i class="bi bi-lightning-charge-fill"></i>
+            SkillSwap AI
+        </a>
+
+        <div class="navbar-nav ms-auto">
+
+            <a class="nav-link" href="/">Home</a>
+
+
+            <a class="nav-link" href="/skills/">
+                Skills
+            </a>
+
+            <a class="nav-link" href="/chat/">
+                Chat
+            </a>
+
+            <a class="nav-link" href="/profile/">
+                Profile
+            </a>
+            <a href="/dashboard/notifications/"
+            class="nav-link-custom position-relative">
+
+              <i class="bi bi-bell-fill">1</i>
+
+          </a>
+        </div>
+
+    </div>
+</nav>
+
+{% block content %}
+{% endblock %}
+
+<footer>
+    © 2026 SkillSwap AI | Built with Django
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,86 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+Create Account
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-6">
+
+            <div class="glass-card p-5">
+
+                <h1 class="text-center mb-4">
+                    🚀 Join SkillSwap AI
+                </h1>
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label>Full Name</label>
+                        <input type="text"
+                               class="form-control"
+                               placeholder="Enter Full Name">
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Email</label>
+                        <input type="email"
+                               class="form-control"
+                               placeholder="Enter Email">
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Username</label>
+                        <input type="text"
+                               class="form-control"
+                               placeholder="Username">
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Password</label>
+                        <input type="password"
+                               class="form-control"
+                               placeholder="Password">
+                    </div>
+
+                    <div class="mb-4">
+                        <label>Confirm Password</label>
+                        <input type="password"
+                               class="form-control"
+                               placeholder="Confirm Password">
+                    </div>
+
+                    <button class="btn btn-primary w-100 btn-lg">
+                        Create Account
+                    </button>
+
+                </form>
+
+                <hr>
+
+                <div class="text-center">
+
+                    Already have an account?
+
+                    <a href="/accounts/login/">
+                        Login
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

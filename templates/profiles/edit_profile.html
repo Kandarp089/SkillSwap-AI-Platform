@@ -1,0 +1,109 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+Edit Profile
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+
+        <h1 class="display-4 fw-bold">
+            👤 Edit Profile
+        </h1>
+
+        <p class="text-secondary">
+            Update your profile and skills
+        </p>
+
+    </div>
+
+    <div class="glass-card p-5">
+
+        <div class="text-center mb-4">
+
+            <img src="https://via.placeholder.com/150"
+                 class="rounded-circle mb-3"
+                 width="150">
+
+            <input type="file"
+                   class="form-control">
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <label class="form-label">
+                    Full Name
+                </label>
+
+                <input type="text"
+                       class="form-control mb-3"
+                       value="Kandarp">
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="form-label">
+                    Email
+                </label>
+
+                <input type="email"
+                       class="form-control mb-3">
+
+            </div>
+
+        </div>
+
+        <label class="form-label">
+            Bio
+        </label>
+
+        <textarea class="form-control mb-3"
+                  rows="4"></textarea>
+
+        <label class="form-label">
+            Skills Offered
+        </label>
+
+        <input type="text"
+               class="form-control mb-3"
+               placeholder="Python, Django, AI">
+
+        <label class="form-label">
+            Skills Wanted
+        </label>
+
+        <input type="text"
+               class="form-control mb-3"
+               placeholder="UI/UX, React">
+
+        <label class="form-label">
+            Experience
+        </label>
+
+        <textarea class="form-control mb-4"
+                  rows="3"></textarea>
+
+        <label class="form-label">
+            Portfolio Link
+        </label>
+
+        <input type="url"
+               class="form-control mb-4"
+               placeholder="https://github.com/...">
+
+        <button class="btn btn-primary btn-lg">
+            Save Profile
+        </button>
+
+    </div>
+
+</div>
+
+{% endblock %}
