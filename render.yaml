@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: skillswap-ai
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn skillswap.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_ALLOWED_HOSTS
+        value: ".onrender.com"

@@ -17,7 +17,7 @@ SECRET_KEY = os.environ.get(
 
 DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,.onrender.com,*").split(",")
 
 # -----------------------------------------------------------------------
 # APPLICATIONS
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -101,13 +102,18 @@ else:
         "default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}
     }
 
-# -----------------------------------------------------------------------
-# DATABASE
-# -----------------------------------------------------------------------
-# Defaults to SQLite so the project runs immediately with zero setup.
-# Set USE_POSTGRES=True (plus the DB_* vars) to switch to PostgreSQL,
-# which is what the schema/migrations are designed for in production.
-if os.environ.get("USE_POSTGRES", "False") == "True":
+import dj_database_url
+
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=False,
+        )
+    }
+elif os.environ.get("USE_POSTGRES", "False") == "True":
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
@@ -133,8 +139,7 @@ AUTH_USER_MODEL = "accounts.User"
 
 AUTHENTICATION_BACKENDS = [
     "accounts.backends.EmailOrUsernameBackend",
-    #"django.contrib.auth.backends.ModelBackend",
-    "accounts.backends.EmailOrUsernameBackend",
+    "django.contrib.auth.backends.ModelBackend",
 ]
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -168,6 +173,7 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
