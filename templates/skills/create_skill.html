@@ -1,0 +1,63 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Post a New Skill - SkillSwap AI{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="glass-card p-4 p-md-5 border-gradient animate-fade-up">
+                <div class="d-flex align-items-center justify-content-between mb-4 pb-3 border-bottom border-secondary border-opacity-25">
+                    <div>
+                        <div class="badge-neon mb-1"><i class="bi bi-plus-circle-fill"></i> New Listing</div>
+                        <h2 class="font-heading fw-bold text-white mb-0">Offer a Skill to Swap</h2>
+                    </div>
+                    <a href="/skills/" class="btn btn-sm btn-neon-outline"><i class="bi bi-arrow-left me-1"></i> Catalog</a>
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label text-sub small fw-semibold">Skill Title</label>
+                        <input type="text" name="title" class="form-control glass-input text-white" placeholder="e.g. Full-Stack Python & Django Masterclass" required>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-sub small fw-semibold">Category</label>
+                            <select name="category" class="form-select glass-input text-white">
+                                {% for cat in categories %}
+                                    <option value="{{ cat.id }}">{{ cat.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label text-sub small fw-semibold">Experience Level</label>
+                            <select name="level" class="form-select glass-input text-white">
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate" selected>Intermediate</option>
+                                <option value="Expert">Expert</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label text-sub small fw-semibold">Skill Description & What You Teach</label>
+                        <textarea name="description" class="form-control glass-input text-white" rows="4" placeholder="Describe what students will learn from your mentorship..." required></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top border-secondary border-opacity-25">
+                        <a href="/skills/" class="btn btn-neon-outline">Cancel</a>
+                        <button type="submit" class="btn btn-neon-primary px-4 shadow-lg">
+                            <i class="bi bi-check-circle-fill me-1"></i> Publish Skill to DB
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

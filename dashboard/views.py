@@ -1,11 +1,32 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
+from skills.models import Skill
+from exchanges.models import ExchangeRequest
+
+User = get_user_model()
 
 def dashboard_home(request):
-    return render(request, 'dashboard/dashboard.html')
+    skills_count = Skill.objects.count()
+    exchanges_count = ExchangeRequest.objects.count()
+    users_count = User.objects.count()
+
+    recent_exchanges = []
+    if request.user.is_authenticated:
+        recent_exchanges = ExchangeRequest.objects.filter(
+            receiver=request.user
+        ).order_by('-created_at')[:5]
+
+    return render(request, 'dashboard/dashboard.html', {
+        "skills_count": skills_count,
+        "exchanges_count": exchanges_count,
+        "users_count": users_count,
+        "recent_exchanges": recent_exchanges
+    })
 
 def leaderboard(request):
-    return render(request, 'dashboard/leaderboard.html')
+    users = User.objects.select_related('profile').all()[:10]
+    return render(request, 'dashboard/leaderboard.html', {"users": users})
 
 def notifications(request):
     return render(request, "dashboard/notifications.html")

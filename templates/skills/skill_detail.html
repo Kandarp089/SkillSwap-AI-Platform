@@ -1,129 +1,143 @@
 {% extends 'base/base.html' %}
-{% load static %}
 
-{% block title %}Python & Django Web Architecture - Skill Details{% endblock %}
+{% block title %}
+Python Development
+{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="row g-4">
-        <!-- Main Content Area -->
-        <div class="col-lg-8">
-            <div class="glass-card p-4 p-md-5 mb-4 border-gradient">
-                <div class="d-flex align-items-center gap-2 mb-3">
-                    <span class="badge badge-neon"><i class="bi bi-code-slash"></i> Tech & Engineering</span>
-                    <span class="badge badge-emerald"><i class="bi bi-patch-check-fill"></i> Verified Skill</span>
-                </div>
 
-                <h1 class="display-5 font-heading fw-extrabold text-white mb-3">
-                    Python & Django Web Architecture
+<div class="container py-5">
+
+    <div class="row">
+
+        <!-- LEFT -->
+
+        <div class="col-lg-8">
+
+            <div class="glass-card p-5">
+
+                <span class="badge bg-primary mb-3">
+                    Most Popular
+                </span>
+
+                <h1>
+                    Python Development
                 </h1>
-                <p class="text-sub fs-5 mb-4">
-                    Master full-stack Python development, Django ORM database modeling, RESTful API design, and cloud deployment pipelines.
+
+                <p class="lead text-secondary">
+                    Learn Python from beginner to advanced level.
                 </p>
 
-                <div class="d-flex flex-wrap align-items-center gap-4 text-sub small py-3 border-top border-bottom border-secondary border-opacity-25 mb-4">
-                    <div><i class="bi bi-star-fill text-warning me-1"></i> <strong class="text-white">4.9</strong> (48 Ratings)</div>
-                    <div><i class="bi bi-people-fill text-purple me-1"></i> <strong class="text-white">142</strong> Students Exchanged</div>
-                    <div><i class="bi bi-bar-chart-fill text-cyan me-1"></i> Intermediate Level</div>
-                    <div><i class="bi bi-clock-fill me-1"></i> 12 Hours Live Mentorship</div>
-                </div>
+                <hr>
 
-                <h4 class="font-heading text-white mb-3">What You Will Learn</h4>
-                <div class="row g-3 mb-4">
-                    <div class="col-md-6">
-                        <div class="glass-card p-3 bg-dark bg-opacity-40 border-secondary border-opacity-25 d-flex align-items-center gap-2">
-                            <i class="bi bi-check-circle-fill text-emerald fs-5"></i>
-                            <span class="text-sub small">Python OOP & Advanced Data Structures</span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="glass-card p-3 bg-dark bg-opacity-40 border-secondary border-opacity-25 d-flex align-items-center gap-2">
-                            <i class="bi bi-check-circle-fill text-emerald fs-5"></i>
-                            <span class="text-sub small">Django ORM & PostgreSQL Models</span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="glass-card p-3 bg-dark bg-opacity-40 border-secondary border-opacity-25 d-flex align-items-center gap-2">
-                            <i class="bi bi-check-circle-fill text-emerald fs-5"></i>
-                            <span class="text-sub small">Django REST Framework & JWT Auth</span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="glass-card p-3 bg-dark bg-opacity-40 border-secondary border-opacity-25 d-flex align-items-center gap-2">
-                            <i class="bi bi-check-circle-fill text-emerald fs-5"></i>
-                            <span class="text-sub small">Production Deployment & WhiteNoise</span>
-                        </div>
-                    </div>
-                </div>
+                <h4>What You Will Learn</h4>
 
-                <!-- Structured Syllabus Accordion -->
-                <h4 class="font-heading text-white mb-3">Structured Exchange Syllabus</h4>
-                <div class="accordion glass-card border-0 mb-4" id="syllabusAccordion">
-                    <div class="accordion-item bg-transparent text-white border-bottom border-secondary border-opacity-25">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button bg-transparent text-white fw-bold shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#module1">
-                                Module 1: Python Fundamentals & Object Oriented Architecture
-                            </button>
-                        </h2>
-                        <div id="module1" class="accordion-collapse collapse show" data-bs-parent="#syllabusAccordion">
-                            <div class="accordion-body text-sub small">
-                                Learn classes, inheritance, decorators, context managers, and clean code practices in Python.
-                            </div>
-                        </div>
-                    </div>
+                <ul class="mt-3">
 
-                    <div class="accordion-item bg-transparent text-white border-bottom border-secondary border-opacity-25">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed bg-transparent text-white fw-bold shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#module2">
-                                Module 2: Django Web Framework & Database Modeling
-                            </button>
-                        </h2>
-                        <div id="module2" class="accordion-collapse collapse" data-bs-parent="#syllabusAccordion">
-                            <div class="accordion-body text-sub small">
-                                Master Django views, URLs, migrations, template syntax, and database relations.
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <li>Python Fundamentals</li>
+
+                    <li>Object Oriented Programming</li>
+
+                    <li>Django Framework</li>
+
+                    <li>REST APIs</li>
+
+                    <li>Database Integration</li>
+
+                </ul>
+
+                <hr>
+
+                <h4>Requirements</h4>
+
+                <ul>
+
+                    <li>Basic Computer Knowledge</li>
+
+                    <li>No Prior Experience Required</li>
+
+                </ul>
+
             </div>
+
         </div>
 
-        <!-- Instructor Sidebar -->
+        <!-- RIGHT -->
+
         <div class="col-lg-4">
-            <div class="glass-card p-4 border-gradient sticky-top" style="top: 90px;">
-                <div class="text-center mb-4">
-                    <div class="rounded-circle bg-purple d-inline-flex align-items-center justify-content-center fw-bold text-white shadow-lg mb-3 display-5"
-                         style="width: 90px; height: 90px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));">
-                        AC
-                    </div>
-                    <h4 class="font-heading text-white mb-1">Alex Chen</h4>
-                    <span class="text-sub small d-block mb-2">Senior Python Architect & Tech Mentor</span>
-                    <span class="badge badge-neon"><i class="bi bi-star-fill text-warning me-1"></i> 4.9 Mentor Rating</span>
+
+            <div class="glass-card p-4">
+
+                <img src="https://i.pravatar.cc/300" class="rounded-circle mb-3" width="120">
+
+                <h3>
+                    King John
+                </h3>
+
+                <p>
+                    Python & Django Mentor
+                </p>
+
+                <div class="mb-3">
+
+                    ⭐⭐⭐⭐⭐ 4.9
+
                 </div>
 
-                <div class="d-flex flex-column gap-2 mb-4 text-sub small">
-                    <div class="d-flex justify-content-between">
-                        <span>Exchange Cost:</span>
-                        <strong class="text-emerald">Free (1:1 Skill Swap)</strong>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span>Response Time:</span>
-                        <strong class="text-white">< 2 Hours</strong>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span>Wants in Return:</span>
-                        <strong class="text-cyan">UI/UX Design or React</strong>
-                    </div>
-                </div>
+                <button class="btn btn-primary w-100 mb-2">
 
-                <button class="btn btn-neon-primary btn-lg w-100 mb-2 shadow-lg" onclick="openSwapModal('Python & Django Web Architecture', 'Alex Chen')">
-                    <i class="bi bi-arrow-left-right me-1"></i> Propose Skill Swap
+                    Request Exchange
+
                 </button>
-                <a href="/chat/" class="btn btn-neon-outline w-100">
-                    <i class="bi bi-chat-dots me-1"></i> Message Alex
-                </a>
+
+                <button class="btn btn-outline-light w-100">
+
+                    Save Skill
+
+                </button>
+
             </div>
+
         </div>
+
     </div>
+
+    <!-- REVIEWS -->
+
+    <div class="glass-card p-4 mt-5">
+
+        <h3>
+            Reviews
+        </h3>
+
+        <hr>
+
+        <div>
+
+            <h5>
+                Rahul
+            </h5>
+
+            <p>
+                Amazing mentor and easy explanations.
+            </p>
+
+        </div>
+
+        <div>
+
+            <h5>
+                Maya
+            </h5>
+
+            <p>
+                Helped me build my first Django project.
+            </p>
+
+        </div>
+
+    </div>
+
 </div>
+
 {% endblock %}

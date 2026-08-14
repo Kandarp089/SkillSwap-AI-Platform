@@ -1,129 +1,93 @@
 {% extends 'base/base.html' %}
-{% load static %}
 
-{% block title %}AI Match Engine - SkillSwap AI Center{% endblock %}
+{% block title %}
+AI Match
+{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <!-- Header -->
-    <div class="text-center max-w-700 mx-auto mb-5">
-        <div class="badge-neon mb-2"><i class="bi bi-cpu-fill"></i> Smart Match Radar</div>
-        <h1 class="display-4 font-heading fw-extrabold text-white">AI Skill Synergy Matcher</h1>
-        <p class="text-sub fs-5">Our AI engine analyzes your expertise, learning goals, and schedule to find your ideal peer mentor.</p>
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+
+        <h1 class="display-3 fw-bold">
+            AI Skill Match
+        </h1>
+
+        <p class="text-secondary">
+            Find the best learning partner using AI
+        </p>
+
     </div>
 
-    <!-- Main Compatibility Overview Card -->
-    <div class="glass-card p-4 p-md-5 border-gradient mb-5 text-center position-relative overflow-hidden">
-        <div class="row align-items-center g-4">
-            <div class="col-lg-4 text-lg-start border-end border-secondary border-opacity-25">
-                <span class="text-sub small d-block mb-1">Your Match Target</span>
-                <h3 class="font-heading text-white fw-bold mb-2">Python ↔ UI/UX Design</h3>
-                <span class="badge badge-emerald"><i class="bi bi-check-circle-fill me-1"></i> High Compatibility Pair</span>
-            </div>
+    <div class="glass-card p-5 text-center mb-5">
 
-            <div class="col-lg-4 text-center">
-                <span class="text-sub small">Calculated Synergy Score</span>
-                <h1 class="display-2 font-heading fw-extrabold text-gradient mb-0 animate-fade-up">96%</h1>
-                <div class="progress glass-card p-1 bg-dark mx-auto mt-2" style="width: 80%; height: 12px;">
-                    <div class="progress-bar rounded-pill" role="progressbar" style="width: 96%; background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));"></div>
-                </div>
-            </div>
+        <h2>Compatibility Score</h2>
 
-            <div class="col-lg-4 text-lg-end">
-                <button class="btn btn-neon-primary btn-lg w-100 w-lg-auto" onclick="openSwapModal('UI/UX Design', 'Sarah Jenkins')">
-                    <i class="bi bi-send-fill me-1"></i> Send Instant Proposal
+        <h1 style="font-size:80px;color:#8b5cf6;">
+            94%
+        </h1>
+
+        <p>
+            Excellent Match Found
+        </p>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-6">
+
+            <div class="glass-card p-4">
+
+                <h3>Recommended User</h3>
+
+                <hr>
+
+                <h4>Rahul Patel</h4>
+
+                <p>
+                    Python • Django • AI
+                </p>
+
+                <p>
+                    Rating: ⭐ 4.9
+                </p>
+
+                <button class="btn btn-primary">
+                    Send Request
                 </button>
+
             </div>
+
         </div>
+
+        <div class="col-lg-6">
+
+            <div class="glass-card p-4">
+
+                <h3>AI Suggestions</h3>
+
+                <hr>
+
+                <ul>
+
+                    <li>Learn React</li>
+
+                    <li>Improve Git Skills</li>
+
+                    <li>Build AI Projects</li>
+
+                    <li>Practice Django APIs</li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <!-- Detailed Synergy Metrics & Recommendations -->
-    <div class="row g-4 mb-5">
-        <!-- Radar Metrics -->
-        <div class="col-lg-6">
-            <div class="glass-card p-4 h-100">
-                <h4 class="font-heading text-white mb-4 d-flex align-items-center gap-2">
-                    <i class="bi bi-pie-chart-fill text-purple"></i> Synergy Analysis Breakdown
-                </h4>
-
-                <div class="d-flex flex-column gap-3">
-                    <div>
-                        <div class="d-flex justify-content-between text-sub small mb-1">
-                            <span class="fw-semibold text-white">Skill Complementarity (Python vs UX)</span>
-                            <span class="text-purple fw-bold">98% Match</span>
-                        </div>
-                        <div class="progress glass-card p-1 bg-dark" style="height: 10px;">
-                            <div class="progress-bar rounded-pill" style="width: 98%; background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));"></div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="d-flex justify-content-between text-sub small mb-1">
-                            <span class="fw-semibold text-white">Schedule & Timezone Overlap</span>
-                            <span class="text-cyan fw-bold">92% Overlap</span>
-                        </div>
-                        <div class="progress glass-card p-1 bg-dark" style="height: 10px;">
-                            <div class="progress-bar rounded-pill" style="width: 92%; background: linear-gradient(90deg, var(--accent-cyan), #0284c7);"></div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="d-flex justify-content-between text-sub small mb-1">
-                            <span class="fw-semibold text-white">Experience Level Balance</span>
-                            <span class="text-emerald fw-bold">94% Balanced</span>
-                        </div>
-                        <div class="progress glass-card p-1 bg-dark" style="height: 10px;">
-                            <div class="progress-bar rounded-pill" style="width: 94%; background: linear-gradient(90deg, var(--accent-emerald), #059669);"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Top Recommended Peer Cards -->
-        <div class="col-lg-6">
-            <div class="glass-card p-4 h-100">
-                <h4 class="font-heading text-white mb-4 d-flex align-items-center gap-2">
-                    <i class="bi bi-people-fill text-cyan"></i> Recommended Peer Mentors
-                </h4>
-
-                <div class="d-flex flex-column gap-3">
-                    <!-- Mentor 1 -->
-                    <div class="glass-card p-3 bg-dark bg-opacity-40 border-secondary border-opacity-25 d-flex align-items-center justify-content-between gap-3">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="rounded-circle bg-cyan d-flex align-items-center justify-content-center fw-bold text-white shadow-sm" style="width: 44px; height: 44px; background: var(--accent-cyan);">
-                                SJ
-                            </div>
-                            <div>
-                                <h6 class="font-heading text-white mb-0">Sarah Jenkins</h6>
-                                <span class="text-sub small">Teaches UI/UX • Wants Python</span>
-                                <span class="text-warning small d-block"><i class="bi bi-star-fill"></i> 5.0 (62 reviews)</span>
-                            </div>
-                        </div>
-                        <button class="btn btn-sm btn-neon-outline" onclick="openSwapModal('UI/UX Design', 'Sarah Jenkins')">
-                            Request
-                        </button>
-                    </div>
-
-                    <!-- Mentor 2 -->
-                    <div class="glass-card p-3 bg-dark bg-opacity-40 border-secondary border-opacity-25 d-flex align-items-center justify-content-between gap-3">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="rounded-circle bg-purple d-flex align-items-center justify-content-center fw-bold text-white shadow-sm" style="width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));">
-                                AC
-                            </div>
-                            <div>
-                                <h6 class="font-heading text-white mb-0">Alex Chen</h6>
-                                <span class="text-sub small">Teaches Python • Wants Machine Learning</span>
-                                <span class="text-warning small d-block"><i class="bi bi-star-fill"></i> 4.9 (48 reviews)</span>
-                            </div>
-                        </div>
-                        <button class="btn btn-sm btn-neon-outline" onclick="openSwapModal('Python Masterclass', 'Alex Chen')">
-                            Request
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
+
 {% endblock %}

@@ -1,38 +1,11 @@
 {% extends 'base/base.html' %}
-{% load static %}
 
-{% block title %}Certificates & Accreditations - SkillSwap AI{% endblock %}
+{% block title %}
+Certificates
+{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="text-center max-w-700 mx-auto mb-5">
-        <div class="badge-neon mb-2"><i class="bi bi-award-fill text-gold"></i> Peer Accreditations</div>
-        <h1 class="display-4 font-heading fw-extrabold text-white">Skill Certificates</h1>
-        <p class="text-sub fs-5">Official skill completion certificates verified by peer mentors on SkillSwap AI.</p>
-    </div>
 
-    <div class="row g-4">
-        <!-- Certificate Card 1 -->
-        <div class="col-lg-6">
-            <div class="glass-card p-4 border-gradient h-100 position-relative overflow-hidden">
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <div class="rounded-circle p-2 bg-warning text-dark d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
-                        <i class="bi bi-award-fill fs-4"></i>
-                    </div>
-                    <span class="badge badge-emerald">Verified Peer Certificate</span>
-                </div>
+<h1>Certificates Page</h1>
 
-                <h3 class="font-heading text-white mb-2">Python & Django Architecture</h3>
-                <p class="text-sub small mb-3">Issued to <strong class="text-white">{{ user.username|default:"Learner" }}</strong> for completing 12 hours of peer skill exchange.</p>
-
-                <div class="d-flex align-items-center justify-content-between text-sub small pt-3 border-top border-secondary border-opacity-25">
-                    <span>Issued: August 2026</span>
-                    <button class="btn btn-sm btn-neon-outline" onclick="showToast('Downloading PDF Certificate...', 'info')">
-                        <i class="bi bi-download me-1"></i> Download PDF
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}
