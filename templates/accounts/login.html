@@ -1,81 +1,79 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
-{% block title %}
-Login
-{% endblock %}
+{% block title %}Log In - SkillSwap AI{% endblock %}
 
 {% block content %}
-
 <div class="container py-5">
-
     <div class="row justify-content-center">
-
-        <div class="col-lg-5">
-
-            <div class="glass-card p-5">
-
-                <h1 class="text-center mb-4">
-                    🔐 Welcome Back
-                </h1>
+        <div class="col-lg-5 col-md-7">
+            <div class="glass-card p-4 p-md-5 border-gradient shadow-lg animate-fade-up">
+                <div class="text-center mb-4">
+                    <div class="rounded-circle p-3 d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo)); width: 56px; height: 56px;">
+                        <i class="bi bi-shield-lock-fill text-white fs-3"></i>
+                    </div>
+                    <h2 class="font-heading fw-bold text-white mb-1">Welcome Back</h2>
+                    <p class="text-sub small">Log in to manage your skill swaps & AI matches</p>
+                </div>
 
                 <form method="POST">
-
                     {% csrf_token %}
+                    {% if form.errors %}
+                        <div class="alert alert-danger glass-card border-danger text-white small p-3 mb-3">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i> Invalid username or password. Please check and try again.
+                        </div>
+                    {% endif %}
 
                     <div class="mb-3">
-
-                        <label>Email or Username</label>
-
-                        <input type="text"
-                               class="form-control"
-                               placeholder="Enter Email">
-
+                        <label class="form-label text-sub small fw-semibold">Email or Username</label>
+                        <div class="position-relative">
+                            <i class="bi bi-person-fill position-absolute top-50 start-0 translate-middle-y ms-3 text-sub"></i>
+                            <input type="text" name="username" class="form-control glass-input ps-5 text-white" placeholder="Enter email or username" required>
+                        </div>
                     </div>
 
                     <div class="mb-4">
-
-                        <label>Password</label>
-
-                        <input type="password"
-                               class="form-control"
-                               placeholder="Password">
-
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label class="form-label text-sub small fw-semibold mb-0">Password</label>
+                            <a href="/accounts/password-reset/" class="text-purple text-decoration-none small">Forgot?</a>
+                        </div>
+                        <div class="position-relative">
+                            <i class="bi bi-lock-fill position-absolute top-50 start-0 translate-middle-y ms-3 text-sub"></i>
+                            <input type="password" id="loginPasswordInput" name="password" class="form-control glass-input ps-5 pe-5 text-white" placeholder="••••••••" required>
+                            <button type="button" class="btn btn-link text-sub position-absolute top-50 end-0 translate-middle-y me-2 p-0 text-decoration-none" 
+                                    onclick="togglePasswordVisibility('loginPasswordInput', this)">
+                                <i class="bi bi-eye-fill"></i>
+                            </button>
+                        </div>
                     </div>
 
-                    <button class="btn btn-primary w-100 btn-lg">
-
-                        Login
-
+                    <button type="submit" class="btn btn-neon-primary w-100 btn-lg shadow-lg mb-3">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Log In
                     </button>
-
                 </form>
 
-                <div class="text-center mt-4">
-
-                    <a href="#">
-                        Forgot Password?
-                    </a>
-
+                <div class="text-center text-sub small pt-3 border-top border-secondary border-opacity-25">
+                    Don't have an account? <a href="/accounts/register/" class="text-gradient fw-bold text-decoration-none ms-1">Create One Free</a>
                 </div>
-
-                <hr>
-
-                <div class="text-center">
-
-                    Don't have an account?
-
-                    <a href="/accounts/register/">
-                        Register
-                    </a>
-
-                </div>
-
             </div>
-
         </div>
-
     </div>
-
 </div>
+{% endblock %}
 
+{% block extra_js %}
+<script>
+function togglePasswordVisibility(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    if (input.type === 'password') {
+        input.type = 'text';
+        btn.innerHTML = '<i class="bi bi-eye-slash-fill"></i>';
+    } else {
+        input.type = 'password';
+        btn.innerHTML = '<i class="bi bi-eye-fill"></i>';
+    }
+}
+</script>
 {% endblock %}

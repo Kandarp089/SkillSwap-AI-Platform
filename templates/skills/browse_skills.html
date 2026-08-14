@@ -1,252 +1,267 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
-{% block title %}
-Browse Skills
-{% endblock %}
+{% block title %}Browse Skills - SkillSwap AI Catalog{% endblock %}
 
 {% block content %}
-
-<div class="container py-5">
-
-    <!-- HEADER -->
-
-    <div class="text-center mb-5">
-
-        <h1 class="display-3 fw-bold">
-            Explore Skills
-        </h1>
-
-        <p class="text-secondary">
-            Discover experts and exchange knowledge
-        </p>
-
+<div class="container py-4">
+    <!-- Header -->
+    <div class="text-center max-w-700 mx-auto mb-5">
+        <div class="badge-neon mb-2"><i class="bi bi-search"></i> Peer Learning Catalog</div>
+        <h1 class="display-4 font-heading fw-extrabold text-white">Explore Skills for Exchange</h1>
+        <p class="text-sub fs-5">Discover expert mentors, search topics, and request 1-on-1 skill swaps for free.</p>
     </div>
 
-    <!-- SEARCH -->
-
-    <div class="glass-card p-4 mb-5">
-
-        <div class="row">
-
-            <div class="col-md-8">
-
-                <input
-                    type="text"
-                    class="form-control form-control-lg"
-                    placeholder="Search Python, AI, Design..."
-                >
-
+    <!-- Live Search & Filter Bar -->
+    <div class="glass-card p-4 mb-5 border-gradient">
+        <div class="row g-3 align-items-center">
+            <div class="col-lg-8">
+                <div class="position-relative">
+                    <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-sub fs-5"></i>
+                    <input type="text" id="skillSearchInput" class="form-control glass-input ps-5 py-3 text-white" placeholder="Search Python, UI/UX, Spanish, Machine Learning, Marketing...">
+                </div>
             </div>
-
-            <div class="col-md-4">
-
-                <button class="btn btn-primary w-100 btn-lg">
-                    Search
-                </button>
-
+            <div class="col-lg-4 text-lg-end">
+                <div class="d-flex align-items-center justify-content-lg-end gap-2">
+                    <span class="text-sub small">Sort By:</span>
+                    <select class="form-select glass-input text-white w-auto py-2">
+                        <option value="popular">Most Popular</option>
+                        <option value="rating">Highest Rated</option>
+                        <option value="newest">Newest First</option>
+                    </select>
+                </div>
             </div>
-
         </div>
 
+        <!-- Filter Pills -->
+        <div class="d-flex flex-wrap gap-2 mt-4 pt-3 border-top border-secondary border-opacity-25">
+            <button class="btn btn-sm btn-neon-primary category-pill-btn active" onclick="filterByCategory('all')">All Categories</button>
+            <button class="btn btn-sm btn-neon-outline category-pill-btn" onclick="filterByCategory('Python')">Python</button>
+            <button class="btn btn-sm btn-neon-outline category-pill-btn" onclick="filterByCategory('Design')">UI/UX Design</button>
+            <button class="btn btn-sm btn-neon-outline category-pill-btn" onclick="filterByCategory('AI')">AI & ML</button>
+            <button class="btn btn-sm btn-neon-outline category-pill-btn" onclick="filterByCategory('Languages')">Languages</button>
+            <button class="btn btn-sm btn-neon-outline category-pill-btn" onclick="filterByCategory('Marketing')">Digital Marketing</button>
+            <button class="btn btn-sm btn-neon-outline category-pill-btn" onclick="filterByCategory('Music')">Music & Audio</button>
+        </div>
     </div>
 
-    <!-- FILTERS -->
+    <!-- Skills Grid -->
+    <div class="row g-4" id="skillsGrid">
+        <!-- Skill Item 1 -->
+        <div class="col-lg-4 col-md-6 skill-card-item" data-skill-name="Python & Django Web Development" data-skill-category="Python Tech" data-teacher-name="Alex Chen">
+            <div class="glass-card glass-card-hover p-4 h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="badge badge-neon"><i class="bi bi-code-slash"></i> Tech</span>
+                        <span class="text-sub small"><i class="bi bi-star-fill text-warning me-1"></i> 4.9 (48)</span>
+                    </div>
+                    <h4 class="font-heading text-white mb-2">Python & Django Web Development</h4>
+                    <p class="text-sub small mb-3">Master full-stack Python, Django ORM, REST APIs, and database architecture with real projects.</p>
+                    
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <span class="badge bg-dark bg-opacity-60 text-sub border border-secondary border-opacity-25">Django 4.2</span>
+                        <span class="badge bg-dark bg-opacity-60 text-sub border border-secondary border-opacity-25">REST API</span>
+                        <span class="badge bg-dark bg-opacity-60 text-sub border border-secondary border-opacity-25">PostgreSQL</span>
+                    </div>
+                </div>
 
-    <div class="mb-5">
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-3 pt-3 border-top border-secondary border-opacity-25">
+                        <div class="rounded-circle bg-purple d-flex align-items-center justify-content-center fw-bold text-white" style="width: 36px; height: 36px;">AC</div>
+                        <div class="small">
+                            <span class="fw-semibold text-white d-block">Alex Chen</span>
+                            <span class="text-muted">Senior Python Architect</span>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'skill_detail' %}" class="btn btn-sm btn-neon-outline flex-grow-1"><i class="bi bi-eye me-1"></i> Details</a>
+                        <button class="btn btn-sm btn-neon-primary flex-grow-1" onclick="openSwapModal('Python & Django Web Development', 'Alex Chen')">
+                            <i class="bi bi-arrow-left-right me-1"></i> Swap Request
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <button class="btn btn-outline-light me-2">
-            Python
-        </button>
+        <!-- Skill Item 2 -->
+        <div class="col-lg-4 col-md-6 skill-card-item" data-skill-name="Figma & Modern UI/UX Design" data-skill-category="Design" data-teacher-name="Sarah Jenkins">
+            <div class="glass-card glass-card-hover p-4 h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="badge badge-cyan"><i class="bi bi-palette"></i> Design</span>
+                        <span class="text-sub small"><i class="bi bi-star-fill text-warning me-1"></i> 5.0 (62)</span>
+                    </div>
+                    <h4 class="font-heading text-white mb-2">Figma & Modern UI/UX Design</h4>
+                    <p class="text-sub small mb-3">Learn glassmorphism, responsive component libraries, wireframing, and interactive prototype systems.</p>
+                    
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <span class="badge bg-dark bg-opacity-60 text-sub border border-secondary border-opacity-25">Figma</span>
+                        <span class="badge bg-dark bg-opacity-60 text-sub border border-secondary border-opacity-25">Design System</span>
+                        <span class="badge bg-dark bg-opacity-60 text-sub border border-secondary border-opacity-25">UX Prototyping</span>
+                    </div>
+                </div>
 
-        <button class="btn btn-outline-light me-2">
-            AI
-        </button>
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-3 pt-3 border-top border-secondary border-opacity-25">
+                        <div class="rounded-circle bg-cyan d-flex align-items-center justify-content-center fw-bold text-white" style="width: 36px; height: 36px; background: var(--accent-cyan);">SJ</div>
+                        <div class="small">
+                            <span class="fw-semibold text-white d-block">Sarah Jenkins</span>
+                            <span class="text-muted">Lead UX Designer</span>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'skill_detail' %}" class="btn btn-sm btn-neon-outline flex-grow-1"><i class="bi bi-eye me-1"></i> Details</a>
+                        <button class="btn btn-sm btn-neon-primary flex-grow-1" onclick="openSwapModal('Figma & Modern UI/UX Design', 'Sarah Jenkins')">
+                            <i class="bi bi-arrow-left-right me-1"></i> Swap Request
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <button class="btn btn-outline-light me-2">
-            Design
-        </button>
+        <!-- Skill Item 3 -->
+        <div class="col-lg-4 col-md-6 skill-card-item" data-skill-name="Machine Learning & Deep Learning AI" data-skill-category="AI Tech" data-teacher-name="Dr. Rahul Verma">
+            <div class="glass-card glass-card-hover p-4 h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="badge badge-neon"><i class="bi bi-cpu"></i> AI & ML</span>
+                        <span class="text-sub small"><i class="bi bi-star-fill text-warning me-1"></i> 5.0 (41)</span>
+                    </div>
+                    <h4 class="font-heading text-white mb-2">Machine Learning & Deep Learning AI</h4>
+                    <p class="text-sub small mb-3">Understand Neural Networks, PyTorch, Model Fine-tuning, and AI recommendation engines.</p>
+                    
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <span class="badge bg-dark bg-opacity-60 text-sub border border-secondary border-opacity-25">PyTorch</span>
+                        <span class="badge bg-dark bg-opacity-60 text-sub border border-secondary border-opacity-25">Scikit-Learn</span>
+                        <span class="badge bg-dark bg-opacity-60 text-sub border border-secondary border-opacity-25">LLM Tuning</span>
+                    </div>
+                </div>
 
-        <button class="btn btn-outline-light me-2">
-            Marketing
-        </button>
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-3 pt-3 border-top border-secondary border-opacity-25">
+                        <div class="rounded-circle bg-purple d-flex align-items-center justify-content-center fw-bold text-white" style="width: 36px; height: 36px;">RV</div>
+                        <div class="small">
+                            <span class="fw-semibold text-white d-block">Dr. Rahul Verma</span>
+                            <span class="text-muted">AI Research Fellow</span>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'skill_detail' %}" class="btn btn-sm btn-neon-outline flex-grow-1"><i class="bi bi-eye me-1"></i> Details</a>
+                        <button class="btn btn-sm btn-neon-primary flex-grow-1" onclick="openSwapModal('Machine Learning & Deep Learning AI', 'Dr. Rahul Verma')">
+                            <i class="bi bi-arrow-left-right me-1"></i> Swap Request
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <button class="btn btn-outline-light me-2">
-            Video Editing
-        </button>
+        <!-- Skill Item 4 -->
+        <div class="col-lg-4 col-md-6 skill-card-item" data-skill-name="Spanish Conversational Mastery" data-skill-category="Languages" data-teacher-name="Elena Rostova">
+            <div class="glass-card glass-card-hover p-4 h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="badge badge-emerald"><i class="bi bg-emerald me-1"></i> Languages</span>
+                        <span class="text-sub small"><i class="bi bi-star-fill text-warning me-1"></i> 4.8 (35)</span>
+                    </div>
+                    <h4 class="font-heading text-white mb-2">Spanish Conversational Mastery</h4>
+                    <p class="text-sub small mb-3">Structured speaking sessions for intermediate and advanced learners with native feedback.</p>
+                    
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <span class="badge bg-dark bg-opacity-60 text-sub border border-secondary border-opacity-25">Conversational</span>
+                        <span class="badge bg-dark bg-opacity-60 text-sub border border-secondary border-opacity-25">Grammar</span>
+                        <span class="badge bg-dark bg-opacity-60 text-sub border border-secondary border-opacity-25">Accent Practice</span>
+                    </div>
+                </div>
 
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-3 pt-3 border-top border-secondary border-opacity-25">
+                        <div class="rounded-circle bg-emerald d-flex align-items-center justify-content-center fw-bold text-white" style="width: 36px; height: 36px; background: var(--accent-emerald);">ER</div>
+                        <div class="small">
+                            <span class="fw-semibold text-white d-block">Elena Rostova</span>
+                            <span class="text-muted">Polyglot Mentor</span>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'skill_detail' %}" class="btn btn-sm btn-neon-outline flex-grow-1"><i class="bi bi-eye me-1"></i> Details</a>
+                        <button class="btn btn-sm btn-neon-primary flex-grow-1" onclick="openSwapModal('Spanish Conversational Mastery', 'Elena Rostova')">
+                            <i class="bi bi-arrow-left-right me-1"></i> Swap Request
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skill Item 5 -->
+        <div class="col-lg-4 col-md-6 skill-card-item" data-skill-name="Digital Marketing & SEO Growth" data-skill-category="Marketing" data-teacher-name="Marcus Vance">
+            <div class="glass-card glass-card-hover p-4 h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="badge badge-neon"><i class="bi bi-graph-up-arrow"></i> Marketing</span>
+                        <span class="text-sub small"><i class="bi bi-star-fill text-warning me-1"></i> 4.9 (29)</span>
+                    </div>
+                    <h4 class="font-heading text-white mb-2">Digital Marketing & SEO Growth</h4>
+                    <p class="text-sub small mb-3">Learn organic traffic strategies, keyword research, content marketing, and conversion optimization.</p>
+                    
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <span class="badge bg-dark bg-opacity-60 text-sub border border-secondary border-opacity-25">SEO</span>
+                        <span class="badge bg-dark bg-opacity-60 text-sub border border-secondary border-opacity-25">Google Analytics</span>
+                        <span class="badge bg-dark bg-opacity-60 text-sub border border-secondary border-opacity-25">Copywriting</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-3 pt-3 border-top border-secondary border-opacity-25">
+                        <div class="rounded-circle bg-purple d-flex align-items-center justify-content-center fw-bold text-white" style="width: 36px; height: 36px;">MV</div>
+                        <div class="small">
+                            <span class="fw-semibold text-white d-block">Marcus Vance</span>
+                            <span class="text-muted">Growth Lead</span>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'skill_detail' %}" class="btn btn-sm btn-neon-outline flex-grow-1"><i class="bi bi-eye me-1"></i> Details</a>
+                        <button class="btn btn-sm btn-neon-primary flex-grow-1" onclick="openSwapModal('Digital Marketing & SEO Growth', 'Marcus Vance')">
+                            <i class="bi bi-arrow-left-right me-1"></i> Swap Request
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skill Item 6 -->
+        <div class="col-lg-4 col-md-6 skill-card-item" data-skill-name="Acoustic Guitar & Music Theory" data-skill-category="Music" data-teacher-name="Liam O'Connor">
+            <div class="glass-card glass-card-hover p-4 h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="badge badge-cyan"><i class="bi bi-music-note-beamed"></i> Music</span>
+                        <span class="text-sub small"><i class="bi bi-star-fill text-warning me-1"></i> 5.0 (54)</span>
+                    </div>
+                    <h4 class="font-heading text-white mb-2">Acoustic Guitar & Music Theory</h4>
+                    <p class="text-sub small mb-3">Beginner to advanced chord progressions, fingerpicking techniques, and rhythm patterns.</p>
+                    
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <span class="badge bg-dark bg-opacity-60 text-sub border border-secondary border-opacity-25">Acoustic</span>
+                        <span class="badge bg-dark bg-opacity-60 text-sub border border-secondary border-opacity-25">Fingerpicking</span>
+                        <span class="badge bg-dark bg-opacity-60 text-sub border border-secondary border-opacity-25">Chords</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-3 pt-3 border-top border-secondary border-opacity-25">
+                        <div class="rounded-circle bg-cyan d-flex align-items-center justify-content-center fw-bold text-white" style="width: 36px; height: 36px; background: var(--accent-cyan);">LO</div>
+                        <div class="small">
+                            <span class="fw-semibold text-white d-block">Liam O'Connor</span>
+                            <span class="text-muted">Guitar Instructor</span>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'skill_detail' %}" class="btn btn-sm btn-neon-outline flex-grow-1"><i class="bi bi-eye me-1"></i> Details</a>
+                        <button class="btn btn-sm btn-neon-primary flex-grow-1" onclick="openSwapModal('Acoustic Guitar & Music Theory', 'Liam O\'Connor')">
+                            <i class="bi bi-arrow-left-right me-1"></i> Swap Request
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <!-- SKILLS GRID -->
-
-    <div class="row">
-
-        <!-- CARD -->
-
-        <div class="col-lg-4 mb-4">
-
-            <div class="glass-card p-4 h-100">
-
-                <div class="d-flex justify-content-between">
-
-                    <span class="badge bg-success">
-                        Online
-                    </span>
-
-                    <span>
-                        ⭐ 4.9
-                    </span>
-
-                </div>
-
-                <h3 class="mt-3">
-                    Python Development
-                </h3>
-
-                <p>
-                    Learn Python, Django and APIs.
-                </p>
-
-                <div class="mb-3">
-
-                    <span class="badge bg-primary">
-                        Python
-                    </span>
-
-                    <span class="badge bg-info">
-                        Django
-                    </span>
-
-                </div>
-
-                <div class="d-flex justify-content-between">
-
-                    <a href="{% url 'skill_detail' %}"
-                        class="btn btn-primary">
-                        View
-                    </a>
-
-                    <button class="btn btn-outline-light">
-                        Save
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- CARD -->
-
-        <div class="col-lg-4 mb-4">
-
-            <div class="glass-card p-4 h-100">
-
-                <div class="d-flex justify-content-between">
-
-                    <span class="badge bg-warning">
-                        Pro Mentor
-                    </span>
-
-                    <span>
-                        ⭐ 4.8
-                    </span>
-
-                </div>
-
-                <h3 class="mt-3">
-                    UI/UX Design
-                </h3>
-
-                <p>
-                    Master Figma and modern design.
-                </p>
-
-                <div class="mb-3">
-
-                    <span class="badge bg-danger">
-                        Figma
-                    </span>
-
-                    <span class="badge bg-secondary">
-                        UX
-                    </span>
-
-                </div>
-
-                <div class="d-flex justify-content-between">
-
-                    <a href="{% url 'skill_detail' %}"
-                        class="btn btn-primary">
-                        View
-                    </a>
-
-                    <button class="btn btn-outline-light">
-                        Save
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- CARD -->
-
-        <div class="col-lg-4 mb-4">
-
-            <div class="glass-card p-4 h-100">
-
-                <div class="d-flex justify-content-between">
-
-                    <span class="badge bg-info">
-                        AI Recommended
-                    </span>
-
-                    <span>
-                        ⭐ 5.0
-                    </span>
-
-                </div>
-
-                <h3 class="mt-3">
-                    Machine Learning
-                </h3>
-
-                <p>
-                    Learn ML and build real projects.
-                </p>
-
-                <div class="mb-3">
-
-                    <span class="badge bg-success">
-                        ML
-                    </span>
-
-                    <span class="badge bg-warning">
-                        AI
-                    </span>
-
-                </div>
-
-                <div class="d-flex justify-content-between">
-
-                    <a href="{% url 'skill_detail' %}"
-                        class="btn btn-primary">
-                        View
-                    </a>
-
-                    <button class="btn btn-outline-light">
-                        Save
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
 </div>
-
 {% endblock %}

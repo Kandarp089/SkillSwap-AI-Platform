@@ -1,86 +1,83 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
-{% block title %}
-Create Account
-{% endblock %}
+{% block title %}Create Account - SkillSwap AI{% endblock %}
 
 {% block content %}
-
 <div class="container py-5">
-
     <div class="row justify-content-center">
-
-        <div class="col-lg-6">
-
-            <div class="glass-card p-5">
-
-                <h1 class="text-center mb-4">
-                    🚀 Join SkillSwap AI
-                </h1>
-
-                <form method="POST">
-
-                    {% csrf_token %}
-
-                    <div class="mb-3">
-                        <label>Full Name</label>
-                        <input type="text"
-                               class="form-control"
-                               placeholder="Enter Full Name">
+        <div class="col-lg-6 col-md-8">
+            <div class="glass-card p-4 p-md-5 border-gradient shadow-lg animate-fade-up">
+                <div class="text-center mb-4">
+                    <div class="rounded-circle p-3 d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan)); width: 56px; height: 56px;">
+                        <i class="bi bi-person-plus-fill text-white fs-3"></i>
                     </div>
-
-                    <div class="mb-3">
-                        <label>Email</label>
-                        <input type="email"
-                               class="form-control"
-                               placeholder="Enter Email">
-                    </div>
-
-                    <div class="mb-3">
-                        <label>Username</label>
-                        <input type="text"
-                               class="form-control"
-                               placeholder="Username">
-                    </div>
-
-                    <div class="mb-3">
-                        <label>Password</label>
-                        <input type="password"
-                               class="form-control"
-                               placeholder="Password">
-                    </div>
-
-                    <div class="mb-4">
-                        <label>Confirm Password</label>
-                        <input type="password"
-                               class="form-control"
-                               placeholder="Confirm Password">
-                    </div>
-
-                    <button class="btn btn-primary w-100 btn-lg">
-                        Create Account
-                    </button>
-
-                </form>
-
-                <hr>
-
-                <div class="text-center">
-
-                    Already have an account?
-
-                    <a href="/accounts/login/">
-                        Login
-                    </a>
-
+                    <h2 class="font-heading fw-bold text-white mb-1">Join SkillSwap AI</h2>
+                    <p class="text-sub small">Start swapping skills, finding AI matches, and learning for free</p>
                 </div>
 
+                <form method="POST">
+                    {% csrf_token %}
+                    {% if form.errors %}
+                        <div class="alert alert-danger glass-card border-danger text-white small p-3 mb-3">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i> Please correct the registration errors below.
+                        </div>
+                    {% endif %}
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-sub small fw-semibold">Username</label>
+                            <div class="position-relative">
+                                <i class="bi bi-at position-absolute top-50 start-0 translate-middle-y ms-3 text-sub"></i>
+                                <input type="text" name="username" class="form-control glass-input ps-5 text-white" placeholder="johndoe" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label text-sub small fw-semibold">Email Address</label>
+                            <div class="position-relative">
+                                <i class="bi bi-envelope-fill position-absolute top-50 start-0 translate-middle-y ms-3 text-sub"></i>
+                                <input type="email" name="email" class="form-control glass-input ps-5 text-white" placeholder="john@example.com" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label text-sub small fw-semibold">Password</label>
+                            <div class="position-relative">
+                                <i class="bi bi-lock-fill position-absolute top-50 start-0 translate-middle-y ms-3 text-sub"></i>
+                                <input type="password" id="regPasswordInput" name="password1" class="form-control glass-input ps-5 pe-5 text-white" placeholder="••••••••" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label text-sub small fw-semibold">Confirm Password</label>
+                            <div class="position-relative">
+                                <i class="bi bi-shield-check position-absolute top-50 start-0 translate-middle-y ms-3 text-sub"></i>
+                                <input type="password" name="password2" class="form-control glass-input ps-5 text-white" placeholder="••••••••" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 form-check">
+                        <input type="checkbox" class="form-check-input glass-input" id="termsCheck" required checked>
+                        <label class="form-check-label text-sub small" for="termsCheck">
+                            I agree to the <a href="/dashboard/terms/" class="text-gradient">Terms of Service</a> and <a href="/dashboard/privacy/" class="text-gradient">Privacy Policy</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-neon-primary w-100 btn-lg shadow-lg mb-3">
+                        <i class="bi bi-rocket-takeoff-fill me-1"></i> Create Free Account
+                    </button>
+                </form>
+
+                <div class="text-center text-sub small pt-3 border-top border-secondary border-opacity-25">
+                    Already have an account? <a href="/accounts/login/" class="text-gradient fw-bold text-decoration-none ms-1">Log In Here</a>
+                </div>
             </div>
-
         </div>
-
     </div>
-
 </div>
-
 {% endblock %}
