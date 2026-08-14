@@ -125,12 +125,27 @@ elif os.environ.get("USE_POSTGRES", "False") == "True":
         }
     }
 else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
+    if os.environ.get("VERCEL"):
+        import shutil
+        db_path = Path("/tmp/db.sqlite3")
+        if not db_path.exists() and (BASE_DIR / "db.sqlite3").exists():
+            try:
+                shutil.copyfile(BASE_DIR / "db.sqlite3", db_path)
+            except Exception:
+                pass
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.sqlite3",
+                "NAME": db_path,
+            }
         }
-    }
+    else:
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.sqlite3",
+                "NAME": BASE_DIR / "db.sqlite3",
+            }
+        }
 
 # -----------------------------------------------------------------------
 # CUSTOM USER MODEL
@@ -173,7 +188,7 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
