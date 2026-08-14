@@ -1,0 +1,161 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - SkillSwap AI Workspace{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Welcome Banner Card -->
+    <div class="glass-card p-4 p-md-5 border-gradient mb-4">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+                <div class="badge-neon mb-2"><i class="bi bi-speedometer2"></i> Learner & Mentor Workspace</div>
+                <h1 class="display-5 font-heading fw-extrabold text-white mb-2">
+                    Welcome back, <span class="text-gradient">{{ user.username|default:"Learner" }}</span>! 👋
+                </h1>
+                <p class="text-sub fs-5 mb-0 pe-lg-3">
+                    You have <strong class="text-white">2 pending swap proposals</strong> and <strong class="text-cyan">1 upcoming session</strong> today.
+                </p>
+            </div>
+
+            <div class="col-lg-4 text-lg-end">
+                <div class="d-flex flex-wrap gap-2 justify-content-lg-end">
+                    <a href="/skills/match/" class="btn btn-neon-primary shadow-lg">
+                        <i class="bi bi-cpu-fill me-1"></i> AI Matcher
+                    </a>
+                    <a href="/skills/" class="btn btn-neon-outline">
+                        <i class="bi bi-plus-circle me-1"></i> Add New Skill
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Stats Grid -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-6">
+            <div class="glass-card p-4 text-center glass-card-hover">
+                <div class="rounded-circle bg-purple p-2 text-white d-inline-flex mb-2" style="width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));">
+                    <i class="bi bi-arrow-left-right fs-5"></i>
+                </div>
+                <span class="text-sub small d-block mb-1">Active Swaps</span>
+                <h2 class="font-heading text-white fw-bold mb-0"><span class="stat-counter" data-target="4">0</span></h2>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-6">
+            <div class="glass-card p-4 text-center glass-card-hover">
+                <div class="rounded-circle bg-cyan p-2 text-white d-inline-flex mb-2" style="width: 44px; height: 44px; background: var(--accent-cyan);">
+                    <i class="bi bi-clock-history fs-5"></i>
+                </div>
+                <span class="text-sub small d-block mb-1">Hours Exchanged</span>
+                <h2 class="font-heading text-cyan fw-bold mb-0"><span class="stat-counter" data-target="32">0</span> hrs</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-6">
+            <div class="glass-card p-4 text-center glass-card-hover">
+                <div class="rounded-circle bg-gold p-2 text-white d-inline-flex mb-2" style="width: 44px; height: 44px; background: var(--accent-amber);">
+                    <i class="bi bi-coin fs-5"></i>
+                </div>
+                <span class="text-sub small d-block mb-1">Swap Credits</span>
+                <h2 class="font-heading text-gradient-gold fw-bold mb-0"><span class="stat-counter" data-target="150">0</span> PTS</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-6">
+            <div class="glass-card p-4 text-center glass-card-hover">
+                <div class="rounded-circle bg-emerald p-2 text-white d-inline-flex mb-2" style="width: 44px; height: 44px; background: var(--accent-emerald);">
+                    <i class="bi bi-star-fill fs-5"></i>
+                </div>
+                <span class="text-sub small d-block mb-1">Mentor Rating</span>
+                <h2 class="font-heading text-warning fw-bold mb-0">4.95 ⭐</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Swap Proposals & Upcoming Schedule -->
+    <div class="row g-4 mb-4">
+        <!-- Swap Proposals Column -->
+        <div class="col-lg-7">
+            <div class="glass-card p-4 h-100">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <h5 class="font-heading text-white mb-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-inbox-fill text-gradient"></i> Pending Swap Requests
+                    </h5>
+                    <a href="/requests/my-exchanges/" class="text-purple small text-decoration-none">View All</a>
+                </div>
+
+                <div class="d-flex flex-column gap-3">
+                    <!-- Proposal Item 1 -->
+                    <div class="glass-card p-3 bg-dark bg-opacity-40 border-secondary border-opacity-25 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="rounded-circle bg-cyan d-flex align-items-center justify-content-center fw-bold text-white shadow-sm" style="width: 44px; height: 44px; background: var(--accent-cyan);">
+                                SJ
+                            </div>
+                            <div>
+                                <h6 class="font-heading text-white mb-1">Sarah Jenkins</h6>
+                                <p class="text-sub small mb-0">Wants to learn <strong class="text-white">Python</strong> in exchange for <strong class="text-cyan">UI/UX Figma</strong></p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-neon-primary" onclick="showToast('Accepted swap request from Sarah Jenkins!', 'success')">
+                                <i class="bi bi-check-lg"></i> Accept
+                            </button>
+                            <button class="btn btn-sm btn-neon-outline text-danger" onclick="showToast('Proposal declined', 'info')">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Proposal Item 2 -->
+                    <div class="glass-card p-3 bg-dark bg-opacity-40 border-secondary border-opacity-25 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="rounded-circle bg-purple d-flex align-items-center justify-content-center fw-bold text-white shadow-sm" style="width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));">
+                                AC
+                            </div>
+                            <div>
+                                <h6 class="font-heading text-white mb-1">Alex Chen</h6>
+                                <p class="text-sub small mb-0">Wants to learn <strong class="text-white">Django REST</strong> in exchange for <strong class="text-purple">Machine Learning</strong></p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-neon-primary" onclick="showToast('Accepted swap request from Alex Chen!', 'success')">
+                                <i class="bi bi-check-lg"></i> Accept
+                            </button>
+                            <button class="btn btn-sm btn-neon-outline text-danger" onclick="showToast('Proposal declined', 'info')">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Mentorship Schedule Column -->
+        <div class="col-lg-5">
+            <div class="glass-card p-4 h-100">
+                <h5 class="font-heading text-white mb-4 d-flex align-items-center gap-2">
+                    <i class="bi bi-calendar-check-fill text-cyan"></i> Mentorship Schedule
+                </h5>
+
+                <div class="d-flex flex-column gap-3">
+                    <div class="glass-card p-3 border-purple bg-purple bg-opacity-10">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="badge badge-neon"><i class="bi bi-camera-video me-1"></i> Today, 4:00 PM</span>
+                            <span class="text-emerald small fw-semibold">Confirmed</span>
+                        </div>
+                        <h6 class="font-heading text-white mb-1">UI/UX Design Session #2</h6>
+                        <p class="text-sub small mb-2">1-on-1 Lesson with Sarah Jenkins (Figma Micro-interactions)</p>
+                        <a href="/chat/" class="btn btn-sm btn-neon-primary w-100">
+                            <i class="bi bi-camera-video-fill me-1"></i> Join Live Session
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
