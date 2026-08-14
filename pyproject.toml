@@ -7,4 +7,4 @@ name = "skillswap"
 version = "0.1.0"
 
 [tool.vercel]
-entrypoint = "skillswap.asgi:application"
+entrypoint = "api/index.py"
