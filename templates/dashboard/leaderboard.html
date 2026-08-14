@@ -1,133 +1,99 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
-{% block title %}
-Dashboard
-{% endblock %}
+{% block title %}Top Mentors Leaderboard - SkillSwap AI{% endblock %}
 
 {% block content %}
+<div class="container py-4">
+    <div class="text-center max-w-700 mx-auto mb-5">
+        <div class="badge-neon mb-2"><i class="bi bi-trophy-fill text-gold"></i> Global Rankings</div>
+        <h1 class="display-4 font-heading fw-extrabold text-white">Top Skill Mentors & Swappers</h1>
+        <p class="text-sub fs-5">Recognizing the most active, helpful, and highest-rated community skill exchange leaders.</p>
+    </div>
 
-<div class="container py-5">
+    <!-- Leaderboard Rankings Table Card -->
+    <div class="glass-card overflow-hidden border-gradient mb-5 shadow-lg">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0 align-middle bg-transparent text-white">
+                <thead class="glass-nav text-sub border-bottom border-secondary border-opacity-25">
+                    <tr>
+                        <th class="py-3 px-4">Rank</th>
+                        <th class="py-3">Mentor</th>
+                        <th class="py-3">Top Skills</th>
+                        <th class="py-3">Swaps Done</th>
+                        <th class="py-3">Rating</th>
+                        <th class="py-3 px-4 text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rank 1 -->
+                    <tr>
+                        <td class="py-3 px-4">
+                            <span class="badge bg-warning text-dark font-heading fw-bold fs-6 rounded-circle p-2" style="width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;">🥇 1</span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rounded-circle bg-cyan d-flex align-items-center justify-content-center fw-bold text-white shadow-sm" style="width: 42px; height: 42px; background: var(--accent-cyan);">SJ</div>
+                                <div>
+                                    <h6 class="font-heading text-white mb-0">Sarah Jenkins</h6>
+                                    <span class="text-sub small">Lead UX Designer</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge badge-cyan">UI/UX Figma</span> <span class="badge badge-neon">Design Systems</span></td>
+                        <td class="fw-bold text-gradient">62 Swaps</td>
+                        <td><span class="text-warning fw-bold"><i class="bi bi-star-fill"></i> 5.0</span></td>
+                        <td class="px-4 text-end">
+                            <button class="btn btn-sm btn-neon-primary" onclick="openSwapModal('UI/UX Design', 'Sarah Jenkins')">Request Swap</button>
+                        </td>
+                    </tr>
 
-<div class="mb-5">
+                    <!-- Rank 2 -->
+                    <tr>
+                        <td class="py-3 px-4">
+                            <span class="badge bg-secondary text-white font-heading fw-bold fs-6 rounded-circle p-2" style="width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;">🥈 2</span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rounded-circle bg-purple d-flex align-items-center justify-content-center fw-bold text-white shadow-sm" style="width: 42px; height: 42px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));">AC</div>
+                                <div>
+                                    <h6 class="font-heading text-white mb-0">Alex Chen</h6>
+                                    <span class="text-sub small">Senior Python Architect</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge badge-neon">Python Django</span> <span class="badge bg-dark border border-secondary text-sub">PostgreSQL</span></td>
+                        <td class="fw-bold text-gradient">48 Swaps</td>
+                        <td><span class="text-warning fw-bold"><i class="bi bi-star-fill"></i> 4.9</span></td>
+                        <td class="px-4 text-end">
+                            <button class="btn btn-sm btn-neon-primary" onclick="openSwapModal('Python Masterclass', 'Alex Chen')">Request Swap</button>
+                        </td>
+                    </tr>
 
-<h1 class="display-4 fw-bold">
-Welcome Back 👋
-</h1>
-
-<p class="text-secondary">
-Track your learning journey
-</p>
-
+                    <!-- Rank 3 -->
+                    <tr>
+                        <td class="py-3 px-4">
+                            <span class="badge bg-danger text-white font-heading fw-bold fs-6 rounded-circle p-2" style="width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; background: #b45309 !important;">🥉 3</span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rounded-circle bg-emerald d-flex align-items-center justify-content-center fw-bold text-white shadow-sm" style="width: 42px; height: 42px; background: var(--accent-emerald);">ER</div>
+                                <div>
+                                    <h6 class="font-heading text-white mb-0">Elena Rostova</h6>
+                                    <span class="text-sub small">Polyglot Language Mentor</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge badge-emerald">Spanish</span> <span class="badge badge-cyan">French</span></td>
+                        <td class="fw-bold text-gradient">35 Swaps</td>
+                        <td><span class="text-warning fw-bold"><i class="bi bi-star-fill"></i> 4.8</span></td>
+                        <td class="px-4 text-end">
+                            <button class="btn btn-sm btn-neon-primary" onclick="openSwapModal('Conversational Spanish', 'Elena Rostova')">Request Swap</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
-
-<div class="row g-4">
-
-<div class="col-md-3">
-<div class="glass-card p-4 text-center">
-
-<h5>XP Points</h5>
-
-<h2 class="text-gradient">
-1250
-</h2>
-
-</div>
-</div>
-
-<div class="col-md-3">
-<div class="glass-card p-4 text-center">
-
-<h5>Matches</h5>
-
-<h2>
-23
-</h2>
-
-</div>
-</div>
-
-<div class="col-md-3">
-<div class="glass-card p-4 text-center">
-
-<h5>Skills</h5>
-
-<h2>
-12
-</h2>
-
-</div>
-</div>
-
-<div class="col-md-3">
-<div class="glass-card p-4 text-center">
-
-<h5>Exchanges</h5>
-
-<h2>
-8
-</h2>
-
-</div>
-</div>
-
-</div>
-
-<div class="row mt-5">
-
-<div class="col-lg-8">
-
-<div class="glass-card p-4">
-
-<h4>
-Recent Activity
-</h4>
-
-<hr>
-
-<p>
-✅ Exchange completed with Arjun
-</p>
-
-<p>
-🔥 New AI Match Found
-</p>
-
-<p>
-🎯 XP +120 Earned
-</p>
-
-</div>
-
-</div>
-
-<div class="col-lg-4">
-
-<div class="glass-card p-4">
-
-<h4>
-Quick Actions
-</h4>
-
-<hr>
-
-<a href="/skills/" class="btn btn-primary w-100 mb-2">
-Browse Skills
-</a>
-
-<a href="/skills/ai_match.html" class="btn btn-success w-100 mb-2">
-AI Match
-</a>
-
-<a href="/chat/" class="btn btn-info w-100">
-Open Chat
-</a>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
 {% endblock %}

@@ -1,65 +1,72 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
-{% block title %}
-Notifications
-{% endblock %}
+{% block title %}Notifications Center - SkillSwap AI{% endblock %}
 
 {% block content %}
+<div class="container py-4">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 gap-3">
+        <div>
+            <div class="badge-neon mb-2"><i class="bi bi-bell-fill"></i> Alerts</div>
+            <h1 class="display-4 font-heading fw-extrabold text-white mb-0">Notifications Center</h1>
+        </div>
 
-<div class="container py-5">
-
-    <div class="text-center mb-5">
-
-        <h1 class="display-4 fw-bold">
-            🔔 Notifications
-        </h1>
-
-        <p class="text-secondary">
-            Stay updated with your activity
-        </p>
-
+        <button class="btn btn-neon-outline" onclick="showToast('All notifications marked as read!', 'info')">
+            <i class="bi bi-check2-all me-1"></i> Mark All as Read
+        </button>
     </div>
 
-    <div class="glass-card p-4 mb-3">
+    <!-- Notifications List -->
+    <div class="glass-card p-4 border-gradient shadow-lg">
+        <div class="d-flex flex-column gap-3">
+            <!-- Notification 1 -->
+            <div class="glass-card p-3 bg-dark bg-opacity-40 border-purple d-flex align-items-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-purple p-2 text-white d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));">
+                        <i class="bi bi-arrow-left-right fs-5"></i>
+                    </div>
+                    <div>
+                        <h6 class="font-heading text-white mb-0">New Swap Proposal Received!</h6>
+                        <span class="text-sub small">Sarah Jenkins proposed a 1-on-1 skill exchange: Python for UI/UX.</span>
+                        <span class="text-muted micro d-block mt-1" style="font-size: 0.75rem;">15 minutes ago</span>
+                    </div>
+                </div>
 
-        <h5>🎯 New AI Match Found</h5>
+                <a href="/dashboard/" class="btn btn-sm btn-neon-primary">View Proposal</a>
+            </div>
 
-        <p>
-            Rahul Patel matches your Python learning goals.
-        </p>
+            <!-- Notification 2 -->
+            <div class="glass-card p-3 bg-dark bg-opacity-40 border-secondary border-opacity-25 d-flex align-items-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-cyan p-2 text-white d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: var(--accent-cyan);">
+                        <i class="bi bi-cpu-fill fs-5"></i>
+                    </div>
+                    <div>
+                        <h6 class="font-heading text-white mb-0">AI Match Engine Update</h6>
+                        <span class="text-sub small">We found 4 new mentors matching your Python & Machine Learning preferences!</span>
+                        <span class="text-muted micro d-block mt-1" style="font-size: 0.75rem;">2 hours ago</span>
+                    </div>
+                </div>
 
+                <a href="/skills/match/" class="btn btn-sm btn-neon-outline">Check Matches</a>
+            </div>
+
+            <!-- Notification 3 -->
+            <div class="glass-card p-3 bg-dark bg-opacity-40 border-secondary border-opacity-25 d-flex align-items-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-emerald p-2 text-white d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: var(--accent-emerald);">
+                        <i class="bi bi-award-fill fs-5"></i>
+                    </div>
+                    <div>
+                        <h6 class="font-heading text-white mb-0">Achievement Unlocked!</h6>
+                        <span class="text-sub small">Congratulations! You unlocked the <strong>Top Mentor Level 14 Badge</strong>.</span>
+                        <span class="text-muted micro d-block mt-1" style="font-size: 0.75rem;">1 day ago</span>
+                    </div>
+                </div>
+
+                <a href="/profile/" class="btn btn-sm btn-neon-outline">View Profile</a>
+            </div>
+        </div>
     </div>
-
-    <div class="glass-card p-4 mb-3">
-
-        <h5>💬 New Message</h5>
-
-        <p>
-            Priya Shah sent you a message.
-        </p>
-
-    </div>
-
-    <div class="glass-card p-4 mb-3">
-
-        <h5>🏆 Achievement Unlocked</h5>
-
-        <p>
-            You earned the "Fast Learner" badge.
-        </p>
-
-    </div>
-
-    <div class="glass-card p-4">
-
-        <h5>⭐ New Review</h5>
-
-        <p>
-            Your mentoring session received 5 stars.
-        </p>
-
-    </div>
-
 </div>
-
 {% endblock %}

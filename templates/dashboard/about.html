@@ -1,148 +1,30 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
-{% block title %}
-About Us
-{% endblock %}
+{% block title %}About Us - SkillSwap AI Mission{% endblock %}
 
 {% block content %}
-
-<div class="container py-5">
-
-    <!-- Hero -->
-
-    <div class="text-center mb-5">
-
-        <h1 class="display-3 fw-bold">
-            About SkillSwap AI
-        </h1>
-
-        <p class="lead text-secondary">
-            Learn, Teach and Grow Together Without Money
-        </p>
-
+<div class="container py-4">
+    <div class="text-center max-w-700 mx-auto mb-5">
+        <div class="badge-neon mb-2"><i class="bi bi-info-circle-fill"></i> Our Mission</div>
+        <h1 class="display-4 font-heading fw-extrabold text-white">Democratizing Global Education</h1>
+        <p class="text-sub fs-5">SkillSwap AI is built on a simple belief: Everyone excels at something, and everyone has something new to learn.</p>
     </div>
 
-    <!-- About Section -->
-
-    <div class="glass-card p-5 mb-5">
-
-        <h2 class="mb-4">
-            Our Mission 🚀
-        </h2>
-
-        <p>
-            SkillSwap AI is a modern platform where people can exchange skills,
-            learn from each other, and grow their careers without spending money.
-            Whether you're a developer, designer, marketer, or student,
-            SkillSwap connects you with people who can teach what you want to learn.
-        </p>
-
-        <p>
-            Our AI-powered matching system helps users find the best learning
-            partners based on skills, interests, goals, and availability.
-        </p>
-
+    <div class="glass-card p-4 p-md-5 border-gradient mb-5">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-6">
+                <h2 class="font-heading text-white fw-bold mb-3">Empowering Peer-to-Peer Knowledge Sharing</h2>
+                <p class="text-sub mb-3">We eliminate financial barriers to learning by connecting people directly. Teach Python coding to a graphic designer, and learn Figma product design in return.</p>
+                <p class="text-sub mb-0">Our AI matching engine ensures optimal compatibility based on skill complement, schedule, and learning goals.</p>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="glass-card p-4 bg-dark bg-opacity-60 border-purple">
+                    <h3 class="font-heading text-gradient fw-extrabold display-3 mb-0">100% Free</h3>
+                    <span class="text-white fw-semibold">No Fees, No Subscriptions, Ever.</span>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <!-- Features -->
-
-    <div class="row">
-
-        <div class="col-md-4 mb-4">
-
-            <div class="glass-card p-4 h-100 text-center">
-
-                <h3>🤖 AI Matching</h3>
-
-                <p>
-                    Smart recommendations based on your skills and interests.
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-4 mb-4">
-
-            <div class="glass-card p-4 h-100 text-center">
-
-                <h3>🌎 Global Community</h3>
-
-                <p>
-                    Connect with learners and mentors worldwide.
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-4 mb-4">
-
-            <div class="glass-card p-4 h-100 text-center">
-
-                <h3>🏆 Achievements</h3>
-
-                <p>
-                    Earn badges, certificates and build your profile.
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- Stats -->
-
-    <div class="glass-card p-5 my-5">
-
-        <div class="row text-center">
-
-            <div class="col-md-3">
-                <h2>10K+</h2>
-                <p>Users</p>
-            </div>
-
-            <div class="col-md-3">
-                <h2>500+</h2>
-                <p>Skills</p>
-            </div>
-
-            <div class="col-md-3">
-                <h2>5K+</h2>
-                <p>Skill Exchanges</p>
-            </div>
-
-            <div class="col-md-3">
-                <h2>100+</h2>
-                <p>Countries</p>
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- Founder -->
-
-    <div class="glass-card p-5 text-center">
-
-        <h2>Founder</h2>
-
-        <div class="mt-4">
-
-            <img src="https://via.placeholder.com/120"
-                 class="rounded-circle mb-3">
-
-            <h4>Kandarp Upadhyay</h4>
-
-            <p class="text-secondary">
-                MCA Student | Developer | Creator of SkillSwap AI
-            </p>
-
-        </div>
-
-    </div>
-
 </div>
-
 {% endblock %}

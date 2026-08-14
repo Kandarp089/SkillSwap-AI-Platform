@@ -1,130 +1,83 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
-{% block title %}
-Community
-{% endblock %}
+{% block title %}Community Forum & Discussions - SkillSwap AI{% endblock %}
 
 {% block content %}
-
-<div class="container py-5">
-
-    <div class="text-center mb-5">
-        <h1 class="display-4 fw-bold">
-            🌍 SkillSwap Community
-        </h1>
-
-        <p class="text-secondary">
-            Connect, Share, Learn & Grow Together
-        </p>
+<div class="container py-4">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 gap-3">
+        <div>
+            <div class="badge-neon mb-2"><i class="bi bi-people-fill"></i> Peer Community</div>
+            <h1 class="display-4 font-heading fw-extrabold text-white mb-0">Community Discussions</h1>
+        </div>
+        <button class="btn btn-neon-primary" onclick="showToast('New Discussion Topic modal opened!', 'info')">
+            <i class="bi bi-plus-lg me-1"></i> Start New Topic
+        </button>
     </div>
 
-    <div class="row">
-
-        <!-- Post Feed -->
-
+    <!-- Community Discussion Feed -->
+    <div class="row g-4">
         <div class="col-lg-8">
-
-            <div class="glass-card p-4 mb-4">
-
-                <h4>Create Post</h4>
-
-                <textarea
-                    class="form-control"
-                    rows="4"
-                    placeholder="Share your knowledge..."
-                ></textarea>
-
-                <button class="btn btn-primary mt-3">
-                    Post
-                </button>
-
+            <!-- Discussion Post 1 -->
+            <div class="glass-card glass-card-hover p-4 mb-3 border-secondary border-opacity-25">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="rounded-circle bg-purple text-white d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px;">AC</div>
+                        <div>
+                            <h6 class="font-heading text-white mb-0">Alex Chen</h6>
+                            <span class="text-sub micro">2 hours ago in #python-django</span>
+                        </div>
+                    </div>
+                    <span class="badge badge-neon">Featured Topic</span>
+                </div>
+                <h5 class="font-heading text-white mb-2">Best practices for Django REST Framework JWT Authentication in 2026?</h5>
+                <p class="text-sub small mb-3">I'm hosting a live 1-on-1 swap session on building secure JWT token refresh handlers. Looking for feedback on stateless refresh tokens!</p>
+                <div class="d-flex align-items-center gap-4 text-sub small">
+                    <span><i class="bi bi-chat-left-text-fill text-cyan me-1"></i> 14 Replies</span>
+                    <span><i class="bi bi-heart-fill text-pink me-1"></i> 28 Likes</span>
+                    <span><i class="bi bi-eye-fill me-1"></i> 180 Views</span>
+                </div>
             </div>
 
-            <div class="glass-card p-4 mb-4">
-
-                <h5>👨‍💻 Arjun Patel</h5>
-
-                <p class="text-secondary">
-                    Just completed Django API Project.
-                    Happy to help beginners.
-                </p>
-
-                <button class="btn btn-outline-light btn-sm">
-                    👍 Like
-                </button>
-
-                <button class="btn btn-outline-light btn-sm">
-                    💬 Comment
-                </button>
-
+            <!-- Discussion Post 2 -->
+            <div class="glass-card glass-card-hover p-4 mb-3 border-secondary border-opacity-25">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="rounded-circle bg-cyan text-white d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; background: var(--accent-cyan);">SJ</div>
+                        <div>
+                            <h6 class="font-heading text-white mb-0">Sarah Jenkins</h6>
+                            <span class="text-sub micro">5 hours ago in #ui-ux-design</span>
+                        </div>
+                    </div>
+                    <span class="badge badge-cyan">Design Tips</span>
+                </div>
+                <h5 class="font-heading text-white mb-2">How to organize Figma Glassmorphism Design Tokens for Web Developers</h5>
+                <p class="text-sub small mb-3">Sharing my free Figma template for dark mode glass cards, neon badges, and CSS variable exports.</p>
+                <div class="d-flex align-items-center gap-4 text-sub small">
+                    <span><i class="bi bi-chat-left-text-fill text-cyan me-1"></i> 22 Replies</span>
+                    <span><i class="bi bi-heart-fill text-pink me-1"></i> 45 Likes</span>
+                    <span><i class="bi bi-eye-fill me-1"></i> 320 Views</span>
+                </div>
             </div>
-
-            <div class="glass-card p-4">
-
-                <h5>🎨 Sara Johnson</h5>
-
-                <p class="text-secondary">
-                    Free Figma Workshop this weekend.
-                </p>
-
-                <button class="btn btn-outline-light btn-sm">
-                    👍 Like
-                </button>
-
-                <button class="btn btn-outline-light btn-sm">
-                    💬 Comment
-                </button>
-
-            </div>
-
         </div>
 
-        <!-- Sidebar -->
-
+        <!-- Sidebar Topics -->
         <div class="col-lg-4">
-
-            <div class="glass-card p-4 mb-4">
-
-                <h5>🔥 Trending Skills</h5>
-
-                <ul class="list-group">
-
-                    <li class="list-group-item">
-                        Python
-                    </li>
-
-                    <li class="list-group-item">
-                        AI / ML
-                    </li>
-
-                    <li class="list-group-item">
-                        UI/UX
-                    </li>
-
-                    <li class="list-group-item">
-                        Cyber Security
-                    </li>
-
-                </ul>
-
-            </div>
-
             <div class="glass-card p-4">
-
-                <h5>🏆 Top Contributors</h5>
-
-                <p>#1 Arjun Patel</p>
-
-                <p>#2 Sara Johnson</p>
-
-                <p>#3 John Smith</p>
-
+                <h5 class="font-heading text-white mb-3"><i class="bi bi-tags-fill text-purple me-1"></i> Popular Channels</h5>
+                <div class="d-flex flex-column gap-2">
+                    <a href="#" class="glass-card p-2 text-white text-decoration-none d-flex justify-content-between align-items-center">
+                        <span>#python-django</span> <span class="badge badge-neon">428 Posts</span>
+                    </a>
+                    <a href="#" class="glass-card p-2 text-white text-decoration-none d-flex justify-content-between align-items-center">
+                        <span>#ui-ux-design</span> <span class="badge badge-cyan">310 Posts</span>
+                    </a>
+                    <a href="#" class="glass-card p-2 text-white text-decoration-none d-flex justify-content-between align-items-center">
+                        <span>#ai-machine-learning</span> <span class="badge badge-emerald">290 Posts</span>
+                    </a>
+                </div>
             </div>
-
         </div>
-
     </div>
-
 </div>
-
 {% endblock %}

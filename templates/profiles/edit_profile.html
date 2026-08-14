@@ -1,109 +1,72 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
-{% block title %}
-Edit Profile
-{% endblock %}
+{% block title %}Edit Profile - SkillSwap AI Settings{% endblock %}
 
 {% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="glass-card p-4 p-md-5 border-gradient animate-fade-up">
+                <div class="d-flex align-items-center justify-content-between mb-4 pb-3 border-bottom border-secondary border-opacity-25">
+                    <div>
+                        <div class="badge-neon mb-1"><i class="bi bi-gear-fill"></i> User Settings</div>
+                        <h2 class="font-heading fw-bold text-white mb-0">Edit Profile & Skills</h2>
+                    </div>
+                    <a href="/profile/" class="btn btn-sm btn-neon-outline"><i class="bi bi-arrow-left me-1"></i> Back to Profile</a>
+                </div>
 
-<div class="container py-5">
+                <form method="POST">
+                    {% csrf_token %}
 
-    <div class="text-center mb-5">
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label text-sub small fw-semibold">First Name</label>
+                            <input type="text" name="first_name" class="form-control glass-input text-white" value="{{ user.first_name|default:'Kandarp' }}">
+                        </div>
 
-        <h1 class="display-4 fw-bold">
-            👤 Edit Profile
-        </h1>
+                        <div class="col-md-6">
+                            <label class="form-label text-sub small fw-semibold">Last Name</label>
+                            <input type="text" name="last_name" class="form-control glass-input text-white" value="{{ user.last_name|default:'Upadhyay' }}">
+                        </div>
 
-        <p class="text-secondary">
-            Update your profile and skills
-        </p>
+                        <div class="col-md-6">
+                            <label class="form-label text-sub small fw-semibold">Email Address</label>
+                            <input type="email" name="email" class="form-control glass-input text-white" value="{{ user.email|default:'kandarp@example.com' }}">
+                        </div>
 
-    </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-sub small fw-semibold">Location / Timezone</label>
+                            <input type="text" class="form-control glass-input text-white" value="Gujarat, India (IST / UTC+5:30)">
+                        </div>
+                    </div>
 
-    <div class="glass-card p-5">
+                    <div class="mb-4">
+                        <label class="form-label text-sub small fw-semibold">Bio / Mentor Intro</label>
+                        <textarea class="form-control glass-input text-white" rows="3">Full-stack Python & Django developer passionate about open source, AI innovation, and peer mentorship.</textarea>
+                    </div>
 
-        <div class="text-center mb-4">
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label text-sub small fw-semibold">Skills You Teach (Comma Separated)</label>
+                            <input type="text" class="form-control glass-input text-white" value="Python, Django, REST APIs, PostgreSQL, HTML/CSS">
+                        </div>
 
-            <img src="https://via.placeholder.com/150"
-                 class="rounded-circle mb-3"
-                 width="150">
+                        <div class="col-md-6">
+                            <label class="form-label text-sub small fw-semibold">Skills You Want to Learn</label>
+                            <input type="text" class="form-control glass-input text-white" value="UI/UX Design, Figma, PyTorch, Spanish">
+                        </div>
+                    </div>
 
-            <input type="file"
-                   class="form-control">
-
-        </div>
-
-        <div class="row">
-
-            <div class="col-md-6">
-
-                <label class="form-label">
-                    Full Name
-                </label>
-
-                <input type="text"
-                       class="form-control mb-3"
-                       value="Kandarp">
-
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top border-secondary border-opacity-25">
+                        <a href="/profile/" class="btn btn-neon-outline">Cancel</a>
+                        <button type="submit" class="btn btn-neon-primary px-4">
+                            <i class="bi bi-check-circle-fill me-1"></i> Save Profile Changes
+                        </button>
+                    </div>
+                </form>
             </div>
-
-            <div class="col-md-6">
-
-                <label class="form-label">
-                    Email
-                </label>
-
-                <input type="email"
-                       class="form-control mb-3">
-
-            </div>
-
         </div>
-
-        <label class="form-label">
-            Bio
-        </label>
-
-        <textarea class="form-control mb-3"
-                  rows="4"></textarea>
-
-        <label class="form-label">
-            Skills Offered
-        </label>
-
-        <input type="text"
-               class="form-control mb-3"
-               placeholder="Python, Django, AI">
-
-        <label class="form-label">
-            Skills Wanted
-        </label>
-
-        <input type="text"
-               class="form-control mb-3"
-               placeholder="UI/UX, React">
-
-        <label class="form-label">
-            Experience
-        </label>
-
-        <textarea class="form-control mb-4"
-                  rows="3"></textarea>
-
-        <label class="form-label">
-            Portfolio Link
-        </label>
-
-        <input type="url"
-               class="form-control mb-4"
-               placeholder="https://github.com/...">
-
-        <button class="btn btn-primary btn-lg">
-            Save Profile
-        </button>
-
     </div>
-
 </div>
-
 {% endblock %}

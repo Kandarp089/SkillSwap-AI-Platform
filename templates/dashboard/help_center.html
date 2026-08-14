@@ -1,98 +1,58 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
-{% block title %}
-Help Center
-{% endblock %}
+{% block title %}Help Center & FAQ - SkillSwap AI Support{% endblock %}
 
 {% block content %}
-
-<div class="container py-5">
-
-    <div class="text-center mb-5">
-        <h1 class="display-4 fw-bold">
-            🛟 Help Center
-        </h1>
-
-        <p class="text-secondary">
-            Find answers, guides and support
-        </p>
+<div class="container py-4">
+    <div class="text-center max-w-700 mx-auto mb-5">
+        <div class="badge-neon mb-2"><i class="bi bi-question-circle-fill"></i> Knowledge Base</div>
+        <h1 class="display-4 font-heading fw-extrabold text-white">Help Center & FAQs</h1>
+        <p class="text-sub fs-5">Find quick answers to common questions about skill swapping, AI matching, and credits.</p>
     </div>
 
-    <!-- Search -->
+    <!-- FAQ Accordion Card -->
+    <div class="glass-card p-4 border-gradient max-w-800 mx-auto mb-5">
+        <div class="accordion" id="helpAccordion">
+            <div class="accordion-item bg-transparent text-white border-bottom border-secondary border-opacity-25">
+                <h2 class="accordion-header">
+                    <button class="accordion-button bg-transparent text-white fw-bold shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                        Is SkillSwap AI really 100% free to use?
+                    </button>
+                </h2>
+                <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#helpAccordion">
+                    <div class="accordion-body text-sub small">
+                        Yes! SkillSwap AI is completely free. Users exchange knowledge 1-on-1 without any subscription fees or monetary payments.
+                    </div>
+                </div>
+            </div>
 
-    <div class="glass-card p-4 mb-5">
+            <div class="accordion-item bg-transparent text-white border-bottom border-secondary border-opacity-25">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed bg-transparent text-white fw-bold shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                        How does the AI Matcher calculate compatibility?
+                    </button>
+                </h2>
+                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                    <div class="accordion-body text-sub small">
+                        Our AI algorithm analyzes skill complementarity (what you teach vs what peer wants), timezone overlap, experience balance, and past ratings.
+                    </div>
+                </div>
+            </div>
 
-        <input
-            type="text"
-            class="form-control form-control-lg"
-            placeholder="Search help articles..."
-        >
-
-    </div>
-
-    <!-- FAQ -->
-
-    <div class="glass-card p-4 mb-4">
-
-        <h4>❓ Frequently Asked Questions</h4>
-
-        <hr>
-
-        <h6>How does SkillSwap work?</h6>
-        <p>Users exchange skills without money. You teach a skill and learn another skill in return.</p>
-
-        <h6>How do I send an exchange request?</h6>
-        <p>Go to Browse Skills, choose a user and click Send Exchange Request.</p>
-
-        <h6>How does AI Matching work?</h6>
-        <p>AI analyzes skills, interests and goals to suggest the best learning partners.</p>
-
-    </div>
-
-    <!-- Help Categories -->
-
-    <div class="row">
-
-        <div class="col-md-4 mb-4">
-            <div class="glass-card p-4 text-center">
-                <h3>👤 Account Help</h3>
-                <p>Profile, Login, Password & Settings</p>
+            <div class="accordion-item bg-transparent text-white border-bottom border-secondary border-opacity-25">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed bg-transparent text-white fw-bold shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                        How do I start a skill exchange session?
+                    </button>
+                </h2>
+                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                    <div class="accordion-body text-sub small">
+                        Simply click "Request Swap" on any skill card or mentor profile. Once accepted, you can chat and schedule video sessions directly in your Dashboard.
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div class="col-md-4 mb-4">
-            <div class="glass-card p-4 text-center">
-                <h3>🔄 Skill Exchange</h3>
-                <p>Requests, Matching & Learning</p>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-4">
-            <div class="glass-card p-4 text-center">
-                <h3>🏆 Achievements</h3>
-                <p>Badges, Certificates & Rewards</p>
-            </div>
-        </div>
-
     </div>
-
-    <!-- Support -->
-
-    <div class="glass-card p-4 mt-4 text-center">
-
-        <h3>Need More Help?</h3>
-
-        <p class="text-secondary">
-            Contact our support team anytime.
-        </p>
-
-        <a href="/dashboard/contact/"
-           class="btn btn-primary">
-            Contact Support
-        </a>
-
-    </div>
-
 </div>
-
-{% endblock %} 
+{% endblock %}

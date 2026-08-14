@@ -1,116 +1,94 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
-{% block title %}
-My Exchanges
-{% endblock %}
+{% block title %}My Exchanges & Swaps Tracker - SkillSwap AI{% endblock %}
 
 {% block content %}
+<div class="container py-4">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 gap-3">
+        <div>
+            <div class="badge-neon mb-2"><i class="bi bi-arrow-left-right"></i> Swap Management</div>
+            <h1 class="display-4 font-heading fw-extrabold text-white mb-0">My Skill Exchanges</h1>
+        </div>
 
-<div class="container py-5">
-
-    <div class="text-center mb-5">
-
-        <h1 class="display-4 fw-bold">
-            🤝 My Exchanges
-        </h1>
-
-        <p class="text-secondary">
-            Track all your skill exchange activities
-        </p>
-
+        <div class="d-flex gap-2">
+            <a href="/skills/match/" class="btn btn-neon-primary"><i class="bi bi-cpu-fill me-1"></i> New AI Match</a>
+            <a href="/skills/" class="btn btn-neon-outline"><i class="bi bi-compass me-1"></i> Browse Skills</a>
+        </div>
     </div>
 
-    <div class="row">
-
-        <!-- Active Exchange -->
-
-        <div class="col-lg-4 mb-4">
-
-            <div class="glass-card p-4 h-100">
-
-                <span class="badge bg-success mb-3">
-                    Active
-                </span>
-
-                <h4>
-                    Python ↔ UI/UX
-                </h4>
-
-                <p>
-                    Exchanging skills with Rahul Patel
-                </p>
-
-                <div class="progress mb-3">
-
-                    <div class="progress-bar bg-success"
-                         style="width:70%">
-                        70%
+    <!-- Exchange Activity Cards Grid -->
+    <div class="row g-4 mb-5">
+        <!-- Active Exchange 1 -->
+        <div class="col-lg-4 col-md-6">
+            <div class="glass-card glass-card-hover p-4 h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="badge badge-emerald"><i class="bi bi-play-circle-fill me-1"></i> Active Swap</span>
+                        <span class="text-sub small">Session 4 of 6</span>
                     </div>
 
+                    <h4 class="font-heading text-white mb-2">Python ↔ UI/UX Design</h4>
+                    <p class="text-sub small mb-3">Exchanging Python Django coding with <strong class="text-white">Sarah Jenkins</strong> in return for Figma Product Design.</p>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between text-sub small mb-1">
+                            <span>Exchange Progress</span>
+                            <span class="text-emerald fw-bold">70% Completed</span>
+                        </div>
+                        <div class="progress glass-card p-1 bg-dark" style="height: 10px;">
+                            <div class="progress-bar rounded-pill" style="width: 70%; background: linear-gradient(90deg, var(--accent-emerald), var(--accent-cyan));"></div>
+                        </div>
+                    </div>
                 </div>
 
-                <button class="btn btn-primary w-100">
-                    Continue
-                </button>
-
+                <div class="d-flex gap-2">
+                    <a href="/chat/" class="btn btn-neon-primary flex-grow-1"><i class="bi bi-chat-dots-fill me-1"></i> Continue Chat</a>
+                </div>
             </div>
-
         </div>
 
-        <!-- Pending -->
+        <!-- Pending Proposal 2 -->
+        <div class="col-lg-4 col-md-6">
+            <div class="glass-card glass-card-hover p-4 h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="badge badge-neon"><i class="bi bi-hourglass-split me-1"></i> Proposal Sent</span>
+                        <span class="text-sub small">Waiting Response</span>
+                    </div>
 
-        <div class="col-lg-4 mb-4">
+                    <h4 class="font-heading text-white mb-2">Django ↔ Machine Learning</h4>
+                    <p class="text-sub small mb-3">Proposal sent to <strong class="text-white">Dr. Rahul Verma</strong> for PyTorch ML lessons.</p>
+                </div>
 
-            <div class="glass-card p-4 h-100">
-
-                <span class="badge bg-warning mb-3">
-                    Pending
-                </span>
-
-                <h4>
-                    Django ↔ React
-                </h4>
-
-                <p>
-                    Waiting for acceptance
-                </p>
-
-                <button class="btn btn-warning w-100">
-                    Pending
-                </button>
-
+                <div class="d-flex gap-2">
+                    <button class="btn btn-neon-outline w-100 text-sub" onclick="showToast('Reminder notification sent to mentor!', 'info')">
+                        <i class="bi bi-bell-fill me-1"></i> Send Reminder
+                    </button>
+                </div>
             </div>
-
         </div>
 
-        <!-- Completed -->
+        <!-- Completed Swap 3 -->
+        <div class="col-lg-4 col-md-6">
+            <div class="glass-card glass-card-hover p-4 h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="badge badge-cyan"><i class="bi bi-check-all me-1"></i> Completed</span>
+                        <span class="text-sub small">Earned Certificate</span>
+                    </div>
 
-        <div class="col-lg-4 mb-4">
+                    <h4 class="font-heading text-white mb-2">Spanish ↔ Guitar Fundamentals</h4>
+                    <p class="text-sub small mb-3">Successfully completed 6-session swap with <strong class="text-white">Elena Rostova</strong>.</p>
+                </div>
 
-            <div class="glass-card p-4 h-100">
-
-                <span class="badge bg-info mb-3">
-                    Completed
-                </span>
-
-                <h4>
-                    AI ↔ Figma
-                </h4>
-
-                <p>
-                    Successfully completed
-                </p>
-
-                <button class="btn btn-success w-100">
-                    View Certificate
-                </button>
-
+                <div class="d-flex gap-2">
+                    <a href="/dashboard/certificates/" class="btn btn-neon-outline w-100">
+                        <i class="bi bi-award-fill text-gold me-1"></i> View Certificate
+                    </a>
+                </div>
             </div>
-
         </div>
-
     </div>
-
 </div>
-
 {% endblock %}
