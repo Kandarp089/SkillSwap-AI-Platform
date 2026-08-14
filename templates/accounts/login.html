@@ -53,7 +53,23 @@
                     </button>
                 </form>
 
-                <div class="text-center text-sub small pt-3 border-top border-secondary border-opacity-25">
+                <!-- Quick 1-Click Demo Login Options -->
+                <div class="mt-4 pt-3 border-top border-secondary border-opacity-25 text-center">
+                    <span class="text-sub small d-block mb-2">⚡ 1-Click Demo Login:</span>
+                    <div class="d-flex flex-wrap gap-2 justify-content-center">
+                        <button type="button" class="btn btn-sm btn-neon-outline" onclick="fillDemoLogin('demo_user', 'SkillSwap123!')">
+                            <i class="bi bi-person-circle text-cyan me-1"></i> Demo Learner
+                        </button>
+                        <button type="button" class="btn btn-sm btn-neon-outline" onclick="fillDemoLogin('alex_chen', 'SkillSwap123!')">
+                            <i class="bi bi-code-slash text-purple me-1"></i> Alex (Python)
+                        </button>
+                        <button type="button" class="btn btn-sm btn-neon-outline" onclick="fillDemoLogin('sarah_jenkins', 'SkillSwap123!')">
+                            <i class="bi bi-palette text-pink me-1"></i> Sarah (UI/UX)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="text-center text-sub small pt-3 border-top border-secondary border-opacity-25 mt-3">
                     Don't have an account? <a href="/accounts/register/" class="text-gradient fw-bold text-decoration-none ms-1">Create One Free</a>
                 </div>
             </div>
@@ -73,6 +89,17 @@ function togglePasswordVisibility(inputId, btn) {
     } else {
         input.type = 'password';
         btn.innerHTML = '<i class="bi bi-eye-fill"></i>';
+    }
+}
+
+function fillDemoLogin(username, password) {
+    const userField = document.querySelector('input[name="username"]');
+    const passField = document.querySelector('input[name="password"]');
+    const form = userField ? userField.closest('form') : null;
+    if (userField && passField && form) {
+        userField.value = username;
+        passField.value = password;
+        form.submit();
     }
 }
 </script>
