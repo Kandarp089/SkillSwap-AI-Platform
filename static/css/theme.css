@@ -336,3 +336,66 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--accent-purple);
 }
+
+/* ==========================================================================
+   Light Mode Legibility & Contrast Overrides
+   ========================================================================== */
+
+[data-theme="light"] .text-white {
+    color: #0f172a !important;
+}
+
+[data-theme="light"] .glass-nav {
+    background: rgba(255, 255, 255, 0.92) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .glass-nav .nav-link {
+    color: #334155 !important;
+}
+
+[data-theme="light"] .glass-nav .nav-link:hover {
+    color: #8b5cf6 !important;
+}
+
+[data-theme="light"] .glass-card {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] .glass-input {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
+    color: #0f172a !important;
+}
+
+[data-theme="light"] .glass-input::placeholder {
+    color: #64748b !important;
+}
+
+[data-theme="light"] .dropdown-menu {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12) !important;
+}
+
+[data-theme="light"] .dropdown-menu-item {
+    color: #0f172a !important;
+}
+
+[data-theme="light"] .table-dark {
+    --bs-table-bg: rgba(255, 255, 255, 0.9) !important;
+    --bs-table-color: #0f172a !important;
+    color: #0f172a !important;
+}
+
+[data-theme="light"] .modal-content {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .btn-close-white {
+    filter: none !important;
+}
