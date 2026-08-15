@@ -140,29 +140,23 @@ function filterByCategory(category) {
 }
 
 /* Swap Request Modal Handler */
-function openSwapModal(skillTitle, teacherName) {
+function openSwapModal(skillTitle, teacherName, username = '') {
     const modalTitle = document.getElementById('swapModalSkillTitle');
     const modalTeacher = document.getElementById('swapModalTeacher');
+    const hiddenSkill = document.getElementById('hiddenRequestedSkill');
+    const hiddenUsername = document.getElementById('hiddenReceiverUsername');
     const modalElement = document.getElementById('swapRequestModal');
 
     if (modalTitle) modalTitle.innerText = skillTitle;
     if (modalTeacher) modalTeacher.innerText = teacherName;
+    if (hiddenSkill) hiddenSkill.value = skillTitle;
+    if (hiddenUsername) hiddenUsername.value = username || teacherName;
 
     if (modalElement && window.bootstrap) {
         const bsModal = new bootstrap.Modal(modalElement);
         bsModal.show();
     } else {
-        showToast(`Request sent to ${teacherName} for ${skillTitle}!`, 'success');
-    }
-}
-
-function submitSwapRequest() {
-    const note = document.getElementById('swapNoteInput')?.value || '';
-    showToast('Your Skill Swap Request has been sent successfully!', 'success');
-    const modalElement = document.getElementById('swapRequestModal');
-    if (modalElement && window.bootstrap) {
-        const bsModal = bootstrap.Modal.getInstance(modalElement);
-        if (bsModal) bsModal.hide();
+        showToast(`Opening request form for ${teacherName}...`, 'info');
     }
 }
 

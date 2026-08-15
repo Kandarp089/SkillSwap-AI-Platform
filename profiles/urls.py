@@ -6,4 +6,5 @@ app_name = "profiles"
 urlpatterns = [
     path('', views.profile_view, name='profile'),
     path('edit/', views.edit_profile, name='edit_profile'),
+    path('<str:username>/', views.profile_view, name='public_profile'),
 ]

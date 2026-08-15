@@ -1,65 +1,56 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
-{% block title %}
-Notifications
-{% endblock %}
+{% block title %}Notifications Center - SkillSwap AI{% endblock %}
 
 {% block content %}
-
-<div class="container py-5">
-
-    <div class="text-center mb-5">
-
-        <h1 class="display-4 fw-bold">
-            🔔 Notifications
-        </h1>
-
-        <p class="text-secondary">
-            Stay updated with your activity
-        </p>
-
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <div class="badge-neon mb-2"><i class="bi bi-bell-fill"></i> Real-time Activity</div>
+            <h1 class="display-4 font-heading fw-extrabold text-white mb-0">Notifications & Alerts</h1>
+        </div>
+        <a href="?mark_all_read=1" class="btn btn-neon-outline">
+            <i class="bi bi-check2-all me-1"></i> Mark All as Read
+        </a>
     </div>
 
-    <div class="glass-card p-4 mb-3">
+    <div class="d-flex flex-column gap-3">
+        {% for notif in notifications %}
+            <div class="glass-card p-4 border-gradient d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 {% if not notif.is_read %}bg-purple bg-opacity-10 border-purple{% endif %}">
+                <div class="d-flex align-items-start gap-3">
+                    <div class="rounded-circle p-2 text-white d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));">
+                        <i class="bi bi-bell-fill fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <h5 class="font-heading text-white mb-0">{{ notif.title }}</h5>
+                            {% if not notif.is_read %}
+                                <span class="badge badge-neon">New</span>
+                            {% endif %}
+                        </div>
+                        <p class="text-sub small mb-1">{{ notif.message }}</p>
+                        <span class="text-sub micro text-muted">{{ notif.created_at|date:"F d, Y g:i A" }}</span>
+                    </div>
+                </div>
 
-        <h5>🎯 New AI Match Found</h5>
-
-        <p>
-            Rahul Patel matches your Python learning goals.
-        </p>
-
+                <div class="d-flex align-items-center gap-2">
+                    {% if notif.link %}
+                        <a href="{{ notif.link }}" class="btn btn-sm btn-neon-primary">View Action</a>
+                    {% endif %}
+                    {% if not notif.is_read %}
+                        <a href="?read={{ notif.id }}" class="btn btn-sm btn-neon-outline text-success" title="Mark Read"><i class="bi bi-check-lg"></i></a>
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <div class="glass-card p-5 text-center max-w-600 mx-auto">
+                <i class="bi bi-bell-slash display-3 text-gradient mb-3 d-block"></i>
+                <h4 class="font-heading text-white">No notifications yet</h4>
+                <p class="text-sub">We'll alert you when you receive new exchange proposals, chat messages, or AI matches.</p>
+            </div>
+        {% endfor %}
     </div>
-
-    <div class="glass-card p-4 mb-3">
-
-        <h5>💬 New Message</h5>
-
-        <p>
-            Priya Shah sent you a message.
-        </p>
-
-    </div>
-
-    <div class="glass-card p-4 mb-3">
-
-        <h5>🏆 Achievement Unlocked</h5>
-
-        <p>
-            You earned the "Fast Learner" badge.
-        </p>
-
-    </div>
-
-    <div class="glass-card p-4">
-
-        <h5>⭐ New Review</h5>
-
-        <p>
-            Your mentoring session received 5 stars.
-        </p>
-
-    </div>
-
 </div>
-
 {% endblock %}

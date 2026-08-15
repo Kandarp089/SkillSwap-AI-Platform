@@ -1,42 +1,87 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from .models import Message
+from dashboard.models import Notification
 
 User = get_user_model()
 
 @login_required(login_url='accounts:login')
 def chat_home(request):
-    messages_qs = Message.objects.filter(sender=request.user) | Message.objects.filter(receiver=request.user)
-    messages_qs = messages_qs.select_related('sender', 'receiver').order_by('created_at')
+    target_username = request.GET.get('user', '').strip()
+    other_users = User.objects.exclude(id=request.user.id).select_related('profile')
+
+    active_partner = None
+    if target_username:
+        active_partner = User.objects.filter(username__iexact=target_username).first()
     
-    other_users = User.objects.exclude(id=request.user.id)
+    if not active_partner and other_users.exists():
+        active_partner = other_users.first()
+
+    messages_qs = Message.objects.none()
+    room_name = ""
+
+    if active_partner:
+        # Generate canonical room name
+        user_ids = sorted([request.user.id, active_partner.id])
+        room_name = f"{user_ids[0]}_{user_ids[1]}"
+
+        # Query messages between request.user and active_partner
+        messages_qs = Message.objects.filter(
+            (Q(sender=request.user) & Q(receiver=active_partner)) |
+            (Q(sender=active_partner) & Q(receiver=request.user))
+        ).select_related('sender', 'receiver').order_by('created_at')
+
+        # Mark unread messages as read
+        Message.objects.filter(sender=active_partner, receiver=request.user, is_read=False).update(is_read=True)
+
     return render(request, "chatapp/chat.html", {
-        "db_messages": messages_qs,
-        "other_users": other_users
+        "active_partner": active_partner,
+        "other_users": other_users,
+        "messages": messages_qs,
+        "room_name": room_name,
     })
 
 @login_required(login_url='accounts:login')
 def send_message(request):
     if request.method == "POST":
         receiver_id = request.POST.get("receiver_id")
+        receiver_username = request.POST.get("receiver_username")
         msg_text = request.POST.get("message", "").strip()
 
-        if msg_text:
-            receiver = User.objects.filter(id=receiver_id).first() if receiver_id else User.objects.exclude(id=request.user.id).first()
-            if receiver:
-                new_msg = Message.objects.create(
-                    sender=request.user,
-                    receiver=receiver,
-                    message=msg_text
-                )
-                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                    return JsonResponse({
-                        "status": "success",
-                        "id": new_msg.id,
-                        "sender": new_msg.sender.username,
-                        "message": new_msg.message,
-                        "created_at": new_msg.created_at.strftime("%I:%M %p")
-                    })
+        receiver = None
+        if receiver_id:
+            receiver = User.objects.filter(id=receiver_id).first()
+        elif receiver_username:
+            receiver = User.objects.filter(username__iexact=receiver_username).first()
+
+        if msg_text and receiver and receiver != request.user:
+            new_msg = Message.objects.create(
+                sender=request.user,
+                receiver=receiver,
+                message=msg_text
+            )
+
+            Notification.objects.create(
+                user=receiver,
+                sender=request.user,
+                notification_type='new_message',
+                title=f"New message from {request.user.username}",
+                message=msg_text[:100],
+                link=f"/chat/?user={request.user.username}"
+            )
+
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.headers.get('Accept') == 'application/json':
+                return JsonResponse({
+                    "status": "success",
+                    "id": new_msg.id,
+                    "sender": new_msg.sender.username,
+                    "message": new_msg.message,
+                    "created_at": new_msg.created_at.strftime("%I:%M %p")
+                })
+            
+            return redirect(f"/chat/?user={receiver.username}")
+
     return redirect("chatapp:chat")

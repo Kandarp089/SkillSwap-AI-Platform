@@ -1,93 +1,136 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
-{% block title %}
-AI Match
-{% endblock %}
+{% block title %}AI Synergy Match Engine - SkillSwap AI{% endblock %}
 
 {% block content %}
-
-<div class="container py-5">
-
-    <div class="text-center mb-5">
-
-        <h1 class="display-3 fw-bold">
-            AI Skill Match
-        </h1>
-
-        <p class="text-secondary">
-            Find the best learning partner using AI
-        </p>
-
+<div class="container py-4">
+    <!-- Header -->
+    <div class="text-center max-w-700 mx-auto mb-5">
+        <div class="badge-neon mb-2"><i class="bi bi-cpu-fill"></i> Smart Synergy Algorithm v2.4</div>
+        <h1 class="display-4 font-heading fw-extrabold text-white mb-2">AI-Powered Skill Matcher</h1>
+        <p class="text-sub fs-5">Configure your learning preferences below to find your optimal peer exchange mentors!</p>
     </div>
 
-    <div class="glass-card p-5 text-center mb-5">
+    <!-- Match Preferences Form -->
+    <div class="glass-card p-4 p-md-5 mb-5 border-gradient">
+        <form action="{% url 'skills:ai_match' %}" method="GET" class="row g-4 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label text-sub small fw-semibold">Skill You Offer (Teach)</label>
+                <select name="offer_skill" class="form-select glass-input text-white">
+                    <option value="python" {% if offer_skill == 'python' %}selected{% endif %}>Python & Django Web Architecture</option>
+                    <option value="uiux" {% if offer_skill == 'uiux' %}selected{% endif %}>UI/UX Design & Figma</option>
+                    <option value="marketing" {% if offer_skill == 'marketing' %}selected{% endif %}>Digital Marketing & SEO</option>
+                    <option value="spanish" {% if offer_skill == 'spanish' %}selected{% endif %}>Spanish Conversational Practice</option>
+                    <option value="ai" {% if offer_skill == 'ai' %}selected{% endif %}>Machine Learning & PyTorch</option>
+                </select>
+            </div>
 
-        <h2>Compatibility Score</h2>
+            <div class="col-md-3">
+                <label class="form-label text-sub small fw-semibold">Skill You Want to Learn</label>
+                <select name="learn_skill" class="form-select glass-input text-white">
+                    <option value="uiux" {% if learn_skill == 'uiux' %}selected{% endif %}>UI/UX Design & Figma</option>
+                    <option value="python" {% if learn_skill == 'python' %}selected{% endif %}>Python & Django Web Architecture</option>
+                    <option value="spanish" {% if learn_skill == 'spanish' %}selected{% endif %}>Spanish Conversational Practice</option>
+                    <option value="ai" {% if learn_skill == 'ai' %}selected{% endif %}>Machine Learning & PyTorch</option>
+                    <option value="react" {% if learn_skill == 'react' %}selected{% endif %}>React & Frontend Development</option>
+                </select>
+            </div>
 
-        <h1 style="font-size:80px;color:#8b5cf6;">
-            94%
-        </h1>
+            <div class="col-md-3">
+                <label class="form-label text-sub small fw-semibold">Target Experience Level</label>
+                <select name="experience_level" class="form-select glass-input text-white">
+                    <option value="Intermediate" {% if exp_level == 'Intermediate' %}selected{% endif %}>Intermediate</option>
+                    <option value="Beginner" {% if exp_level == 'Beginner' %}selected{% endif %}>Beginner</option>
+                    <option value="Advanced" {% if exp_level == 'Advanced' %}selected{% endif %}>Advanced</option>
+                    <option value="Expert" {% if exp_level == 'Expert' %}selected{% endif %}>Expert</option>
+                </select>
+            </div>
 
-        <p>
-            Excellent Match Found
-        </p>
-
-    </div>
-
-    <div class="row">
-
-        <div class="col-lg-6">
-
-            <div class="glass-card p-4">
-
-                <h3>Recommended User</h3>
-
-                <hr>
-
-                <h4>Rahul Patel</h4>
-
-                <p>
-                    Python • Django • AI
-                </p>
-
-                <p>
-                    Rating: ⭐ 4.9
-                </p>
-
-                <button class="btn btn-primary">
-                    Send Request
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-neon-primary w-100 py-3 shadow-lg">
+                    <i class="bi bi-lightning-charge-fill me-1"></i> Compute Matches
                 </button>
-
             </div>
-
-        </div>
-
-        <div class="col-lg-6">
-
-            <div class="glass-card p-4">
-
-                <h3>AI Suggestions</h3>
-
-                <hr>
-
-                <ul>
-
-                    <li>Learn React</li>
-
-                    <li>Improve Git Skills</li>
-
-                    <li>Build AI Projects</li>
-
-                    <li>Practice Django APIs</li>
-
-                </ul>
-
-            </div>
-
-        </div>
-
+        </form>
     </div>
 
-</div>
+    <!-- Match Results Section -->
+    <h3 class="font-heading text-white mb-4 d-flex align-items-center gap-2">
+        <i class="bi bi-stars text-gradient"></i> AI Recommended Peer Matches ({{ matches|length }})
+    </h3>
 
+    <div class="row g-4">
+        {% for match in matches %}
+            <div class="col-lg-6">
+                <div class="glass-card glass-card-hover p-4 h-100 border-gradient position-relative">
+                    <div class="d-flex align-items-start justify-content-between mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            {% if match.profile and match.profile.avatar %}
+                                <img src="{{ match.profile.avatar.url }}" alt="{{ match.mentor.username }}" class="rounded-circle shadow-sm" style="width: 56px; height: 56px; object-fit: cover;">
+                            {% else %}
+                                <div class="rounded-circle bg-purple d-flex align-items-center justify-content-center fw-bold text-white fs-4 shadow-sm" style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));">
+                                    {{ match.mentor.username|first|upper }}
+                                </div>
+                            {% endif %}
+
+                            <div>
+                                <h4 class="font-heading text-white mb-0">{{ match.mentor.get_full_name|default:match.mentor.username }}</h4>
+                                <span class="text-sub small">@{{ match.mentor.username }} • {{ match.profile.location|default:"Peer Mentor" }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Match Score Badge -->
+                        <div class="text-end">
+                            <h2 class="font-heading fw-extrabold text-gradient mb-0">{{ match.score }}%</h2>
+                            <span class="badge badge-emerald">Synergy Fit</span>
+                        </div>
+                    </div>
+
+                    <!-- Skills Complementarity Box -->
+                    <div class="glass-card p-3 bg-dark bg-opacity-40 border-secondary border-opacity-25 mb-3">
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <span class="text-sub micro text-uppercase d-block mb-1">Teaches:</span>
+                                <span class="fw-semibold text-cyan small">{{ match.teaches|truncatewords:6 }}</span>
+                            </div>
+                            <div class="col-6 border-start border-secondary border-opacity-25 ps-3">
+                                <span class="text-sub micro text-uppercase d-block mb-1">Wants to Learn:</span>
+                                <span class="fw-semibold text-purple small">{{ match.wants|truncatewords:6 }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Why This Match Explanation -->
+                    <div class="mb-4">
+                        <span class="text-sub small fw-semibold mb-2 d-block"><i class="bi bi-lightbulb-fill text-warning me-1"></i> Why this match?</span>
+                        <ul class="list-unstyled text-sub small mb-0 d-flex flex-column gap-1">
+                            {% for reason in match.reasons %}
+                                <li class="d-flex align-items-center gap-2"><i class="bi bi-check-circle-fill text-success fs-6"></i> {{ reason }}</li>
+                            {% endfor %}
+                            <li class="d-flex align-items-center gap-2"><i class="bi bi-check-circle-fill text-success fs-6"></i> Compatible {{ match.profile.learning_mode|default:"1-on-1 Video" }} preferences.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex flex-wrap gap-2 pt-3 border-top border-secondary border-opacity-25">
+                        <button class="btn btn-neon-primary flex-grow-1" onclick="openSwapModal('{{ match.teaches }}', '{{ match.mentor.get_full_name|default:match.mentor.username }}', '{{ match.mentor.username }}')">
+                            <i class="bi bi-send-fill me-1"></i> Propose Swap
+                        </button>
+                        <a href="{% url 'chatapp:chat' %}?user={{ match.mentor.username }}" class="btn btn-neon-outline">
+                            <i class="bi bi-chat-dots-fill me-1"></i> Chat
+                        </a>
+                        <a href="{% url 'profiles:public_profile' username=match.mentor.username %}" class="btn btn-neon-outline" title="View Profile">
+                            <i class="bi bi-person me-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center py-5">
+                <p class="text-sub fs-5">No matching mentors found. Try selecting different skill combinations above.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

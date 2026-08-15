@@ -1,127 +1,75 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
-{% block title %}
-Achievements
-{% endblock %}
+{% block title %}Achievements & Badges - SkillSwap AI{% endblock %}
 
 {% block content %}
-
-<div class="container py-5">
-
-    <div class="text-center mb-5">
-
-        <h1 class="display-3 fw-bold">
-            🏆 Achievements
-        </h1>
-
-        <p class="text-secondary">
-            Unlock badges and level up your journey
-        </p>
-
+<div class="container py-4">
+    <!-- Header -->
+    <div class="text-center max-w-700 mx-auto mb-5">
+        <div class="badge-neon mb-2"><i class="bi bi-award-fill text-warning"></i> Gamified Learning Progress</div>
+        <h1 class="display-4 font-heading fw-extrabold text-white mb-2">Achievements & Badges</h1>
+        <p class="text-sub fs-5">Level up your peer mentorship profile, earn XP, and unlock exclusive community badges!</p>
     </div>
 
-    <!-- Stats -->
-
-    <div class="row mb-5">
-
-        <div class="col-md-3">
-
+    <!-- Stats Bar -->
+    <div class="row g-3 mb-5">
+        <div class="col-md-3 col-6">
             <div class="glass-card p-4 text-center">
-
-                <h2>1250</h2>
-
-                <p>Total XP</p>
-
+                <span class="text-sub small d-block mb-1">Total XP</span>
+                <h2 class="font-heading text-gradient fw-extrabold mb-0">{{ user_profile.xp|default:1500 }}</h2>
             </div>
-
         </div>
-
-        <div class="col-md-3">
-
+        <div class="col-md-3 col-6">
             <div class="glass-card p-4 text-center">
-
-                <h2>12</h2>
-
-                <p>Level</p>
-
+                <span class="text-sub small d-block mb-1">Mentor Level</span>
+                <h2 class="font-heading text-gradient-gold fw-extrabold mb-0">Lvl {{ user_profile.level|default:10 }}</h2>
             </div>
-
         </div>
-
-        <div class="col-md-3">
-
+        <div class="col-md-3 col-6">
             <div class="glass-card p-4 text-center">
-
-                <h2>8</h2>
-
-                <p>Badges</p>
-
+                <span class="text-sub small d-block mb-1">Badges Unlocked</span>
+                <h2 class="font-heading text-cyan fw-extrabold mb-0">{{ unlocked_ids|length }} / {{ achievements|length }}</h2>
             </div>
-
         </div>
-
-        <div class="col-md-3">
-
+        <div class="col-md-3 col-6">
             <div class="glass-card p-4 text-center">
-
-                <h2>45</h2>
-
-                <p>Day Streak</p>
-
+                <span class="text-sub small d-block mb-1">Peer Rating</span>
+                <h2 class="font-heading text-warning fw-extrabold mb-0">{{ user_profile.rating|default:4.9 }} ⭐</h2>
             </div>
-
         </div>
-
     </div>
 
-    <!-- Badges -->
+    <!-- Achievements Grid -->
+    <div class="row g-4">
+        {% for ach in achievements %}
+            <div class="col-lg-4 col-md-6">
+                <div class="glass-card glass-card-hover p-4 h-100 text-center border-gradient {% if ach.id in unlocked_ids %}border-purple bg-purple bg-opacity-10{% else %}opacity-75{% endif %}">
+                    <div class="display-3 mb-3">
+                        <i class="bi {{ ach.icon|default:'bi-award-fill' }} {% if ach.id in unlocked_ids %}text-gradient{% else %}text-muted{% endif %}"></i>
+                    </div>
 
-    <div class="row">
+                    <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
+                        <h4 class="font-heading text-white mb-0">{{ ach.title }}</h4>
+                        {% if ach.id in unlocked_ids %}
+                            <span class="badge badge-emerald"><i class="bi bi-check-circle-fill"></i> Unlocked</span>
+                        {% else %}
+                            <span class="badge bg-dark border border-secondary text-sub"><i class="bi bi-lock-fill"></i> Locked</span>
+                        {% endif %}
+                    </div>
 
-        <div class="col-lg-4 mb-4">
+                    <p class="text-sub small mb-3">{{ ach.description }}</p>
 
-            <div class="glass-card p-4 text-center">
-
-                <h1>🥇</h1>
-
-                <h4>Gold Mentor</h4>
-
-                <p>Completed 50 exchanges</p>
-
+                    <div class="pt-3 border-top border-secondary border-opacity-25">
+                        <span class="badge badge-neon">+{{ ach.xp_reward }} XP Reward</span>
+                    </div>
+                </div>
             </div>
-
-        </div>
-
-        <div class="col-lg-4 mb-4">
-
-            <div class="glass-card p-4 text-center">
-
-                <h1>🔥</h1>
-
-                <h4>Fast Learner</h4>
-
-                <p>30 day learning streak</p>
-
+        {% empty %}
+            <div class="col-12 text-center py-5">
+                <p class="text-sub fs-5">No achievements loaded.</p>
             </div>
-
-        </div>
-
-        <div class="col-lg-4 mb-4">
-
-            <div class="glass-card p-4 text-center">
-
-                <h1>⭐</h1>
-
-                <h4>Top Contributor</h4>
-
-                <p>Highly rated by community</p>
-
-            </div>
-
-        </div>
-
+        {% endfor %}
     </div>
-
 </div>
-
 {% endblock %}

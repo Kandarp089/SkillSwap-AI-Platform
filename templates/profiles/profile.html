@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-{% block title %}{{ user.username|default:"My Profile" }} - SkillSwap AI Profile{% endblock %}
+{% block title %}{{ profile_user.username }} - SkillSwap AI Profile{% endblock %}
 
 {% block content %}
 <div class="container py-4">
@@ -9,38 +9,48 @@
     <div class="glass-card overflow-hidden border-gradient mb-4">
         <div style="height: 180px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo), var(--accent-cyan));" class="position-relative">
             <div class="position-absolute bottom-0 end-0 p-3">
-                <span class="badge badge-neon"><i class="bi bi-patch-check-fill text-cyan"></i> Verified Mentor</span>
+                <span class="badge badge-neon"><i class="bi bi-patch-check-fill text-cyan"></i> Verified Peer Mentor</span>
             </div>
         </div>
 
         <div class="p-4 pt-0 text-center text-md-start">
             <div class="d-flex flex-column flex-md-row align-items-center align-items-md-end gap-4" style="margin-top: -60px;">
-                <div class="rounded-circle border border-4 border-dark shadow-lg overflow-hidden bg-purple text-white d-flex align-items-center justify-content-center fw-extrabold display-4"
-                     style="width: 130px; height: 130px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));">
-                    {{ user.username|first|upper|default:"K" }}
-                </div>
+                {% if profile.avatar %}
+                    <img src="{{ profile.avatar.url }}" alt="{{ profile_user.username }}" class="rounded-circle border border-4 border-dark shadow-lg overflow-hidden" style="width: 130px; height: 130px; object-fit: cover;">
+                {% else %}
+                    <div class="rounded-circle border border-4 border-dark shadow-lg overflow-hidden bg-purple text-white d-flex align-items-center justify-content-center fw-extrabold display-4"
+                         style="width: 130px; height: 130px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));">
+                        {{ profile_user.username|first|upper }}
+                    </div>
+                {% endif %}
 
                 <div class="flex-grow-1">
                     <h2 class="font-heading fw-bold text-white mb-1">
-                        {{ user.get_full_name|default:user.username|default:"Kandarp Upadhyay" }}
+                        {{ profile_user.get_full_name|default:profile_user.username }}
                     </h2>
                     <p class="text-sub mb-2">
-                        Python & Django Developer • AI Enthusiast • Peer Skill Mentor
+                        {{ profile.headline|default:"Passionate Peer Learner & Mentor" }}
                     </p>
                     <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-start gap-2">
-                        <span class="badge badge-neon"><i class="bi bi-geo-alt-fill"></i> Gujarat, India</span>
-                        <span class="badge badge-cyan"><i class="bi bi-calendar3"></i> Member since 2026</span>
+                        <span class="badge badge-neon"><i class="bi bi-geo-alt-fill"></i> {{ profile.location|default:"Gujarat, India" }}</span>
+                        <span class="badge badge-cyan"><i class="bi bi-person-badge"></i> {{ profile.experience_level|default:"Intermediate" }}</span>
                         <span class="badge badge-emerald"><i class="bi bi-shield-check"></i> 100% Response Rate</span>
                     </div>
                 </div>
 
                 <div class="d-flex gap-2">
-                    <a href="/profile/edit/" class="btn btn-neon-outline">
-                        <i class="bi bi-pencil-square me-1"></i> Edit Profile
-                    </a>
-                    <button class="btn btn-neon-primary" onclick="showToast('Profile link copied to clipboard!', 'success')">
-                        <i class="bi bi-share-fill me-1"></i> Share Profile
-                    </button>
+                    {% if is_own_profile %}
+                        <a href="{% url 'profiles:edit_profile' %}" class="btn btn-neon-outline">
+                            <i class="bi bi-pencil-square me-1"></i> Edit Profile
+                        </a>
+                    {% else %}
+                        <a href="{% url 'chatapp:chat' %}?user={{ profile_user.username }}" class="btn btn-neon-outline">
+                            <i class="bi bi-chat-dots me-1"></i> Message
+                        </a>
+                        <button class="btn btn-neon-primary" onclick="openSwapModal('Skill Exchange', '{{ profile_user.get_full_name|default:profile_user.username }}', '{{ profile_user.username }}')">
+                            <i class="bi bi-arrow-left-right me-1"></i> Propose Swap
+                        </button>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -51,26 +61,44 @@
         <div class="col-6 col-md-3">
             <div class="glass-card p-3 text-center">
                 <span class="text-sub small d-block mb-1">Total XP</span>
-                <h2 class="font-heading text-gradient fw-extrabold mb-0"><span class="stat-counter" data-target="2450">0</span></h2>
+                <h2 class="font-heading text-gradient fw-extrabold mb-0"><span class="stat-counter" data-target="{{ profile.xp|default:1500 }}">{{ profile.xp|default:1500 }}</span></h2>
             </div>
         </div>
         <div class="col-6 col-md-3">
             <div class="glass-card p-3 text-center">
                 <span class="text-sub small d-block mb-1">Mentor Level</span>
-                <h2 class="font-heading text-gradient-gold fw-extrabold mb-0">Lvl <span class="stat-counter" data-target="14">0</span></h2>
+                <h2 class="font-heading text-gradient-gold fw-extrabold mb-0">Lvl <span class="stat-counter" data-target="{{ profile.level|default:10 }}">{{ profile.level|default:10 }}</span></h2>
             </div>
         </div>
         <div class="col-6 col-md-3">
             <div class="glass-card p-3 text-center">
                 <span class="text-sub small d-block mb-1">Rating</span>
-                <h2 class="font-heading text-warning fw-extrabold mb-0">4.95 ⭐</h2>
+                <h2 class="font-heading text-warning fw-extrabold mb-0">{{ profile.rating|default:4.9 }} ⭐</h2>
             </div>
         </div>
         <div class="col-6 col-md-3">
             <div class="glass-card p-3 text-center">
                 <span class="text-sub small d-block mb-1">Swaps Completed</span>
-                <h2 class="font-heading text-cyan fw-extrabold mb-0"><span class="stat-counter" data-target="38">0</span></h2>
+                <h2 class="font-heading text-cyan fw-extrabold mb-0"><span class="stat-counter" data-target="{{ completed_exchanges_count }}">{{ completed_exchanges_count }}</span></h2>
             </div>
+        </div>
+    </div>
+
+    <!-- Bio & Details -->
+    <div class="glass-card p-4 mb-4">
+        <h4 class="font-heading text-white mb-2"><i class="bi bi-person-lines-fill me-2 text-purple"></i> About {{ profile_user.get_full_name|default:profile_user.username }}</h4>
+        <p class="text-sub mb-3">{{ profile.bio|default:"Passionate peer learner and mentor on SkillSwap AI." }}</p>
+        
+        <div class="d-flex flex-wrap gap-3 pt-2">
+            {% if profile.github_url %}
+                <a href="{{ profile.github_url }}" target="_blank" class="btn btn-sm btn-neon-outline"><i class="bi bi-github me-1"></i> GitHub</a>
+            {% endif %}
+            {% if profile.linkedin_url %}
+                <a href="{{ profile.linkedin_url }}" target="_blank" class="btn btn-sm btn-neon-outline"><i class="bi bi-linkedin me-1"></i> LinkedIn</a>
+            {% endif %}
+            {% if profile.website_url %}
+                <a href="{{ profile.website_url }}" target="_blank" class="btn btn-sm btn-neon-outline"><i class="bi bi-globe me-1"></i> Portfolio</a>
+            {% endif %}
         </div>
     </div>
 
@@ -79,38 +107,14 @@
         <div class="col-md-6">
             <div class="glass-card p-4 h-100">
                 <h4 class="font-heading text-white mb-3 d-flex align-items-center gap-2">
-                    <i class="bi bi-award-fill text-purple"></i> Skills I Teach (Offered)
+                    <i class="bi bi-award-fill text-purple"></i> Skills Offered (Teaching)
                 </h4>
-                <div class="d-flex flex-column gap-3">
-                    <div>
-                        <div class="d-flex justify-content-between text-sub small mb-1">
-                            <span class="fw-semibold text-white">Python & Django Web Architecture</span>
-                            <span class="text-purple fw-bold">95% Mastery</span>
-                        </div>
-                        <div class="progress glass-card p-1 bg-dark" style="height: 10px;">
-                            <div class="progress-bar bg-gradient rounded-pill" style="width: 95%; background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));"></div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="d-flex justify-content-between text-sub small mb-1">
-                            <span class="fw-semibold text-white">RESTful API Design & PostgreSQL</span>
-                            <span class="text-cyan fw-bold">88% Mastery</span>
-                        </div>
-                        <div class="progress glass-card p-1 bg-dark" style="height: 10px;">
-                            <div class="progress-bar bg-gradient rounded-pill" style="width: 88%; background: linear-gradient(90deg, var(--accent-cyan), #0284c7);"></div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="d-flex justify-content-between text-sub small mb-1">
-                            <span class="fw-semibold text-white">HTML5, CSS3 & Bootstrap 5</span>
-                            <span class="text-emerald fw-bold">92% Mastery</span>
-                        </div>
-                        <div class="progress glass-card p-1 bg-dark" style="height: 10px;">
-                            <div class="progress-bar bg-gradient rounded-pill" style="width: 92%; background: linear-gradient(90deg, var(--accent-emerald), #059669);"></div>
-                        </div>
-                    </div>
+                <div class="d-flex flex-wrap gap-2">
+                    {% for sk in profile.skills_offered_list %}
+                        <span class="badge badge-neon fs-6 py-2 px-3"><i class="bi bi-check-circle-fill me-1"></i> {{ sk }}</span>
+                    {% empty %}
+                        <span class="text-sub small">No skills listed yet.</span>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -118,20 +122,14 @@
         <div class="col-md-6">
             <div class="glass-card p-4 h-100">
                 <h4 class="font-heading text-white mb-3 d-flex align-items-center gap-2">
-                    <i class="bi bi-rocket-takeoff-fill text-cyan"></i> Skills I Want to Learn
+                    <i class="bi bi-rocket-takeoff-fill text-cyan"></i> Skills Wanted (Learning)
                 </h4>
                 <div class="d-flex flex-wrap gap-2">
-                    <span class="badge badge-neon fs-6 py-2 px-3"><i class="bi bi-palette me-1"></i> UI/UX & Figma Prototyping</span>
-                    <span class="badge badge-cyan fs-6 py-2 px-3"><i class="bi bi-cpu me-1"></i> Machine Learning & PyTorch</span>
-                    <span class="badge badge-emerald fs-6 py-2 px-3"><i class="bi bi-translate me-1"></i> Spanish Conversation</span>
-                    <span class="badge bg-dark border border-secondary text-sub fs-6 py-2 px-3"><i class="bi bi-music-note-beamed me-1"></i> Acoustic Guitar</span>
-                </div>
-
-                <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
-                    <span class="text-sub small d-block mb-2">Want to exchange a skill with {{ user.username|default:"Kandarp" }}?</span>
-                    <button class="btn btn-neon-primary w-100" onclick="openSwapModal('Python & Django Web Development', '{{ user.username|default:"Kandarp" }}')">
-                        <i class="bi bi-arrow-left-right me-1"></i> Propose Skill Swap
-                    </button>
+                    {% for sk in profile.skills_wanted_list %}
+                        <span class="badge badge-cyan fs-6 py-2 px-3"><i class="bi bi-lightning-charge me-1"></i> {{ sk }}</span>
+                    {% empty %}
+                        <span class="text-sub small">No skills listed yet.</span>
+                    {% endfor %}
                 </div>
             </div>
         </div>

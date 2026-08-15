@@ -1,126 +1,103 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
-{% block title %}
-Community
-{% endblock %}
+{% block title %}Peer Community Hub - SkillSwap AI{% endblock %}
 
 {% block content %}
-
-<div class="container py-5">
-
-    <div class="text-center mb-5">
-        <h1 class="display-4 fw-bold">
-            🌍 SkillSwap Community
-        </h1>
-
-        <p class="text-secondary">
-            Connect, Share, Learn & Grow Together
-        </p>
+<div class="container py-4">
+    <!-- Header -->
+    <div class="text-center max-w-700 mx-auto mb-5">
+        <div class="badge-neon mb-2"><i class="bi bi-people-fill"></i> Knowledge Exchange Forum</div>
+        <h1 class="display-4 font-heading fw-extrabold text-white mb-2">SkillSwap Community Feed</h1>
+        <p class="text-sub fs-5">Share learning wins, ask peer questions, and discuss skill mentorship with creators globally!</p>
     </div>
 
-    <div class="row">
-
-        <!-- Post Feed -->
-
+    <div class="row g-4">
+        <!-- Main Post Feed -->
         <div class="col-lg-8">
+            <!-- Create Post Card -->
+            {% if user.is_authenticated %}
+                <div class="glass-card p-4 mb-4 border-gradient shadow-lg">
+                    <h5 class="font-heading text-white mb-3 d-flex align-items-center gap-2">
+                        <i class="bi bi-pencil-square text-purple"></i> Share Knowledge or Ask Question
+                    </h5>
 
-            <div class="glass-card p-4 mb-4">
+                    <form action="{% url 'dashboard:community' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <textarea name="content" class="form-control glass-input text-white py-3" rows="3" placeholder="What skill progress or question do you want to share today?" required></textarea>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-neon-primary px-4 shadow-lg">
+                                <i class="bi bi-send-fill me-1"></i> Post to Community
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
 
-                <h4>Create Post</h4>
+            <!-- Posts List -->
+            <div class="d-flex flex-column gap-3">
+                {% for post in posts %}
+                    <div class="glass-card glass-card-hover p-4">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="d-flex align-items-center gap-3">
+                                {% if post.author.profile.avatar %}
+                                    <img src="{{ post.author.profile.avatar.url }}" alt="{{ post.author.username }}" class="rounded-circle shadow-sm" style="width: 44px; height: 44px; object-fit: cover;">
+                                {% else %}
+                                    <div class="rounded-circle bg-purple text-white d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));">
+                                        {{ post.author.username|first|upper }}
+                                    </div>
+                                {% endif %}
 
-                <textarea class="form-control" rows="4" placeholder="Share your knowledge..."></textarea>
+                                <div>
+                                    <h6 class="font-heading text-white mb-0">{{ post.author.get_full_name|default:post.author.username }}</h6>
+                                    <span class="text-sub micro">@{{ post.author.username }} • {{ post.created_at|date:"M d, Y g:i A" }}</span>
+                                </div>
+                            </div>
+                        </div>
 
-                <button class="btn btn-primary mt-3">
-                    Post
-                </button>
+                        <p class="text-sub fs-6 mb-3 lh-relaxed">{{ post.content|linebreaks }}</p>
 
+                        <div class="d-flex align-items-center gap-3 pt-3 border-top border-secondary border-opacity-25">
+                            <button class="btn btn-sm btn-neon-outline" onclick="showToast('Liked post!', 'success')">
+                                <i class="bi bi-hand-thumbs-up me-1"></i> {{ post.likes_count }} Likes
+                            </button>
+                            <a href="{% url 'chatapp:chat' %}?user={{ post.author.username }}" class="btn btn-sm btn-neon-outline">
+                                <i class="bi bi-chat-dots me-1"></i> Reply via Chat
+                            </a>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="glass-card p-5 text-center">
+                        <p class="text-sub fs-5 mb-0">No community posts yet. Be the first to start a conversation!</p>
+                    </div>
+                {% endfor %}
             </div>
-
-            <div class="glass-card p-4 mb-4">
-
-                <h5>👨‍💻 Arjun Patel</h5>
-
-                <p class="text-secondary">
-                    Just completed Django API Project.
-                    Happy to help beginners.
-                </p>
-
-                <button class="btn btn-outline-light btn-sm">
-                    👍 Like
-                </button>
-
-                <button class="btn btn-outline-light btn-sm">
-                    💬 Comment
-                </button>
-
-            </div>
-
-            <div class="glass-card p-4">
-
-                <h5>🎨 Sara Johnson</h5>
-
-                <p class="text-secondary">
-                    Free Figma Workshop this weekend.
-                </p>
-
-                <button class="btn btn-outline-light btn-sm">
-                    👍 Like
-                </button>
-
-                <button class="btn btn-outline-light btn-sm">
-                    💬 Comment
-                </button>
-
-            </div>
-
         </div>
 
         <!-- Sidebar -->
-
         <div class="col-lg-4">
-
             <div class="glass-card p-4 mb-4">
-
-                <h5>🔥 Trending Skills</h5>
-
-                <ul class="list-group">
-
-                    <li class="list-group-item">
-                        Python
-                    </li>
-
-                    <li class="list-group-item">
-                        AI / ML
-                    </li>
-
-                    <li class="list-group-item">
-                        UI/UX
-                    </li>
-
-                    <li class="list-group-item">
-                        Cyber Security
-                    </li>
-
-                </ul>
-
+                <h5 class="font-heading text-white mb-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-lightning-charge-fill text-warning"></i> Trending Skills
+                </h5>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="badge badge-neon py-2 px-3">#Python</span>
+                    <span class="badge badge-cyan py-2 px-3">#UIUX</span>
+                    <span class="badge badge-emerald py-2 px-3">#DjangoREST</span>
+                    <span class="badge bg-dark border border-secondary text-sub py-2 px-3">#AI_ML</span>
+                    <span class="badge bg-dark border border-secondary text-sub py-2 px-3">#Spanish</span>
+                </div>
             </div>
 
             <div class="glass-card p-4">
-
-                <h5>🏆 Top Contributors</h5>
-
-                <p>#1 Arjun Patel</p>
-
-                <p>#2 Sara Johnson</p>
-
-                <p>#3 John Smith</p>
-
+                <h5 class="font-heading text-white mb-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-trophy-fill text-gold"></i> Top Mentors
+                </h5>
+                <a href="{% url 'dashboard:leaderboard' %}" class="btn btn-sm btn-neon-outline w-100">View Leaderboard</a>
             </div>
-
         </div>
-
     </div>
-
 </div>
-
 {% endblock %}

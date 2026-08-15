@@ -1,11 +1,60 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
-{% block title %}
-Certificates
-{% endblock %}
+{% block title %}Verified Skill Certificates - SkillSwap AI Credentials{% endblock %}
 
 {% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="text-center max-w-700 mx-auto mb-5">
+        <div class="badge-neon mb-2"><i class="bi bi-patch-check-fill text-cyan"></i> Verified Credentials</div>
+        <h1 class="display-4 font-heading fw-extrabold text-white mb-2">Skill Mentorship Certificates</h1>
+        <p class="text-sub fs-5">Official peer-verified certificates earned upon completing 1-on-1 skill exchange mentorships!</p>
+    </div>
 
-<h1>Certificates Page</h1>
+    <!-- Certificate Grid -->
+    <div class="row g-4">
+        {% for cert in certificates %}
+            <div class="col-lg-6">
+                <div class="glass-card p-4 p-md-5 border-gradient position-relative shadow-lg">
+                    <!-- Certificate Frame Header -->
+                    <div class="d-flex align-items-center justify-content-between mb-4 pb-3 border-bottom border-secondary border-opacity-25">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-cpu-fill text-gradient fs-3"></i>
+                            <span class="font-heading fw-bold text-white fs-5">SkillSwap AI</span>
+                        </div>
+                        <span class="badge badge-emerald"><i class="bi bi-check-circle-fill"></i> Verified Certificate</span>
+                    </div>
 
+                    <div class="text-center my-4">
+                        <span class="text-sub micro text-uppercase tracking-widest d-block mb-1">Certificate of Completion</span>
+                        <h3 class="font-heading text-white fw-bold mb-2">{{ cert.skill_title }}</h3>
+                        <p class="text-sub small mb-3">This certifies that <strong class="text-white">{{ cert.user.get_full_name|default:cert.user.username }}</strong> has successfully completed peer mentorship exchange with <strong class="text-cyan">{{ cert.mentor_name }}</strong>.</p>
+                        
+                        <div class="d-inline-block p-2 glass-card bg-dark bg-opacity-60 border-secondary border-opacity-25 rounded mb-3">
+                            <span class="text-muted micro font-monospace">Verification Code: {{ cert.verification_code }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Certificate Footer -->
+                    <div class="d-flex align-items-center justify-content-between pt-3 border-top border-secondary border-opacity-25">
+                        <span class="text-sub small"><i class="bi bi-calendar-event me-1"></i> Issued: {{ cert.issued_at|date:"M d, Y" }}</span>
+                        <button class="btn btn-sm btn-neon-outline" onclick="window.print()">
+                            <i class="bi bi-printer me-1"></i> Print / Save PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center py-5">
+                <div class="glass-card p-5 max-w-600 mx-auto">
+                    <i class="bi bi-patch-check display-3 text-gradient mb-3 d-block"></i>
+                    <h4 class="font-heading text-white">No certificates earned yet</h4>
+                    <p class="text-sub mb-4">Complete an active exchange session on SkillSwap AI to earn your first verified certificate!</p>
+                    <a href="{% url 'exchanges:my_exchanges' %}" class="btn btn-neon-primary">View Active Exchanges</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

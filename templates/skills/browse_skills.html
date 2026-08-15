@@ -13,40 +13,46 @@
         </div>
 
         {% if user.is_authenticated %}
-            <a href="/skills/create/" class="btn btn-neon-primary shadow-lg">
+            <a href="{% url 'skills:create_skill' %}" class="btn btn-neon-primary shadow-lg">
                 <i class="bi bi-plus-lg me-1"></i> Post New Skill
             </a>
         {% endif %}
     </div>
 
     <!-- Live Search & Filter Bar -->
-    <div class="glass-card p-4 mb-5 border-gradient">
+    <form action="{% url 'skills:browse_skills' %}" method="GET" class="glass-card p-4 mb-5 border-gradient">
         <div class="row g-3 align-items-center">
-            <div class="col-lg-8">
+            <div class="col-lg-6">
                 <div class="position-relative">
                     <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-sub fs-5"></i>
-                    <input type="text" id="skillSearchInput" class="form-control glass-input ps-5 py-3 text-white" placeholder="Search Python, UI/UX, Spanish, Machine Learning...">
+                    <input type="text" name="q" value="{{ query }}" id="skillSearchInput" class="form-control glass-input ps-5 py-3 text-white" placeholder="Search Python, UI/UX, Spanish, Machine Learning...">
                 </div>
             </div>
-            <div class="col-lg-4 text-lg-end">
-                <div class="d-flex align-items-center justify-content-lg-end gap-2">
-                    <span class="text-sub small">Sort By:</span>
-                    <select class="form-select glass-input text-white w-auto py-2">
-                        <option value="popular">Most Popular</option>
-                        <option value="rating">Highest Rated</option>
-                    </select>
-                </div>
+            <div class="col-md-3">
+                <select name="level" class="form-select glass-input text-white py-3" onchange="this.form.submit()">
+                    <option value="">All Levels</option>
+                    <option value="Beginner" {% if selected_level == 'Beginner' %}selected{% endif %}>Beginner</option>
+                    <option value="Intermediate" {% if selected_level == 'Intermediate' %}selected{% endif %}>Intermediate</option>
+                    <option value="Expert" {% if selected_level == 'Expert' %}selected{% endif %}>Expert</option>
+                </select>
+            </div>
+            <div class="col-md-3 text-lg-end">
+                <select name="sort" class="form-select glass-input text-white py-3" onchange="this.form.submit()">
+                    <option value="newest" {% if selected_sort == 'newest' %}selected{% endif %}>Newest First</option>
+                    <option value="rating" {% if selected_sort == 'rating' %}selected{% endif %}>Highest Rated</option>
+                    <option value="popular" {% if selected_sort == 'popular' %}selected{% endif %}>Most Popular</option>
+                </select>
             </div>
         </div>
 
         <!-- Filter Pills -->
         <div class="d-flex flex-wrap gap-2 mt-4 pt-3 border-top border-secondary border-opacity-25">
-            <button class="btn btn-sm btn-neon-primary category-pill-btn active" onclick="filterByCategory('all')">All Categories</button>
+            <a href="{% url 'skills:browse_skills' %}" class="btn btn-sm {% if not selected_category or selected_category == 'all' %}btn-neon-primary{% else %}btn-neon-outline{% endif %} category-pill-btn">All Categories</a>
             {% for cat in categories %}
-                <button class="btn btn-sm btn-neon-outline category-pill-btn" onclick="filterByCategory('{{ cat.slug }}')">{{ cat.name }}</button>
+                <a href="?category={{ cat.slug }}" class="btn btn-sm {% if selected_category == cat.slug %}btn-neon-primary{% else %}btn-neon-outline{% endif %} category-pill-btn">{{ cat.name }}</a>
             {% endfor %}
         </div>
-    </div>
+    </form>
 
     <!-- Skills Grid -->
     <div class="row g-4" id="skillsGrid">
@@ -63,22 +69,27 @@
                         
                         <div class="d-flex flex-wrap gap-2 mb-3">
                             <span class="badge bg-dark bg-opacity-60 text-sub border border-secondary border-opacity-25">{{ skill.level }}</span>
+                            <span class="badge badge-cyan">{{ skill.learning_mode }}</span>
                         </div>
                     </div>
 
                     <div>
                         <div class="d-flex align-items-center gap-2 mb-3 pt-3 border-top border-secondary border-opacity-25">
-                            <div class="rounded-circle bg-purple d-flex align-items-center justify-content-center fw-bold text-white" style="width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));">
-                                {{ skill.user.username|first|upper }}
-                            </div>
+                            {% if skill.user.profile.avatar %}
+                                <img src="{{ skill.user.profile.avatar.url }}" alt="{{ skill.user.username }}" class="rounded-circle shadow-sm" style="width: 36px; height: 36px; object-fit: cover;">
+                            {% else %}
+                                <div class="rounded-circle bg-purple d-flex align-items-center justify-content-center fw-bold text-white" style="width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));">
+                                    {{ skill.user.username|first|upper }}
+                                </div>
+                            {% endif %}
                             <div class="small">
                                 <span class="fw-semibold text-white d-block">{{ skill.user.get_full_name|default:skill.user.username }}</span>
-                                <span class="text-muted">Skill Mentor</span>
+                                <span class="text-muted">{{ skill.user.profile.headline|default:"Skill Mentor" }}</span>
                             </div>
                         </div>
                         <div class="d-flex gap-2">
                             <a href="{% url 'skills:skill_detail_pk' skill.id %}" class="btn btn-sm btn-neon-outline flex-grow-1"><i class="bi bi-eye me-1"></i> Details</a>
-                            <button class="btn btn-sm btn-neon-primary flex-grow-1" onclick="openSwapModal('{{ skill.title }}', '{{ skill.user.username }}')">
+                            <button class="btn btn-sm btn-neon-primary flex-grow-1" onclick="openSwapModal('{{ skill.title }}', '{{ skill.user.get_full_name|default:skill.user.username }}', '{{ skill.user.username }}')">
                                 <i class="bi bi-arrow-left-right me-1"></i> Swap Request
                             </button>
                         </div>
@@ -87,7 +98,15 @@
             </div>
         {% empty %}
             <div class="col-12 text-center py-5">
-                <p class="text-sub fs-5">No skills found. Be the first to post a skill!</p>
+                <div class="glass-card p-5 max-w-600 mx-auto">
+                    <i class="bi bi-search display-3 text-gradient mb-3 d-block"></i>
+                    <h4 class="font-heading text-white">No skills matching your criteria</h4>
+                    <p class="text-sub mb-4">Try clearing filters or post a new skill to start peer learning.</p>
+                    <a href="{% url 'skills:browse_skills' %}" class="btn btn-neon-outline me-2">Clear Filters</a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'skills:create_skill' %}" class="btn btn-neon-primary">Post a Skill</a>
+                    {% endif %}
+                </div>
             </div>
         {% endfor %}
     </div>

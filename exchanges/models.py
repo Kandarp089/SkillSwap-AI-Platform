@@ -8,6 +8,7 @@ class ExchangeRequest(models.Model):
         ('accepted', 'Accepted'),
         ('rejected', 'Rejected'),
         ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
     )
 
     sender = models.ForeignKey(
@@ -24,8 +25,14 @@ class ExchangeRequest(models.Model):
     requested_skill = models.CharField(max_length=200, blank=True, default="UI/UX Design")
     note = models.TextField(blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    rating = models.IntegerField(null=True, blank=True)
+    feedback = models.TextField(blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created_at']
 
     def __str__(self):
         return f"{self.sender.username} → {self.receiver.username} ({self.requested_skill}) [{self.status}]"

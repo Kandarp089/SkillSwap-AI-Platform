@@ -1,115 +1,117 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
-{% block title %}
-My Exchanges
-{% endblock %}
+{% block title %}My Exchanges - SkillSwap AI Workspace{% endblock %}
 
 {% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 gap-3">
+        <div>
+            <div class="badge-neon mb-2"><i class="bi bi-arrow-left-right"></i> Mentorship Hub</div>
+            <h1 class="display-4 font-heading fw-extrabold text-white mb-0">My Skill Exchanges</h1>
+        </div>
 
-<div class="container py-5">
-
-    <div class="text-center mb-5">
-
-        <h1 class="display-4 fw-bold">
-            🤝 My Exchanges
-        </h1>
-
-        <p class="text-secondary">
-            Track all your skill exchange activities
-        </p>
-
+        <a href="{% url 'skills:browse_skills' %}" class="btn btn-neon-primary shadow-lg">
+            <i class="bi bi-plus-circle me-1"></i> Request New Swap
+        </a>
     </div>
 
-    <div class="row">
+    <!-- Exchange Cards Grid -->
+    <div class="row g-4">
+        {% for exchange in exchanges %}
+            <div class="col-lg-4 col-md-6">
+                <div class="glass-card glass-card-hover p-4 h-100 d-flex flex-column justify-content-between border-gradient">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            {% if exchange.status == 'accepted' %}
+                                <span class="badge badge-emerald"><i class="bi bi-circle-fill me-1" style="font-size:0.5rem;"></i> Active Session</span>
+                            {% elif exchange.status == 'completed' %}
+                                <span class="badge badge-cyan"><i class="bi bi-check-circle-fill me-1"></i> Completed</span>
+                            {% elif exchange.status == 'pending' %}
+                                <span class="badge badge-neon"><i class="bi bi-clock-history me-1"></i> Pending Review</span>
+                            {% else %}
+                                <span class="badge bg-dark border border-secondary text-sub">{{ exchange.status|capfirst }}</span>
+                            {% endif %}
 
-        <!-- Active Exchange -->
+                            <span class="text-sub micro">{{ exchange.created_at|date:"M d, Y" }}</span>
+                        </div>
 
-        <div class="col-lg-4 mb-4">
-
-            <div class="glass-card p-4 h-100">
-
-                <span class="badge bg-success mb-3">
-                    Active
-                </span>
-
-                <h4>
-                    Python ↔ UI/UX
-                </h4>
-
-                <p>
-                    Exchanging skills with Rahul Patel
-                </p>
-
-                <div class="progress mb-3">
-
-                    <div class="progress-bar bg-success" style="width:70%">
-                        70%
+                        <h4 class="font-heading text-white mb-2">{{ exchange.requested_skill }}</h4>
+                        <p class="text-sub small mb-3"><i class="bi bi-arrow-down-up text-cyan me-1"></i> Offered in swap: <strong class="text-white">{{ exchange.offered_skill }}</strong></p>
                     </div>
 
+                    <div>
+                        <!-- Partner Info Box -->
+                        <div class="d-flex align-items-center gap-3 p-3 glass-card bg-dark bg-opacity-40 mb-3 border-secondary border-opacity-25">
+                            {% if exchange.sender == user %}
+                                <!-- Partner is receiver -->
+                                {% if exchange.receiver.profile.avatar %}
+                                    <img src="{{ exchange.receiver.profile.avatar.url }}" alt="{{ exchange.receiver.username }}" class="rounded-circle shadow-sm" style="width: 40px; height: 40px; object-fit: cover;">
+                                {% else %}
+                                    <div class="rounded-circle bg-purple text-white d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));">
+                                        {{ exchange.receiver.username|first|upper }}
+                                    </div>
+                                {% endif %}
+                                <div class="small min-w-0 flex-grow-1">
+                                    <span class="text-sub micro d-block">Partner:</span>
+                                    <span class="fw-semibold text-white d-block text-truncate">{{ exchange.receiver.get_full_name|default:exchange.receiver.username }}</span>
+                                </div>
+                            {% else %}
+                                <!-- Partner is sender -->
+                                {% if exchange.sender.profile.avatar %}
+                                    <img src="{{ exchange.sender.profile.avatar.url }}" alt="{{ exchange.sender.username }}" class="rounded-circle shadow-sm" style="width: 40px; height: 40px; object-fit: cover;">
+                                {% else %}
+                                    <div class="rounded-circle bg-cyan text-white d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; background: var(--accent-cyan);">
+                                        {{ exchange.sender.username|first|upper }}
+                                    </div>
+                                {% endif %}
+                                <div class="small min-w-0 flex-grow-1">
+                                    <span class="text-sub micro d-block">Partner:</span>
+                                    <span class="fw-semibold text-white d-block text-truncate">{{ exchange.sender.get_full_name|default:exchange.sender.username }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Action Buttons depending on status -->
+                        {% if exchange.status == 'pending' %}
+                            {% if exchange.receiver == user %}
+                                <div class="d-flex gap-2">
+                                    <a href="{% url 'exchanges:accept_request' exchange.id %}" class="btn btn-sm btn-neon-primary flex-grow-1">Accept Proposal</a>
+                                    <a href="{% url 'exchanges:reject_request' exchange.id %}" class="btn btn-sm btn-neon-outline text-danger">Decline</a>
+                                </div>
+                            {% else %}
+                                <a href="{% url 'exchanges:cancel_request' exchange.id %}" class="btn btn-sm btn-neon-outline w-100 text-warning">Cancel Request</a>
+                            {% endif %}
+                        {% elif exchange.status == 'accepted' %}
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'chatapp:chat' %}?user={% if exchange.sender == user %}{{ exchange.receiver.username }}{% else %}{{ exchange.sender.username }}{% endif %}" class="btn btn-sm btn-neon-primary flex-grow-1">
+                                    <i class="bi bi-chat-dots-fill me-1"></i> Live Chat
+                                </a>
+                                <a href="{% url 'exchanges:complete_request' exchange.id %}" class="btn btn-sm btn-neon-outline text-success" title="Mark Session Completed">
+                                    <i class="bi bi-check-circle"></i> Complete
+                                </a>
+                            </div>
+                        {% elif exchange.status == 'completed' %}
+                            <a href="{% url 'dashboard:certificates' %}" class="btn btn-sm btn-neon-outline w-100 text-cyan">
+                                <i class="bi bi-award-fill me-1"></i> View Certificate
+                            </a>
+                        {% else %}
+                            <span class="text-sub small text-center d-block">Exchange {{ exchange.status|capfirst }}</span>
+                        {% endif %}
+                    </div>
                 </div>
-
-                <button class="btn btn-primary w-100">
-                    Continue
-                </button>
-
             </div>
-
-        </div>
-
-        <!-- Pending -->
-
-        <div class="col-lg-4 mb-4">
-
-            <div class="glass-card p-4 h-100">
-
-                <span class="badge bg-warning mb-3">
-                    Pending
-                </span>
-
-                <h4>
-                    Django ↔ React
-                </h4>
-
-                <p>
-                    Waiting for acceptance
-                </p>
-
-                <button class="btn btn-warning w-100">
-                    Pending
-                </button>
-
+        {% empty %}
+            <div class="col-12 text-center py-5">
+                <div class="glass-card p-5 max-w-600 mx-auto">
+                    <i class="bi bi-arrow-left-right display-3 text-gradient mb-3 d-block"></i>
+                    <h4 class="font-heading text-white">No exchange requests found</h4>
+                    <p class="text-sub mb-4">Start browsing the catalog or use our AI Synergy Matcher to find learning partners.</p>
+                    <a href="{% url 'skills:browse_skills' %}" class="btn btn-neon-primary">Explore Skills</a>
+                </div>
             </div>
-
-        </div>
-
-        <!-- Completed -->
-
-        <div class="col-lg-4 mb-4">
-
-            <div class="glass-card p-4 h-100">
-
-                <span class="badge bg-info mb-3">
-                    Completed
-                </span>
-
-                <h4>
-                    AI ↔ Figma
-                </h4>
-
-                <p>
-                    Successfully completed
-                </p>
-
-                <button class="btn btn-success w-100">
-                    View Certificate
-                </button>
-
-            </div>
-
-        </div>
-
+        {% endfor %}
     </div>
-
 </div>
-
 {% endblock %}

@@ -1,143 +1,137 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
-{% block title %}
-Python Development
-{% endblock %}
+{% block title %}{{ skill.title }} - SkillSwap AI Catalog{% endblock %}
 
 {% block content %}
-
-<div class="container py-5">
-
-    <div class="row">
-
-        <!-- LEFT -->
-
+<div class="container py-4">
+    <div class="row g-4">
+        <!-- Main Content Column -->
         <div class="col-lg-8">
-
-            <div class="glass-card p-5">
-
-                <span class="badge bg-primary mb-3">
-                    Most Popular
-                </span>
-
-                <h1>
-                    Python Development
-                </h1>
-
-                <p class="lead text-secondary">
-                    Learn Python from beginner to advanced level.
-                </p>
-
-                <hr>
-
-                <h4>What You Will Learn</h4>
-
-                <ul class="mt-3">
-
-                    <li>Python Fundamentals</li>
-
-                    <li>Object Oriented Programming</li>
-
-                    <li>Django Framework</li>
-
-                    <li>REST APIs</li>
-
-                    <li>Database Integration</li>
-
-                </ul>
-
-                <hr>
-
-                <h4>Requirements</h4>
-
-                <ul>
-
-                    <li>Basic Computer Knowledge</li>
-
-                    <li>No Prior Experience Required</li>
-
-                </ul>
-
-            </div>
-
-        </div>
-
-        <!-- RIGHT -->
-
-        <div class="col-lg-4">
-
-            <div class="glass-card p-4">
-
-                <img src="https://i.pravatar.cc/300" class="rounded-circle mb-3" width="120">
-
-                <h3>
-                    King John
-                </h3>
-
-                <p>
-                    Python & Django Mentor
-                </p>
-
-                <div class="mb-3">
-
-                    ⭐⭐⭐⭐⭐ 4.9
-
+            <div class="glass-card p-4 p-md-5 border-gradient mb-4">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <span class="badge badge-neon"><i class="bi {{ skill.category.icon|default:'bi-code-slash' }}"></i> {{ skill.category.name|default:'General' }}</span>
+                    <span class="text-sub small"><i class="bi bi-eye me-1"></i> {{ skill.views_count }} Views</span>
                 </div>
 
-                <button class="btn btn-primary w-100 mb-2">
+                <h1 class="display-4 font-heading fw-extrabold text-white mb-3">{{ skill.title }}</h1>
 
-                    Request Exchange
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    <span class="badge bg-dark border border-secondary text-sub fs-6 py-2 px-3"><i class="bi bi-bar-chart-line me-1"></i> {{ skill.level }} Level</span>
+                    <span class="badge badge-cyan fs-6 py-2 px-3"><i class="bi bi-display me-1"></i> {{ skill.learning_mode }}</span>
+                    <span class="badge badge-emerald fs-6 py-2 px-3"><i class="bi bi-clock me-1"></i> {{ skill.availability }}</span>
+                </div>
 
-                </button>
+                <hr class="border-secondary border-opacity-25 my-4">
 
-                <button class="btn btn-outline-light w-100">
+                <h4 class="font-heading text-white mb-3"><i class="bi bi-file-text-fill text-purple me-2"></i> Skill Description & Overview</h4>
+                <p class="text-sub fs-5 lh-lg mb-4">{{ skill.description|linebreaks }}</p>
 
-                    Save Skill
+                {% if skill.tag_list %}
+                    <h5 class="font-heading text-white mb-3">Related Tags</h5>
+                    <div class="d-flex flex-wrap gap-2 mb-4">
+                        {% for tag in skill.tag_list %}
+                            <span class="badge bg-dark bg-opacity-60 text-sub border border-secondary border-opacity-25">#{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
 
-                </button>
-
+                <div class="pt-3 border-top border-secondary border-opacity-25 d-flex align-items-center justify-content-between">
+                    <span class="text-sub small">Listed on {{ skill.created_at|date:"F d, Y" }}</span>
+                    <button class="btn btn-neon-primary px-4" onclick="openSwapModal('{{ skill.title }}', '{{ skill.user.get_full_name|default:skill.user.username }}', '{{ skill.user.username }}')">
+                        <i class="bi bi-arrow-left-right me-1"></i> Propose Swap For This Skill
+                    </button>
+                </div>
             </div>
 
+            <!-- Reviews Section -->
+            <div class="glass-card p-4 p-md-5">
+                <h4 class="font-heading text-white mb-4 d-flex align-items-center gap-2">
+                    <i class="bi bi-star-fill text-warning"></i> Peer Mentorship Reviews ({{ reviews|length }})
+                </h4>
+
+                <!-- Reviews Feed -->
+                <div class="d-flex flex-column gap-3 mb-4">
+                    {% for rev in reviews %}
+                        <div class="glass-card p-3 bg-dark bg-opacity-40 border-secondary border-opacity-25">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <span class="fw-semibold text-white">{{ rev.reviewer.get_full_name|default:rev.reviewer.username }}</span>
+                                <span class="text-warning small">
+                                    {% for i in "12345"|make_list %}
+                                        {% if forloop.counter <= rev.rating %}<i class="bi bi-star-fill"></i>{% else %}<i class="bi bi-star"></i>{% endif %}
+                                    {% endfor %}
+                                </span>
+                            </div>
+                            <p class="text-sub small mb-0">{{ rev.comment }}</p>
+                        </div>
+                    {% empty %}
+                        <p class="text-sub small">No reviews written for this skill yet. Be the first to leave feedback after your exchange!</p>
+                    {% endfor %}
+                </div>
+
+                <!-- Submit Review Form -->
+                {% if user.is_authenticated and user != skill.user %}
+                    <form action="{% url 'skills:add_review' skill.id %}" method="POST" class="pt-4 border-top border-secondary border-opacity-25">
+                        {% csrf_token %}
+                        <h6 class="font-heading text-white mb-3">Leave a Mentor Review</h6>
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label text-sub small">Rating</label>
+                                <select name="rating" class="form-select glass-input text-white">
+                                    <option value="5">5 ⭐ - Excellent</option>
+                                    <option value="4">4 ⭐ - Very Good</option>
+                                    <option value="3">3 ⭐ - Good</option>
+                                    <option value="2">2 ⭐ - Fair</option>
+                                    <option value="1">1 ⭐ - Poor</option>
+                                </select>
+                            </div>
+                            <div class="col-md-9">
+                                <label class="form-label text-sub small">Your Feedback</label>
+                                <input type="text" name="comment" class="form-control glass-input text-white" placeholder="Share your experience learning this skill..." required>
+                            </div>
+                            <div class="col-12 text-end">
+                                <button type="submit" class="btn btn-sm btn-neon-primary px-4">Submit Review</button>
+                            </div>
+                        </div>
+                    </form>
+                {% endif %}
+            </div>
         </div>
 
+        <!-- Sidebar Mentor Column -->
+        <div class="col-lg-4">
+            <div class="glass-card p-4 text-center border-gradient sticky-top" style="top: 100px;">
+                <div class="position-relative d-inline-block mb-3">
+                    {% if skill.user.profile.avatar %}
+                        <img src="{{ skill.user.profile.avatar.url }}" alt="{{ skill.user.username }}" class="rounded-circle shadow-lg border border-3 border-purple" style="width: 100px; height: 100px; object-fit: cover;">
+                    {% else %}
+                        <div class="rounded-circle bg-purple d-flex align-items-center justify-content-center fw-extrabold text-white display-5 shadow-lg mx-auto" style="width: 100px; height: 100px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));">
+                            {{ skill.user.username|first|upper }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <h4 class="font-heading text-white mb-1">{{ skill.user.get_full_name|default:skill.user.username }}</h4>
+                <p class="text-sub small mb-3">{{ skill.user.profile.headline|default:"Peer Skill Mentor" }}</p>
+
+                <div class="d-flex justify-content-center align-items-center gap-2 mb-4">
+                    <span class="badge badge-neon"><i class="bi bi-star-fill text-warning"></i> {{ skill.rating }} Mentor Rating</span>
+                    <span class="badge badge-cyan"><i class="bi bi-geo-alt"></i> {{ skill.user.profile.location|default:"India" }}</span>
+                </div>
+
+                <div class="d-flex flex-column gap-2 mb-3">
+                    <button class="btn btn-neon-primary py-2 shadow-lg" onclick="openSwapModal('{{ skill.title }}', '{{ skill.user.get_full_name|default:skill.user.username }}', '{{ skill.user.username }}')">
+                        <i class="bi bi-arrow-left-right me-1"></i> Request Skill Swap
+                    </button>
+                    <a href="{% url 'chatapp:chat' %}?user={{ skill.user.username }}" class="btn btn-neon-outline py-2">
+                        <i class="bi bi-chat-dots me-1"></i> Message {{ skill.user.username }}
+                    </a>
+                    <a href="{% url 'profiles:public_profile' username=skill.user.username %}" class="btn btn-neon-outline py-2">
+                        <i class="bi bi-person me-1"></i> View Full Profile
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <!-- REVIEWS -->
-
-    <div class="glass-card p-4 mt-5">
-
-        <h3>
-            Reviews
-        </h3>
-
-        <hr>
-
-        <div>
-
-            <h5>
-                Rahul
-            </h5>
-
-            <p>
-                Amazing mentor and easy explanations.
-            </p>
-
-        </div>
-
-        <div>
-
-            <h5>
-                Maya
-            </h5>
-
-            <p>
-                Helped me build my first Django project.
-            </p>
-
-        </div>
-
-    </div>
-
 </div>
-
 {% endblock %}

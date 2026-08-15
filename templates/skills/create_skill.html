@@ -13,7 +13,7 @@
                         <div class="badge-neon mb-1"><i class="bi bi-plus-circle-fill"></i> New Listing</div>
                         <h2 class="font-heading fw-bold text-white mb-0">Offer a Skill to Swap</h2>
                     </div>
-                    <a href="/skills/" class="btn btn-sm btn-neon-outline"><i class="bi bi-arrow-left me-1"></i> Catalog</a>
+                    <a href="{% url 'skills:browse_skills' %}" class="btn btn-sm btn-neon-outline"><i class="bi bi-arrow-left me-1"></i> Catalog</a>
                 </div>
 
                 <form method="POST">
@@ -44,15 +44,36 @@
                         </div>
                     </div>
 
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-sub small fw-semibold">Learning Mode</label>
+                            <select name="learning_mode" class="form-select glass-input text-white">
+                                <option value="1-on-1 Video">1-on-1 Video</option>
+                                <option value="Async Messaging">Async Messaging</option>
+                                <option value="Group Workshop">Group Workshop</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label text-sub small fw-semibold">Availability</label>
+                            <input type="text" name="availability" class="form-control glass-input text-white" value="Flexible / Weekends" placeholder="e.g. Weekends, 6-8 PM">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-sub small fw-semibold">Tags (Comma Separated)</label>
+                        <input type="text" name="tags" class="form-control glass-input text-white" placeholder="python, django, webdev, database">
+                    </div>
+
                     <div class="mb-4">
                         <label class="form-label text-sub small fw-semibold">Skill Description & What You Teach</label>
                         <textarea name="description" class="form-control glass-input text-white" rows="4" placeholder="Describe what students will learn from your mentorship..." required></textarea>
                     </div>
 
                     <div class="d-flex justify-content-end gap-2 pt-3 border-top border-secondary border-opacity-25">
-                        <a href="/skills/" class="btn btn-neon-outline">Cancel</a>
+                        <a href="{% url 'skills:browse_skills' %}" class="btn btn-neon-outline">Cancel</a>
                         <button type="submit" class="btn btn-neon-primary px-4 shadow-lg">
-                            <i class="bi bi-check-circle-fill me-1"></i> Publish Skill to DB
+                            <i class="bi bi-check-circle-fill me-1"></i> Publish Skill
                         </button>
                     </div>
                 </form>
@@ -61,3 +82,4 @@
     </div>
 </div>
 {% endblock %}
+

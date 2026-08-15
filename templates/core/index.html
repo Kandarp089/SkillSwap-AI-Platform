@@ -21,11 +21,11 @@
 
                 <!-- CTA Buttons -->
                 <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start gap-3 mb-5">
-                    <a href="#ai-matcher-widget" class="btn btn-neon-primary btn-lg shadow-lg">
-                        <i class="bi bi-cpu-fill"></i> Test AI Matcher
+                    <a href="{% url 'skills:ai_match' %}" class="btn btn-neon-primary btn-lg shadow-lg">
+                        <i class="bi bi-cpu-fill me-1"></i> Find My Skill Match
                     </a>
-                    <a href="/skills/" class="btn btn-neon-outline btn-lg">
-                        <i class="bi bi-compass"></i> Explore 1,200+ Skills
+                    <a href="{% url 'skills:browse_skills' %}" class="btn btn-neon-outline btn-lg">
+                        <i class="bi bi-compass me-1"></i> Explore Skills
                     </a>
                 </div>
 
@@ -66,7 +66,7 @@
                     <!-- Live Simulation Card inside Hero -->
                     <div class="p-3 glass-card bg-opacity-50 mb-3 border border-secondary border-opacity-25">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <span class="text-sub small"><i class="bi bi-person-fill text-purple me-1"></i> Kandarp (You)</span>
+                            <span class="text-sub small"><i class="bi bi-person-fill text-purple me-1"></i> {{ user.username|default:"Alex Patel" }}</span>
                             <span class="badge badge-cyan">Offering Python</span>
                         </div>
                         <div class="d-flex align-items-center justify-content-between">
@@ -78,7 +78,7 @@
                     <div class="glass-card p-3 bg-dark bg-opacity-75 border-0 text-center">
                         <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
                             <i class="bi bi-check-circle-fill text-success fs-5"></i>
-                            <span class="fw-bold text-white fs-5">96% Skill Synergy Match!</span>
+                            <span class="fw-bold text-white fs-5">98% Skill Synergy Match!</span>
                         </div>
                         <p class="text-sub small mb-0">Direct 1-on-1 Swap Proposal Ready</p>
                     </div>
@@ -98,14 +98,14 @@
                 <p class="text-sub">Select a skill you want to learn and a skill you can teach to calculate your instant peer compatibility score!</p>
             </div>
 
-            <div class="row g-4 align-items-center justify-content-center">
+            <form action="{% url 'skills:ai_match' %}" method="GET" class="row g-4 align-items-center justify-content-center">
                 <!-- Skill 1: What You Offer -->
                 <div class="col-md-5">
                     <div class="glass-card p-3 border-0 bg-dark bg-opacity-40">
                         <label class="form-label text-sub fw-semibold mb-2">
                             <i class="bi bi-award-fill text-purple me-1"></i> Skill You Can Offer (Teach)
                         </label>
-                        <select id="matchOfferSkill" class="form-select glass-input text-white">
+                        <select name="offer_skill" id="matchOfferSkill" class="form-select glass-input text-white">
                             <option value="python">Python & Django Web Dev</option>
                             <option value="uiux">UI/UX Design & Figma</option>
                             <option value="marketing">Digital Marketing & SEO</option>
@@ -129,7 +129,7 @@
                         <label class="form-label text-sub fw-semibold mb-2">
                             <i class="bi bi-rocket-takeoff-fill text-cyan me-1"></i> Skill You Want to Learn
                         </label>
-                        <select id="matchLearnSkill" class="form-select glass-input text-white">
+                        <select name="learn_skill" id="matchLearnSkill" class="form-select glass-input text-white">
                             <option value="uiux">UI/UX Design & Figma</option>
                             <option value="python">Python & Django Web Dev</option>
                             <option value="french">French Language & Pronunciation</option>
@@ -141,40 +141,15 @@
                 </div>
 
                 <div class="col-12 text-center mt-4">
-                    <button class="btn btn-neon-primary btn-lg px-5 shadow-lg" onclick="calculateHomeAIMatch()">
-                        <i class="bi bi-lightning-charge-fill me-1"></i> Compute AI Synergy Match
+                    <button type="submit" class="btn btn-neon-primary btn-lg px-5 shadow-lg">
+                        <i class="bi bi-lightning-charge-fill me-1"></i> Calculate AI Match
                     </button>
                 </div>
-            </div>
-
-            <!-- Dynamic Result Card -->
-            <div id="aiMatchResult" class="mt-5 glass-card p-4 bg-dark bg-opacity-60 border-purple d-none animate-fade-up">
-                <div class="row align-items-center g-4">
-                    <div class="col-md-4 text-center border-end border-secondary border-opacity-25">
-                        <span class="text-sub small">Synergy Match Score</span>
-                        <h1 class="display-3 font-heading fw-extrabold text-gradient mb-0" id="aiMatchScoreText">0%</h1>
-                        <span class="badge badge-emerald">Optimal Exchange</span>
-                    </div>
-
-                    <div class="col-md-5">
-                        <h5 class="font-heading text-white mb-2">Matching Peers Available Now</h5>
-                        <p class="text-sub small mb-3">We found 4 verified mentors ready to swap skills with your exact preferences!</p>
-
-                        <div class="progress glass-card p-1 bg-dark mb-2" style="height: 16px;">
-                            <div id="aiMatchProgressBar" class="progress-bar bg-gradient-purple rounded-pill" role="progressbar" style="width: 0%; background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));"></div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3 text-center">
-                        <button class="btn btn-neon-primary w-100" onclick="openSwapModal('UI/UX Design', 'Sarah Jenkins')">
-                            <i class="bi bi-send-fill me-1"></i> Connect Now
-                        </button>
-                    </div>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 </section>
+
 
 <!-- Browse Top Skills Section -->
 <section class="py-5">
