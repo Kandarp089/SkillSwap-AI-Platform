@@ -3,13 +3,33 @@ services:
     name: skillswap-ai
     runtime: python
     buildCommand: "./build.sh"
-    startCommand: "gunicorn skillswap.wsgi:application"
+    startCommand: "python -m gunicorn skillswap.asgi:application -k uvicorn.workers.UvicornWorker"
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.9
+        value: "3.12.4"
       - key: DJANGO_DEBUG
         value: "False"
       - key: DJANGO_SECRET_KEY
         generateValue: true
       - key: DJANGO_ALLOWED_HOSTS
-        value: ".onrender.com"
+        value: "skillswap-ai.onrender.com"
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        value: "https://skillswap-ai.onrender.com"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: skillswap-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: skillswap-redis
+          property: connectionString
+
+  - type: keyvalue
+    name: skillswap-redis
+    plan: free
+    ipAllowList: []
+
+databases:
+  - name: skillswap-db
+    plan: free
