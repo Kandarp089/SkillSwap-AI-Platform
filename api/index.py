@@ -13,6 +13,8 @@ from django.core.wsgi import get_wsgi_application
 
 # Initialize WSGI app for Vercel
 app = get_wsgi_application()
+handler = app
+
 
 # Auto-migrate ephemeral database if on Vercel serverless environment
 if os.environ.get("VERCEL"):
