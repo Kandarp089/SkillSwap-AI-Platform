@@ -1,66 +1,67 @@
-# SkillSwap AI 🚀
+# SkillSwap AI ⚡
+> **Next-Gen Peer-to-Peer AI Skill Exchange Platform**
 
-A modern AI-powered skill exchange platform built with Django where users can teach skills, learn new skills, connect with mentors, and grow together.
+![SkillSwap AI Platform Banner](https://raw.githubusercontent.com/Kandarp089/SkillSwap-AI-Platform/main/screenshots/banner.png)
 
-## Features
+## 🌐 Live Platform Demo
+- 🔗 **Live Website**: [https://slimy-lights-battle.loca.lt](https://slimy-lights-battle.loca.lt) *(Enter IP `223.181.68.231` if prompted by Localtunnel)*
+- 📦 **GitHub Repository**: [https://github.com/Kandarp089/SkillSwap-AI-Platform.git](https://github.com/Kandarp089/SkillSwap-AI-Platform.git)
 
-* User Authentication
-* Profile Management
-* AI Skill Matching
-* Real-time Chat UI
-* Exchange Requests
-* Community & Events
-* Achievements & Certificates
-* Dashboard Analytics
-* Help Center
+---
 
-## Tech Stack
+## ⚡ Key Features
 
-* Python
-* Django
-* SQLite3
-* HTML5
-* CSS3
-* Bootstrap 5
-* JavaScript
+- **🤖 AI Synergy Skill Matcher**: Dynamic compatibility scoring, preference calculation, and personalized match recommendations.
+- **💬 Real-Time WebSockets Chat**: Built with Django Channels, Channels-Redis, and hybrid HTTP/AJAX fallback for instant peer messaging.
+- **🔄 Complete Exchange Lifecycle**: Proposal creation, acceptance, rejection, cancellation, completion, automated **+150 XP** awards, and **+25 credit** transfers.
+- **🏆 Gamification & Rewards**: Global mentor leaderboard, achievements showcase, and verified completion certificates with unique verification IDs.
+- **🎨 Glassmorphism Dark Theme**: Modern UI crafted with Outfit + Plus Jakarta Sans typography, vibrant neon gradients (`#8b5cf6`, `#06b6d4`), and glowing glass cards.
+- **☁️ Production Ready**: Pre-configured with Render Infrastructure Blueprint (`render.yaml`) for Gunicorn + UvicornWorker ASGI server, PostgreSQL database, and Redis.
 
-## Screenshots
+---
 
-### Home Page
+## 🔑 1-Click Demo Credentials
 
-![Home](screenshots/home.png)
+| Role | Username | Password |
+| :--- | :--- | :--- |
+| **Demo Learner** | `demo_user` | `SkillSwap123!` |
+| **Python Mentor** | `alex_chen` | `SkillSwap123!` |
+| **UI/UX Mentor** | `sarah_jenkins` | `SkillSwap123!` |
 
-### Dashboard
+---
 
-![Dashboard](screenshots/dashboard.png)
+## 🛠️ Tech Stack
 
-### Chat
+- **Backend**: Python 3.12, Django 4.2+, Django Channels, ASGI, WSGI
+- **Database & Cache**: PostgreSQL, SQLite3, Redis Channel Layer
+- **Frontend**: HTML5, Vanilla CSS3 (Glassmorphism), JavaScript (ES6+), Bootstrap 5, Bootstrap Icons
+- **Production Server**: Gunicorn, UvicornWorker, WhiteNoise, Render Blueprint
 
-![Chat](screenshots/chat.png)
+---
 
-### AI Match
-
-![AI Match](screenshots/ai-match.png)
-
-## Installation
+## 🚀 Quick Local Installation
 
 ```bash
+# Clone the repository
 git clone https://github.com/Kandarp089/SkillSwap-AI-Platform.git
-cd SkillSwap-AI-Platform
+cd SkillSwap-AI-Platform/skillswap
+
+# Create and activate virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: .\venv\Scripts\Activate.ps1
+
+# Install dependencies
 pip install -r requirements.txt
+
+# Run migrations and start dev server
 python manage.py migrate
 python manage.py runserver
 ```
 
-## Future Enhancements
+---
 
-* Real-Time Chat
-* AI Recommendation Engine
-* Job Board
-* Learning Roadmaps
-* Video Calling
+## 👤 Author
 
-## Author
-
-Kandarp Upadhyay
-MCA Student | Django Developer
+**Kandarp Upadhyay**
+- MCA Student | Django Full-Stack Architect
+- GitHub: [@Kandarp089](https://github.com/Kandarp089)
