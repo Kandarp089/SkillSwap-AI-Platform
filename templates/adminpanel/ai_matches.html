@@ -1,0 +1,59 @@
+{% extends 'adminpanel/base_admin.html' %}
+
+{% block title %}AI Match Weight Settings{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h2 class="font-heading fw-extrabold mb-1">AI Match Algorithm Configuration</h2>
+        <p class="text-secondary small mb-0">Adjust weights for Skill Overlap, 2-Way Synergy, Experience, Availability, and Reputation (Must total 100%).</p>
+    </div>
+</div>
+
+<div class="admin-table-card p-4 max-w-xl">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="row g-3">
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-secondary small fw-semibold">Skill Overlap Weight (%)</label>
+                <input type="number" name="skill_overlap" value="{{ weights.skill_overlap_weight }}" class="form-control bg-dark text-white border-secondary">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-secondary small fw-semibold">2-Way Wanted/Offered Weight (%)</label>
+                <input type="number" name="wanted_offered" value="{{ weights.wanted_offered_weight }}" class="form-control bg-dark text-white border-secondary">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-secondary small fw-semibold">Experience Compatibility (%)</label>
+                <input type="number" name="experience" value="{{ weights.experience_weight }}" class="form-control bg-dark text-white border-secondary">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-secondary small fw-semibold">Availability Overlap (%)</label>
+                <input type="number" name="availability" value="{{ weights.availability_weight }}" class="form-control bg-dark text-white border-secondary">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-secondary small fw-semibold">Learning Mode Preference (%)</label>
+                <input type="number" name="learning_mode" value="{{ weights.learning_mode_weight }}" class="form-control bg-dark text-white border-secondary">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-secondary small fw-semibold">Language Preference (%)</label>
+                <input type="number" name="language" value="{{ weights.language_weight }}" class="form-control bg-dark text-white border-secondary">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-secondary small fw-semibold">Rating & Reputation Weight (%)</label>
+                <input type="number" name="rating" value="{{ weights.rating_weight }}" class="form-control bg-dark text-white border-secondary">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-secondary small fw-semibold">Platform Activity Weight (%)</label>
+                <input type="number" name="activity" value="{{ weights.activity_weight }}" class="form-control bg-dark text-white border-secondary">
+            </div>
+        </div>
+
+        <div class="p-3 bg-dark border border-secondary rounded mb-4 d-flex align-items-center justify-content-between">
+            <span class="text-secondary">Current Total Weight:</span>
+            <strong class="font-heading text-purple fs-5">{{ weights.total_weight }}%</strong>
+        </div>
+
+        <button type="submit" class="btn btn-neon-primary w-100"><i class="bi bi-save me-1"></i> Save Weight Configuration</button>
+    </form>
+</div>
+{% endblock %}

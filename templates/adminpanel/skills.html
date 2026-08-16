@@ -1,0 +1,99 @@
+{% extends 'adminpanel/base_admin.html' %}
+
+{% block title %}Skill Catalog Management{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h2 class="font-heading fw-extrabold mb-1">Global Skill Catalog</h2>
+        <p class="text-secondary small mb-0">Create new skills, categorize them, and toggle active catalog visibility.</p>
+    </div>
+    <button class="btn btn-neon-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createSkillModal"><i class="bi bi-plus-lg me-1"></i> Add New Skill</button>
+</div>
+
+<div class="admin-table-card p-4">
+    <div class="table-responsive">
+        <table class="table table-dark-custom mb-0">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Level</th>
+                    <th>Created By</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for skill in skills %}
+                    <tr>
+                        <td class="fw-bold text-white">{{ skill.title }}</td>
+                        <td><span class="badge bg-secondary">{{ skill.category.name|default:"Uncategorized" }}</span></td>
+                        <td>{{ skill.level }}</td>
+                        <td>@{{ skill.user.username }}</td>
+                        <td>
+                            {% if skill.is_active %}
+                                <span class="badge bg-success">Active</span>
+                            {% else %}
+                                <span class="badge bg-dark border border-secondary text-secondary">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="skill_id" value="{{ skill.id }}">
+                                <input type="hidden" name="action" value="toggle_active">
+                                <button type="submit" class="btn btn-sm btn-outline-warning">
+                                    {% if skill.is_active %}Deactivate{% else %}Activate{% endif %}
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-secondary py-4">No skills in catalog.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="createSkillModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border-secondary">
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="create">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title font-heading">Add New Global Skill</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label text-secondary small">Skill Title</label>
+                        <input type="text" name="title" required class="form-control bg-secondary bg-opacity-25 text-white border-secondary">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-secondary small">Category</label>
+                        <select name="category_id" class="form-select bg-secondary bg-opacity-25 text-white border-secondary">
+                            {% for c in categories %}
+                                <option value="{{ c.id }}">{{ c.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-secondary small">Description</label>
+                        <textarea name="description" rows="3" required class="form-control bg-secondary bg-opacity-25 text-white border-secondary"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-neon-primary">Create Skill</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

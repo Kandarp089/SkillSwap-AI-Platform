@@ -1,0 +1,45 @@
+{% extends 'adminpanel/base_admin.html' %}
+
+{% block title %}Admin Audit Logs{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h2 class="font-heading fw-extrabold mb-1">Admin Audit Trail</h2>
+        <p class="text-secondary small mb-0">Immutable log of all admin operations, user suspensions, role changes, and system settings modifications.</p>
+    </div>
+</div>
+
+<div class="admin-table-card p-4">
+    <div class="table-responsive">
+        <table class="table table-dark-custom mb-0">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Admin User</th>
+                    <th>Action</th>
+                    <th>Target Model</th>
+                    <th>Target Object ID</th>
+                    <th>IP Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                    <tr>
+                        <td><small class="text-secondary">{{ log.timestamp|date:"Y-m-d H:i:s" }}</small></td>
+                        <td class="fw-bold text-white">@{{ log.admin.username }}</td>
+                        <td><span class="badge bg-purple">{{ log.action }}</span></td>
+                        <td><code>{{ log.target_model }}</code></td>
+                        <td>{{ log.target_object_id|default:"-" }}</td>
+                        <td><small class="text-secondary">{{ log.ip_address|default:"127.0.0.1" }}</small></td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-secondary py-4">No audit logs recorded yet.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

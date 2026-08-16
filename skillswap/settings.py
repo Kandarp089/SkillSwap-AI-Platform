@@ -44,6 +44,14 @@ INSTALLED_APPS = [
     "exchanges.apps.ExchangesConfig",
     "chatapp.apps.ChatappConfig",
     "dashboard.apps.DashboardConfig",
+    "notifications.apps.NotificationsConfig",
+    "achievements.apps.AchievementsConfig",
+    "certificates.apps.CertificatesConfig",
+    "community.apps.CommunityConfig",
+    "events.apps.EventsConfig",
+    "support.apps.SupportConfig",
+    "reports.apps.ReportsConfig",
+    "adminpanel.apps.AdminpanelConfig",
 ]
 
 

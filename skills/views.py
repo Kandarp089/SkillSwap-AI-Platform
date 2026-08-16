@@ -205,40 +205,25 @@ def skill_detail(request, pk=None):
     })
 
 def ai_match(request):
-    seed_skills_if_empty()
-
-    offer_skill = request.GET.get('offer_skill', 'python').strip().lower()
-    learn_skill = request.GET.get('learn_skill', 'uiux').strip().lower()
+    from matching.services import calculate_peer_match
+    
+    offer_skill = request.GET.get('offer_skill', 'python').strip()
+    learn_skill = request.GET.get('learn_skill', 'uiux').strip()
     exp_level = request.GET.get('experience_level', 'Intermediate')
     mode = request.GET.get('learning_mode', '1-on-1 Video')
 
+    current_user = request.user if request.user.is_authenticated else User.objects.first()
     all_mentors = User.objects.select_related('profile').exclude(id=request.user.id if request.user.is_authenticated else 0)
 
     matches = []
     for mentor in all_mentors:
         prof = getattr(mentor, 'profile', None)
-        offered_str = prof.skills_offered.lower() if prof else ""
-        wanted_str = prof.skills_wanted.lower() if prof else ""
-
-        # Synergy score algorithm
-        score = 80
-        reasons = []
-
-        if learn_skill in offered_str:
-            score += 12
-            reasons.append("Mentor offers the exact skill you want to learn.")
-        else:
-            reasons.append("Mentor offers complementary tech skills.")
-
-        if offer_skill in wanted_str:
-            score += 6
-            reasons.append("Mentor is actively seeking the skill you teach.")
-
-        if prof and prof.experience_level == exp_level:
-            score += 2
-            reasons.append("Matching experience level.")
-
-        score = min(score, 99)
+        score, reasons = calculate_peer_match(
+            learner_user=current_user,
+            mentor_user=mentor,
+            requested_learn_skill=learn_skill,
+            offered_teach_skill=offer_skill
+        )
 
         matches.append({
             "mentor": mentor,
@@ -253,7 +238,7 @@ def ai_match(request):
     matches.sort(key=lambda x: x['score'], reverse=True)
 
     return render(request, 'skills/ai-match.html', {
-        "matches": matches[:5],
+        "matches": matches[:6],
         "offer_skill": offer_skill,
         "learn_skill": learn_skill,
         "exp_level": exp_level,

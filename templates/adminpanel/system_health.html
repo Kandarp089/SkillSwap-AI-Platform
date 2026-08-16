@@ -1,0 +1,60 @@
+{% extends 'adminpanel/base_admin.html' %}
+
+{% block title %}System Health & Maintenance{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h2 class="font-heading fw-extrabold mb-1">System Health & Maintenance</h2>
+        <p class="text-secondary small mb-0">Check database connectivity, environment specs, and toggle global maintenance mode.</p>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="admin-table-card p-4">
+            <h5 class="font-heading fw-bold mb-3"><i class="bi bi-heart-pulse-fill text-danger me-2"></i> Environment Health Diagnostics</h5>
+            <ul class="list-group list-group-flush bg-transparent">
+                <li class="list-group-item bg-transparent text-white border-secondary d-flex justify-content-between">
+                    <span>Database Status:</span>
+                    {% if health.db_ok %}
+                        <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i> Connected & Healthy</span>
+                    {% else %}
+                        <span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i> Connection Error</span>
+                    {% endif %}
+                </li>
+                <li class="list-group-item bg-transparent text-white border-secondary d-flex justify-content-between">
+                    <span>Python Runtime:</span>
+                    <small class="text-secondary">{{ health.python_version|truncatechars:35 }}</small>
+                </li>
+                <li class="list-group-item bg-transparent text-white border-secondary d-flex justify-content-between">
+                    <span>Django Version:</span>
+                    <span class="badge bg-purple">{{ health.django_version }}</span>
+                </li>
+                <li class="list-group-item bg-transparent text-white border-secondary d-flex justify-content-between">
+                    <span>Environment:</span>
+                    <span class="text-cyan small fw-semibold">{{ health.environment }}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="admin-table-card p-4">
+            <h5 class="font-heading fw-bold mb-3"><i class="bi bi-tools text-warning me-2"></i> Global Maintenance Mode</h5>
+            <p class="text-secondary small">Toggling Maintenance Mode will display a service banner to standard users while allowing Control Center admins full management access.</p>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="toggle_maintenance" value="1">
+                {% if health.maintenance_active %}
+                    <div class="alert alert-warning mb-3"><strong>Status:</strong> Maintenance Mode is currently ACTIVE.</div>
+                    <button type="submit" class="btn btn-success w-100"><i class="bi bi-play-circle me-1"></i> Disable Maintenance Mode</button>
+                {% else %}
+                    <div class="alert alert-success mb-3"><strong>Status:</strong> Platform Operational (Normal).</div>
+                    <button type="submit" class="btn btn-outline-danger w-100"><i class="bi bi-pause-circle me-1"></i> Enable Maintenance Mode</button>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

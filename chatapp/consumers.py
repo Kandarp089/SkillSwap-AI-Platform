@@ -3,7 +3,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from django.contrib.auth import get_user_model
 from .models import Message
-from dashboard.models import Notification
+from notifications.models import Notification
 
 User = get_user_model()
 
@@ -12,7 +12,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'chat_{self.room_name}'
 
-        if self.scope['user'].is_anonymous:
+        user = self.scope.get('user')
+        if not user or user.is_anonymous or getattr(user, 'is_suspended', False):
+            await self.close()
+            return
+
+        # Server-side WebSocket Authorization Check:
+        # User must be part of the room name (e.g. room_name = 'userA_userB' or 'userB_userA') or staff
+        is_authorized = await self.check_room_authorization(user, self.room_name)
+        if not is_authorized:
             await self.close()
             return
 
@@ -77,6 +85,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'timestamp': event['timestamp'],
             'message_id': event['message_id'],
         }))
+
+    @database_sync_to_async
+    def check_room_authorization(self, user, room_name):
+        if user.is_staff or getattr(user, 'is_admin_or_staff', False):
+            return True
+        parts = room_name.lower().split('_')
+        return user.username.lower() in parts
 
     @database_sync_to_async
     def get_user(self, username):

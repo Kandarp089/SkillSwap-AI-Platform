@@ -1,0 +1,101 @@
+{% extends 'adminpanel/base_admin.html' %}
+
+{% block title %}Support Tickets{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h2 class="font-heading fw-extrabold mb-1">Support Ticket Center</h2>
+        <p class="text-secondary small mb-0">View user inquiries, assign tickets, and post admin responses.</p>
+    </div>
+</div>
+
+<div class="admin-table-card p-4">
+    <div class="table-responsive">
+        <table class="table table-dark-custom mb-0">
+            <thead>
+                <tr>
+                    <th>Ticket ID</th>
+                    <th>User</th>
+                    <th>Subject</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Assigned To</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in tickets %}
+                    <tr>
+                        <td><code>#{{ t.ticket_id }}</code></td>
+                        <td class="fw-bold text-white">@{{ t.user.username }}</td>
+                        <td>{{ t.subject }}</td>
+                        <td>
+                            {% if t.priority == 'high' or t.priority == 'urgent' %}
+                                <span class="badge bg-danger">{{ t.priority|capfirst }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ t.priority|capfirst }}</span>
+                            {% endif %}
+                        </td>
+                        <td><span class="badge bg-info text-dark">{{ t.get_status_display }}</span></td>
+                        <td><small class="text-purple">{% if t.assigned_to %}@{{ t.assigned_to.username }}{% else %}Unassigned{% endif %}</small></td>
+                        <td>
+                            <button class="btn btn-sm btn-neon-primary" data-bs-toggle="modal" data-bs-target="#ticketModal{{ t.id }}"><i class="bi bi-chat-left-text me-1"></i> Reply</button>
+                        </td>
+                    </tr>
+
+                    <!-- Reply Modal -->
+                    <div class="modal fade" id="ticketModal{{ t.id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content bg-dark text-white border-secondary">
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="ticket_db_id" value="{{ t.id }}">
+                                    <div class="modal-header border-secondary">
+                                        <h5 class="modal-title font-heading">Ticket #{{ t.ticket_id }} — {{ t.subject }}</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3 p-3 bg-secondary bg-opacity-10 rounded border border-secondary">
+                                            <div class="text-secondary small mb-1">Messages Thread:</div>
+                                            {% for m in t.messages.all %}
+                                                <div class="mb-2">
+                                                    <strong class="text-cyan">@{{ m.sender.username }}:</strong>
+                                                    <span>{{ m.message }}</span>
+                                                    <small class="text-secondary d-block" style="font-size:0.7rem;">{{ m.created_at|date:"M d, H:i" }}</small>
+                                                </div>
+                                            {% empty %}
+                                                <p class="text-secondary small mb-0">No message thread yet.</p>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label text-secondary small">Post Admin Response</label>
+                                            <textarea name="reply_text" rows="3" required class="form-control bg-secondary bg-opacity-25 text-white border-secondary" placeholder="Type support answer..."></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label text-secondary small">Update Status</label>
+                                            <select name="status" class="form-select bg-secondary bg-opacity-25 text-white border-secondary">
+                                                {% for k, v in t.STATUS_CHOICES %}
+                                                    <option value="{{ k }}" {% if t.status == k %}selected{% endif %}>{{ v }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer border-secondary">
+                                        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-neon-primary">Send Response</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center text-secondary py-4">No support tickets found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
