@@ -17,14 +17,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
 
-        # Server-side WebSocket Authorization Check:
-        # User must be part of the room name (e.g. room_name = 'userA_userB' or 'userB_userA') or staff
         is_authorized = await self.check_room_authorization(user, self.room_name)
         if not is_authorized:
             await self.close()
             return
 
-        # Join room group
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
@@ -32,7 +29,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
     async def disconnect(self, close_code):
-        # Leave room group
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
@@ -54,13 +50,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 receiver = await self.get_user(receiver_username)
 
                 if receiver:
-                    # Save message to database
                     saved_msg = await self.save_message(sender, receiver, message_text)
-
-                    # Create notification asynchronously
                     await self.create_notification(receiver, sender, message_text)
 
-                    # Send message to room group
                     await self.channel_layer.group_send(
                         self.room_group_name,
                         {
@@ -76,7 +68,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             print(f"WebSocket error: {e}")
 
     async def chat_message_broadcast(self, event):
-        # Send message to WebSocket client
         await self.send(text_data=json.dumps({
             'type': 'chat_message',
             'message': event['message'],
@@ -90,8 +81,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def check_room_authorization(self, user, room_name):
         if user.is_staff or getattr(user, 'is_admin_or_staff', False):
             return True
-        parts = room_name.lower().split('_')
-        return user.username.lower() in parts
+        parts = [p.lower() for p in room_name.split('_')]
+        return user.username.lower() in parts or str(user.id) in parts
 
     @database_sync_to_async
     def get_user(self, username):

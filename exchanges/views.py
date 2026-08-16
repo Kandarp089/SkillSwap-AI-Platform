@@ -5,7 +5,8 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.db.models import Q
 from .models import ExchangeRequest
-from dashboard.models import Notification
+from notifications.models import Notification
+from .services import complete_exchange
 
 User = get_user_model()
 
@@ -28,7 +29,6 @@ def send_request(request):
             receiver = User.objects.exclude(id=request.user.id).first()
 
         if receiver and receiver != request.user:
-            # Check for existing pending request
             existing = ExchangeRequest.objects.filter(
                 sender=request.user,
                 receiver=receiver,
@@ -48,14 +48,13 @@ def send_request(request):
                 status='pending'
             )
 
-            # Create Notification
             Notification.objects.create(
                 user=receiver,
                 sender=request.user,
                 notification_type='exchange_request',
                 title=f"New Skill Swap Proposal from {request.user.username}",
                 message=f"Wants to learn '{requested_skill}' in exchange for '{offered_skill}'.",
-                link="/requests/"
+                link="/requests/my-exchanges/"
             )
 
             messages.success(request, f"Skill Swap proposal sent to {receiver.username}!")
@@ -65,6 +64,7 @@ def send_request(request):
         return redirect("exchanges:my_exchanges")
     return redirect("exchanges:my_exchanges")
 
+
 @login_required(login_url='accounts:login')
 def requests_page(request):
     received = ExchangeRequest.objects.filter(receiver=request.user).select_related('sender', 'sender__profile').order_by('-created_at')
@@ -73,6 +73,7 @@ def requests_page(request):
         "received_requests": received,
         "sent_requests": sent
     })
+
 
 @login_required(login_url='accounts:login')
 def accept_request(request, request_id):
@@ -87,11 +88,12 @@ def accept_request(request, request_id):
             notification_type='request_accepted',
             title=f"Swap Request Accepted!",
             message=f"{request.user.username} accepted your skill swap for '{ex_req.requested_skill}'.",
-            link="/chat/?user=" + request.user.username
+            link=f"/chat/?user={request.user.username}"
         )
 
         messages.success(request, f"Accepted swap proposal from {ex_req.sender.username}! You can now start chatting.")
     return redirect("exchanges:my_exchanges")
+
 
 @login_required(login_url='accounts:login')
 def reject_request(request, request_id):
@@ -112,23 +114,16 @@ def reject_request(request, request_id):
         messages.info(request, f"Declined swap proposal from {ex_req.sender.username}.")
     return redirect("exchanges:my_exchanges")
 
+
 @login_required(login_url='accounts:login')
 def complete_request(request, request_id):
-    ex_req = get_object_or_404(ExchangeRequest, id=request_id)
-    if (ex_req.sender == request.user or ex_req.receiver == request.user) and ex_req.status == 'accepted':
-        ex_req.status = 'completed'
-        ex_req.completed_at = timezone.now()
-        ex_req.save()
-
-        # Award XP and credits to both users
-        for user in [ex_req.sender, ex_req.receiver]:
-            if hasattr(user, 'profile'):
-                user.profile.xp += 150
-                user.profile.credits += 25
-                user.profile.save()
-
-        messages.success(request, "Skill Swap marked as completed! +150 XP awarded to both learners!")
+    try:
+        complete_exchange(request_id, request.user)
+        messages.success(request, "Skill Swap marked as completed! +150 XP & Credits awarded!")
+    except Exception as e:
+        messages.error(request, str(e))
     return redirect("exchanges:my_exchanges")
+
 
 @login_required(login_url='accounts:login')
 def cancel_request(request, request_id):
@@ -138,6 +133,7 @@ def cancel_request(request, request_id):
         ex_req.save()
         messages.info(request, "Swap request cancelled.")
     return redirect("exchanges:my_exchanges")
+
 
 @login_required(login_url='accounts:login')
 def my_exchanges(request):

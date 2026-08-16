@@ -3,8 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
 from django.db.models import Q
-from .models import Message
-from dashboard.models import Notification
+from .models import Message, Conversation, ConversationMember
+from notifications.models import Notification
 
 User = get_user_model()
 
@@ -24,9 +24,9 @@ def chat_home(request):
     room_name = ""
 
     if active_partner:
-        # Generate canonical room name
-        user_ids = sorted([request.user.id, active_partner.id])
-        room_name = f"{user_ids[0]}_{user_ids[1]}"
+        # Canonical room name using user handles sorted alphabetically
+        user_handles = sorted([request.user.username.lower(), active_partner.username.lower()])
+        room_name = f"{user_handles[0]}_{user_handles[1]}"
 
         # Query messages between request.user and active_partner
         messages_qs = Message.objects.filter(
@@ -43,6 +43,7 @@ def chat_home(request):
         "messages": messages_qs,
         "room_name": room_name,
     })
+
 
 @login_required(login_url='accounts:login')
 def send_message(request):

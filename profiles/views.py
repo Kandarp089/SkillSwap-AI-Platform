@@ -16,7 +16,7 @@ def profile_view(request, username=None):
     else:
         return redirect('accounts:login')
 
-    user_skills = Skill.objects.filter(user=profile_user).select_related('category')
+    user_skills = Skill.objects.filter(user=profile_user, is_active=True).select_related('category')
     completed_exchanges_count = ExchangeRequest.objects.filter(
         (Q(sender=profile_user) | Q(receiver=profile_user)) & Q(status='completed')
     ).count()
@@ -31,10 +31,11 @@ def profile_view(request, username=None):
         "is_own_profile": is_own_profile,
     })
 
+
 @login_required(login_url='accounts:login')
 def edit_profile(request):
     user = request.user
-    profile = user.profile
+    profile = getattr(user, 'profile', None)
 
     if request.method == "POST":
         first_name = request.POST.get("first_name", "").strip()
@@ -53,10 +54,19 @@ def edit_profile(request):
         linkedin_url = request.POST.get("linkedin_url", "").strip()
         website_url = request.POST.get("website_url", "").strip()
 
-        if first_name: user.first_name = first_name
-        if last_name: user.last_name = last_name
-        if email: user.email = email
-        user.save()
+        update_user_fields = []
+        if first_name and user.first_name != first_name:
+            user.first_name = first_name
+            update_user_fields.append('first_name')
+        if last_name and user.last_name != last_name:
+            user.last_name = last_name
+            update_user_fields.append('last_name')
+        if email and user.email != email:
+            user.email = email
+            update_user_fields.append('email')
+        
+        if update_user_fields:
+            user.save(update_fields=update_user_fields)
 
         profile.headline = headline
         profile.bio = bio
@@ -72,6 +82,8 @@ def edit_profile(request):
 
         if 'avatar' in request.FILES:
             profile.avatar = request.FILES['avatar']
+        if 'cover_image' in request.FILES:
+            profile.cover_image = request.FILES['cover_image']
 
         profile.save()
 

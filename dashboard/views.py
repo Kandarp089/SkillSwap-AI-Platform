@@ -1,3 +1,4 @@
+import uuid
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -5,7 +6,12 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q, Count
 from skills.models import Skill
 from exchanges.models import ExchangeRequest
-from .models import Notification, Achievement, UserAchievement, Certificate, CommunityPost, Event
+from notifications.models import Notification
+from achievements.models import Achievement, UserAchievement
+from certificates.models import Certificate
+from community.models import CommunityPost, PostComment
+from events.models import Event, EventRegistration
+from support.models import SupportTicket, SupportMessage
 
 User = get_user_model()
 
@@ -38,6 +44,7 @@ def dashboard_home(request):
         "total_platform_skills": total_platform_skills,
     })
 
+
 def leaderboard(request):
     period = request.GET.get('period', 'all')
     users_qs = User.objects.select_related('profile').all()
@@ -51,6 +58,7 @@ def leaderboard(request):
         "leaderboard_users": users,
         "selected_period": period
     })
+
 
 @login_required(login_url='accounts:login')
 def notifications(request):
@@ -71,24 +79,17 @@ def notifications(request):
         "notifications": user_notifications
     })
 
+
 def settings_page(request):
     return render(request, "dashboard/settings.html")
 
-def seed_achievements_if_empty():
-    if Achievement.objects.count() == 0:
-        Achievement.objects.create(title="First Skill Exchange", description="Completed your very first peer skill swap session.", icon="bi-rocket-takeoff", badge_color="purple", criteria="1_exchange", xp_reward=100)
-        Achievement.objects.create(title="Top Peer Mentor", description="Received 5-star ratings across 5 consecutive exchanges.", icon="bi-star-fill", badge_color="gold", criteria="5_stars", xp_reward=300)
-        Achievement.objects.create(title="Skill Master", description="Published 3 distinct skills for teaching.", icon="bi-award-fill", badge_color="cyan", criteria="3_skills", xp_reward=200)
-        Achievement.objects.create(title="Community Pioneer", description="Joined SkillSwap AI early release cohort.", icon="bi-shield-check", badge_color="emerald", criteria="early_member", xp_reward=150)
 
 def achievements(request):
-    seed_achievements_if_empty()
     all_achievements = Achievement.objects.all()
 
     unlocked_ids = []
     if request.user.is_authenticated:
         unlocked_ids = list(UserAchievement.objects.filter(user=request.user).values_list('achievement_id', flat=True))
-        # Award 'First Skill Exchange' if completed exchange exists but achievement not logged
         completed = ExchangeRequest.objects.filter((Q(sender=request.user) | Q(receiver=request.user)) & Q(status='completed')).exists()
         if completed:
             first_ach = Achievement.objects.filter(title="First Skill Exchange").first()
@@ -101,23 +102,16 @@ def achievements(request):
         "unlocked_ids": unlocked_ids,
     })
 
+
 def certificates(request):
     user_certs = []
     if request.user.is_authenticated:
         user_certs = Certificate.objects.filter(user=request.user).order_by('-issued_date')
-        if not user_certs.exists():
-            # Create default demo certificate for user
-            Certificate.objects.create(
-                certificate_id=f"CERT-{request.user.id}-PY2026",
-                user=request.user,
-                skill_title="Python & Django Web Architecture",
-                achievement_title="Verified Peer Mentorship Certificate"
-            )
-            user_certs = Certificate.objects.filter(user=request.user)
 
     return render(request, "dashboard/certificates.html", {
         "certificates": user_certs
     })
+
 
 def community(request):
     if request.method == "POST" and request.user.is_authenticated:
@@ -135,10 +129,11 @@ def community(request):
             messages.success(request, "Community discussion post published!")
             return redirect("dashboard:community")
 
-    posts = CommunityPost.objects.select_related('author', 'author__profile').order_by('-created_at')
+    posts = CommunityPost.objects.filter(is_hidden=False).select_related('author', 'author__profile').order_by('-is_pinned', '-created_at')
     return render(request, 'dashboard/community.html', {
         "posts": posts
     })
+
 
 def events(request):
     if request.method == "POST" and request.user.is_authenticated:
@@ -146,33 +141,50 @@ def events(request):
         if event_id:
             event = Event.objects.filter(id=event_id).first()
             if event:
-                event.attendees_count += 1
-                event.save(update_fields=['attendees_count'])
-                messages.success(request, f"RSVP Confirmed for '{event.title}'! Link added to your calendar.")
+                EventRegistration.objects.get_or_create(event=event, user=request.user)
+                messages.success(request, f"RSVP Confirmed for '{event.title}'! Event details saved.")
                 return redirect("dashboard:events")
 
-    events_list = Event.objects.select_related('organizer').order_by('event_date')
+    events_list = Event.objects.filter(is_published=True).select_related('organizer').order_by('event_date')
+    user_registered_ids = []
+    if request.user.is_authenticated:
+        user_registered_ids = list(EventRegistration.objects.filter(user=request.user).values_list('event_id', flat=True))
+
     return render(request, 'dashboard/events.html', {
-        "events": events_list
+        "events": events_list,
+        "user_registered_ids": user_registered_ids
     })
+
 
 def about(request):
     return render(request, 'dashboard/about.html')
+
 
 def contact(request):
     if request.method == "POST":
         name = request.POST.get("name", "").strip()
         email = request.POST.get("email", "").strip()
-        subject = request.POST.get("subject", "").strip()
+        subject = request.POST.get("subject", "General Inquiry").strip()
         message_text = request.POST.get("message", "").strip()
 
         if name and email and message_text:
-            messages.success(request, f"Thank you {name}! Your message has been received. Our team will get back to you shortly.")
+            ticket_id = f"TICK-{uuid.uuid4().hex[:6].upper()}"
+            user = request.user if request.user.is_authenticated else User.objects.first()
+            ticket = SupportTicket.objects.create(
+                ticket_id=ticket_id,
+                user=user,
+                subject=subject,
+                category="Contact Form"
+            )
+            SupportMessage.objects.create(ticket=ticket, sender=user, message=f"From: {name} ({email})\n\n{message_text}")
+            
+            messages.success(request, f"Thank you {name}! Support Ticket #{ticket_id} created. Our admin team will respond shortly.")
             return redirect("dashboard:contact")
         else:
             messages.error(request, "Please complete all required fields in the contact form.")
 
     return render(request, 'dashboard/contact.html')
+
 
 def help_center(request):
     return render(request, 'dashboard/help_center.html')

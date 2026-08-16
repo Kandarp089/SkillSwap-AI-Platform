@@ -20,11 +20,7 @@ def complete_exchange(exchange_id, user):
     if exchange.status in ['completed', 'cancelled', 'rejected']:
         raise ValidationError("This exchange is already finalized.")
 
-    if user == exchange.sender:
-        exchange.sender_confirmed = True
-    elif user == exchange.receiver:
-        exchange.receiver_confirmed = True
-    elif user.is_staff or getattr(user, 'is_admin_or_staff', False):
+    if user == exchange.sender or user == exchange.receiver or user.is_staff or getattr(user, 'is_admin_or_staff', False):
         exchange.sender_confirmed = True
         exchange.receiver_confirmed = True
     else:

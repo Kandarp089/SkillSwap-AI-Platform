@@ -19,10 +19,16 @@ def login_view(request):
         user = authenticate(request, username=username_input, password=password_input)
 
         if user is not None:
+            if getattr(user, 'is_suspended', False):
+                messages.error(request, f"Account suspended: {user.suspension_reason or 'Violation of community terms'}")
+                return render(request, "accounts/login.html")
+                
             login(request, user)
+            request.session.set_expiry(1209600)  # Persist session for 14 days
             messages.success(request, f"Welcome back, {user.username}!")
+            
             next_url = request.GET.get("next")
-            if next_url:
+            if next_url and next_url.startswith('/'):
                 return redirect(next_url)
             return redirect("dashboard:home")
         else:
@@ -61,10 +67,10 @@ def register_view(request):
             user = User.objects.create_user(username=username, email=email, password=password1)
             user.save()
             
-            # Authenticate & Login newly created user
             authenticated_user = authenticate(request, username=username, password=password1)
             if authenticated_user:
                 login(request, authenticated_user)
+                request.session.set_expiry(1209600)
             
             messages.success(request, f"Account created successfully! Welcome to SkillSwap AI, {username}!")
             return redirect("dashboard:home")
