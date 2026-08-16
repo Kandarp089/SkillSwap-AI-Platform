@@ -17,8 +17,7 @@ SECRET_KEY = os.environ.get(
 
 DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,.onrender.com,*").split(",")
-
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,.onrender.com,.vercel.app,*").split(",")
 # -----------------------------------------------------------------------
 # APPLICATIONS
 # -----------------------------------------------------------------------
@@ -125,7 +124,7 @@ elif os.environ.get("USE_POSTGRES", "False") == "True":
         }
     }
 else:
-    if os.environ.get("VERCEL"):
+    if os.environ.get("VERCEL") or os.environ.get("VERCEL_ENV"):
         import shutil
         db_path = Path("/tmp/db.sqlite3")
         if not db_path.exists() and (BASE_DIR / "db.sqlite3").exists():
@@ -198,11 +197,12 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # -----------------------------------------------------------------------
 # CSRF & TRUSTED ORIGINS
 # -----------------------------------------------------------------------
+_csrf_origins = os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
-    for origin in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
+    for origin in _csrf_origins
     if origin.strip()
-]
+] + ["https://*.vercel.app", "https://*.onrender.com"]
 
 # -----------------------------------------------------------------------
 # EMAIL

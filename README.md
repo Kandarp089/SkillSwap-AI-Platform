@@ -4,8 +4,8 @@
 ![SkillSwap AI Platform Banner](https://raw.githubusercontent.com/Kandarp089/SkillSwap-AI-Platform/main/screenshots/banner.png)
 
 ## 🌐 Live Platform Demo
-- 🔗 **Live Website**: [https://slimy-lights-battle.loca.lt](https://slimy-lights-battle.loca.lt) *(Enter IP `223.181.68.231` if prompted by Localtunnel)*
-- 📦 **GitHub Repository**: [https://github.com/Kandarp089/SkillSwap-AI-Platform.git](https://github.com/Kandarp089/SkillSwap-AI-Platform.git)
+- 🚀 **Vercel Live Host**: [https://skillswap-black-two.vercel.app](https://skillswap-black-two.vercel.app)
+- 📦 **GitHub Repository**: [https://github.com/Kandarp089/SkillSwap-AI-Platform](https://github.com/Kandarp089/SkillSwap-AI-Platform)
 
 ---
 

@@ -4,7 +4,7 @@
 __pycache__/
 *.py[cod]
 db.sqlite3
-staticfiles/
+# staticfiles/
 media/
 .venv/
 venv/
@@ -13,3 +13,5 @@ env/
 .idea/
 *.log
 .DS_Store
+
+.vercel
