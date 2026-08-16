@@ -173,9 +173,14 @@ def create_skill(request):
 
 def skill_detail(request, pk=None):
     seed_skills_if_empty()
-    skill = Skill.objects.first()
+    skill = None
     if pk:
-        skill = get_object_or_404(Skill.objects.select_related('user', 'category', 'user__profile'), id=pk)
+        skill = Skill.objects.filter(id=pk).select_related('user', 'category', 'user__profile').first()
+    if not skill:
+        skill = Skill.objects.select_related('user', 'category', 'user__profile').first()
+    if not skill:
+        messages.info(request, "No skills available yet.")
+        return redirect('skills:browse_skills')
 
     # Increment view count
     skill.views_count += 1
