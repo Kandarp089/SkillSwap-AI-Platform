@@ -8,7 +8,7 @@ def control_center_required(allowed_roles=None):
         @wraps(view_func)
         def _wrapped_view(request, *args, **kwargs):
             if not request.user.is_authenticated:
-                return redirect('adminpanel:login')
+                return redirect('/accounts/login/?next=' + request.path)
             if not request.user.has_control_panel_access():
                 messages.error(request, "Access denied. You do not have permissions for the Control Center.")
                 raise PermissionDenied

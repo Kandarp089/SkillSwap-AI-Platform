@@ -30,29 +30,18 @@ def log_admin_action(admin_user, action, target_model, target_id="", details="",
     )
 
 def control_center_login(request):
-    if request.user.is_authenticated and request.user.has_control_panel_access():
-        return redirect('adminpanel:dashboard')
-    
-    if request.method == 'POST':
-        u = request.POST.get('username')
-        p = request.POST.get('password')
-        user = authenticate(request, username=u, password=p)
-        if user and user.has_control_panel_access():
-            login(request, user)
-            log_admin_action(user, "ADMIN_LOGIN", "User", user.id, "Admin logged into Control Center", request)
-            messages.success(request, f"Welcome to SkillSwap AI Control Center, {user.username}!")
+    if request.user.is_authenticated:
+        if request.user.has_control_panel_access():
             return redirect('adminpanel:dashboard')
-        else:
-            messages.error(request, "Invalid admin credentials or insufficient role permissions.")
-    
-    return render(request, 'adminpanel/login.html')
+        return redirect('dashboard:home')
+    return redirect('/accounts/login/?next=/control-center/')
 
 def control_center_logout(request):
     if request.user.is_authenticated:
         log_admin_action(request.user, "ADMIN_LOGOUT", "User", request.user.id, "Admin logged out", request)
     logout(request)
-    messages.info(request, "Logged out of Control Center.")
-    return redirect('adminpanel:login')
+    messages.info(request, "You have been logged out.")
+    return redirect('/')
 
 @control_center_required()
 def dashboard(request):

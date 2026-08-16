@@ -6,6 +6,8 @@ User = get_user_model()
 
 def login_view(request):
     if request.user.is_authenticated:
+        if request.user.has_control_panel_access():
+            return redirect("adminpanel:dashboard")
         return redirect("dashboard:home")
 
     if request.method == "POST":
@@ -24,12 +26,19 @@ def login_view(request):
                 return render(request, "accounts/login.html")
                 
             login(request, user)
-            request.session.set_expiry(1209600)  # Persist session for 14 days
-            messages.success(request, f"Welcome back, {user.username}!")
+            request.session.set_expiry(1209600)  # 14 days session persistence
+            
+            if user.has_control_panel_access():
+                messages.success(request, f"Welcome to SkillSwap AI Control Center, {user.username}!")
+            else:
+                messages.success(request, f"Welcome back, {user.username}!")
             
             next_url = request.GET.get("next")
             if next_url and next_url.startswith('/'):
                 return redirect(next_url)
+
+            if user.has_control_panel_access():
+                return redirect("adminpanel:dashboard")
             return redirect("dashboard:home")
         else:
             messages.error(request, "Invalid email/username or password. Please try again.")
@@ -39,6 +48,8 @@ def login_view(request):
 
 def register_view(request):
     if request.user.is_authenticated:
+        if request.user.has_control_panel_access():
+            return redirect("adminpanel:dashboard")
         return redirect("dashboard:home")
 
     if request.method == "POST":
