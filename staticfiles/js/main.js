@@ -79,9 +79,8 @@ function calculateHomeAIMatch() {
         return;
     }
 
-    // Generate dynamic realistic score based on string hashes
     const hash = (offerSkill.value + learnSkill.value).length * 17;
-    const score = 82 + (hash % 17); // 82% to 98%
+    const score = 82 + (hash % 17);
 
     resultBox.classList.remove('d-none');
     resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -141,6 +140,15 @@ function filterByCategory(category) {
 
 /* Swap Request Modal Handler */
 function openSwapModal(skillTitle, teacherName, username = '') {
+    // Authentication Check
+    if (typeof IS_USER_AUTHENTICATED !== 'undefined' && !IS_USER_AUTHENTICATED) {
+        showToast('Please log in to send a skill swap proposal.', 'info');
+        setTimeout(() => {
+            window.location.href = '/accounts/login/?next=' + encodeURIComponent(window.location.pathname);
+        }, 1000);
+        return;
+    }
+
     const modalTitle = document.getElementById('swapModalSkillTitle');
     const modalTeacher = document.getElementById('swapModalTeacher');
     const hiddenSkill = document.getElementById('hiddenRequestedSkill');

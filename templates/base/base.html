@@ -46,26 +46,38 @@
         <div class="collapse navbar-collapse" id="navbarContent">
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-2">
                 <li class="nav-item">
-                    <a class="nav-link text-white opacity-75 opacity-100-hover fw-medium px-3" href="{% url 'core:landing' %}"><i class="bi bi-house-door me-1"></i> Home</a>
+                    <a class="nav-link text-white fw-medium px-3 {% if request.resolver_match.url_name == 'landing' %}active text-purple fw-bold{% else %}opacity-75 opacity-100-hover{% endif %}" href="{% url 'core:landing' %}">
+                        <i class="bi bi-house-door me-1"></i> Home
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white opacity-75 opacity-100-hover fw-medium px-3" href="{% url 'skills:browse_skills' %}"><i class="bi bi-compass me-1"></i> Browse Skills</a>
+                    <a class="nav-link text-white fw-medium px-3 {% if request.resolver_match.url_name == 'browse_skills' %}active text-purple fw-bold{% else %}opacity-75 opacity-100-hover{% endif %}" href="{% url 'skills:browse_skills' %}">
+                        <i class="bi bi-compass me-1"></i> Browse Skills
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white opacity-75 opacity-100-hover fw-medium px-3" href="{% url 'skills:ai_match' %}"><i class="bi bi-cpu me-1"></i> AI Match</a>
+                    <a class="nav-link text-white fw-medium px-3 {% if request.resolver_match.url_name == 'ai_match' %}active text-purple fw-bold{% else %}opacity-75 opacity-100-hover{% endif %}" href="{% url 'skills:ai_match' %}">
+                        <i class="bi bi-cpu me-1"></i> AI Match
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white opacity-75 opacity-100-hover fw-medium px-3" href="{% url 'chatapp:chat' %}"><i class="bi bi-chat-dots me-1"></i> Live Chat</a>
+                    <a class="nav-link text-white fw-medium px-3 {% if request.resolver_match.url_name == 'chat' %}active text-purple fw-bold{% else %}opacity-75 opacity-100-hover{% endif %}" href="{% url 'chatapp:chat' %}">
+                        <i class="bi bi-chat-dots me-1"></i> Live Chat
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white opacity-75 opacity-100-hover fw-medium px-3" href="{% url 'dashboard:leaderboard' %}"><i class="bi bi-trophy me-1"></i> Leaderboard</a>
+                    <a class="nav-link text-white fw-medium px-3 {% if request.resolver_match.url_name == 'leaderboard' %}active text-purple fw-bold{% else %}opacity-75 opacity-100-hover{% endif %}" href="{% url 'dashboard:leaderboard' %}">
+                        <i class="bi bi-trophy me-1"></i> Leaderboard
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white opacity-75 opacity-100-hover fw-medium px-3" href="{% url 'dashboard:community' %}"><i class="bi bi-people me-1"></i> Community</a>
+                    <a class="nav-link text-white fw-medium px-3 {% if request.resolver_match.url_name == 'community' %}active text-purple fw-bold{% else %}opacity-75 opacity-100-hover{% endif %}" href="{% url 'dashboard:community' %}">
+                        <i class="bi bi-people me-1"></i> Community
+                    </a>
                 </li>
             </ul>
 
-            <!-- Right Actions (Auth / Theme / Notifications) -->
+            <!-- Right Actions (Auth / Theme / Notifications / Control Center) -->
             <div class="d-flex align-items-center gap-3">
                 <!-- Theme Switcher -->
                 <button class="btn btn-sm btn-neon-outline rounded-circle p-2 d-flex align-items-center justify-content-center" 
@@ -97,7 +109,11 @@
                             {% endif %}
                             <span class="fw-semibold d-none d-md-inline">{{ user.username }}</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end glass-card p-2 border-0 mt-2 shadow-lg" style="min-width: 210px;">
+                        <ul class="dropdown-menu dropdown-menu-end glass-card p-2 border-0 mt-2 shadow-lg" style="min-width: 220px;">
+                            {% if user.is_staff or user.has_control_panel_access %}
+                                <li><a class="dropdown-menu-item dropdown-item text-warning fw-bold rounded p-2" href="{% url 'adminpanel:dashboard' %}"><i class="bi bi-shield-lock-fill me-2 text-warning"></i> Control Center</a></li>
+                                <li><hr class="dropdown-divider bg-secondary opacity-25"></li>
+                            {% endif %}
                             <li><a class="dropdown-menu-item dropdown-item text-white rounded p-2" href="{% url 'profiles:profile' %}"><i class="bi bi-person me-2 text-purple"></i> My Profile</a></li>
                             <li><a class="dropdown-menu-item dropdown-item text-white rounded p-2" href="{% url 'dashboard:home' %}"><i class="bi bi-speedometer2 me-2 text-cyan"></i> Dashboard</a></li>
                             <li><a class="dropdown-menu-item dropdown-item text-white rounded p-2" href="{% url 'exchanges:my_exchanges' %}"><i class="bi bi-arrow-left-right me-2 text-pink"></i> My Swaps {% if pending_requests_count > 0 %}<span class="badge bg-warning text-dark ms-1">{{ pending_requests_count }}</span>{% endif %}</a></li>
@@ -246,6 +262,11 @@
         </div>
     </div>
 </footer>
+
+<!-- Global JS Variables -->
+<script>
+    const IS_USER_AUTHENTICATED = {% if user.is_authenticated %}true{% else %}false{% endif %};
+</script>
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
